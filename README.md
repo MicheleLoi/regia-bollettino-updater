@@ -37,14 +37,76 @@ pip install -e .[dev]
 
 ## Commands
 
-| Command          | Description                                        |
-|------------------|----------------------------------------------------|
-| `updater scan`   | Fetch GitHub API data → `output/raw/*.json`        |
-| `updater build`  | Process raw data → three bulletin JSON files       |
-| `updater review` | Show diff + threshold check + request confirmation |
-| `updater publish`| Upload bulletins to VPS (requires review flag)     |
+| Command               | Description                                        |
+|-----------------------|----------------------------------------------------|
+| `updater scan`        | Fetch GitHub API data → `output/raw/*.json` (incremental by default) |
+| `updater scan --full` | Force full re-scan of all forks (ignores scan state) |
+| `updater build`       | Process raw data → three bulletin JSON files       |
+| `updater review`      | Show diff + threshold check + request confirmation |
+| `updater publish`     | Upload bulletins to VPS (requires review flag)     |
 
 Each command accepts `--config path/to/config.yaml` (default: `config.yaml`).
+
+## Incremental scan
+
+For seeds with `follow_forks: true`, `updater scan` uses **incremental mode** by
+default: only *new* forks (not yet seen in previous scans) trigger full API
+fetches.  Previously-seen forks are carried forward from the most recent raw
+file, so `build.py` always sees the complete fork set and needs no changes.
+
+### How it works
+
+1. **Fork list** — always fetched in full (cheap: 1 API call per 100 forks).
+2. **Delta** — IDs not in `output/scan_state.json` → full metadata fetch (meta + README + license).
+3. **Carry forward** — already-seen fork data is copied from the prior raw file into the new raw.
+4. **State update** — new fork IDs are appended to `seen_forks[seed]` in `scan_state.json`.
+
+The 6 explicitly-named seeds (`rafal-fryc/mikelocal`, etc.) are always fetched
+fresh regardless of state — they are curated editorial entries, not delta-tracked.
+
+### `output/scan_state.json` schema
+
+```json
+{
+  "schema_version": "1.0.0",
+  "last_full_scan_at": "20260519T211600Z",
+  "seen_forks": {
+    "willchen96/mike": [12345678, 23456789, ...]
+  }
+}
+```
+
+The file is created automatically on first run.  It lives alongside the
+bulletins in `output/` and should be committed to the repository so subsequent
+runs on any machine start from the correct incremental baseline.
+
+### `--full` override
+
+```bash
+updater scan --full
+```
+
+Ignores `scan_state.json` and re-fetches every fork.  Updates
+`last_full_scan_at`.  Recommended for periodic re-verification (e.g. every 6
+months) to detect changes in previously-seen forks.
+
+### First-run migration (after a manual full scan)
+
+If you ran a full scan with the old always-full code and want to initialize the
+state file from the resulting raw output (so the *next* run is incremental):
+
+```python
+from pathlib import Path
+from src.scan import seed_state_from_raw
+
+seed_state_from_raw(
+    "output/raw/20260519T211600Z.json",   # your most recent full raw
+    "output/scan_state.json",
+)
+```
+
+Run once, then commit `output/scan_state.json`.  Subsequent `updater scan`
+runs will only fetch new forks.
 
 ## Configuration
 
