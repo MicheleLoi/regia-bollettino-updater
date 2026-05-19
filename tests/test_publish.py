@@ -118,7 +118,8 @@ def _make_bulletin_fixture(tmp_path: Path) -> None:
 
 
 def test_publish_run_calls_ssh(tmp_path, monkeypatch):
-    """publish.run() should connect via SSH and upload both bulletin files."""
+    """publish.run() should connect via SSH and upload ecosystem + patterns bulletins.
+    (skills bulletin is skipped when bulletin_skills.json is absent from output/)"""
     config_path = _write_config(tmp_path)
     _make_bulletin_fixture(tmp_path)
 

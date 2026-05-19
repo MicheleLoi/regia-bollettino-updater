@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-05-01T10:00:00+00:00",
+  "source_count": 1,
+  "skills": [
+    {
+      "id": "anthropics-knowledge-work-legal",
+      "name": "anthropics/knowledge-work-plugins",
+      "description_it": "Plugin legale ufficiale Anthropic per Claude Cowork.",
+      "repo_url": "https://github.com/anthropics/knowledge-work-plugins",
+      "skill_path": "legal/.claude-plugin/plugin.json",
+      "source_repo": "anthropics/knowledge-work-plugins",
+      "source_url": null,
+      "area": "commerciale",
+      "jurisdiction": "[?]",
+      "tier": 1,
+      "publisher": {
+        "name": "Anthropic",
+        "type": "anthropic-official",
+        "italian_localized": false
+      },
+      "reputation": {
+        "stars": 12000,
+        "last_commit": "2026-04-30",
+        "commit_frequency_30d": 2,
+        "contributors": 0,
+        "open_issues": 110,
+        "license": "Apache-2.0",
+        "computed_quality_stars": 5,
+        "computed_trend": "stabile"
+      },
+      "founder_disclaimer": "Plugin ufficiale Anthropic.",
+      "recommended_for": "Studi che vogliono un punto di partenza certificato Anthropic.",
+      "added_to_bollettino": "2026-05-01",
+      "last_seen": "2026-05-01",
+      "italian_adaptation_status": "pending",
+      "critical_alert": false,
+      "critical_alert_message": null,
+      "critical_alert_severity": null,
+      "notes": null
+    }
+  ]
+}

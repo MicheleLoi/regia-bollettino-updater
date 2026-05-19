@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-05-17T10:00:00+00:00",
+  "source_count": 2,
+  "skills": [
+    {
+      "id": "anthropics-knowledge-work-legal",
+      "name": "anthropics/knowledge-work-plugins",
+      "description_it": "Plugin legale ufficiale Anthropic per Claude Cowork: revisione e analisi di documenti legali.",
+      "repo_url": "https://github.com/anthropics/knowledge-work-plugins",
+      "skill_path": "legal/.claude-plugin/plugin.json",
+      "source_repo": "anthropics/knowledge-work-plugins",
+      "source_url": null,
+      "area": "commerciale",
+      "jurisdiction": "[?]",
+      "tier": 1,
+      "publisher": {
+        "name": "Anthropic",
+        "type": "anthropic-official",
+        "italian_localized": false
+      },
+      "reputation": {
+        "stars": 12267,
+        "last_commit": "2026-05-16",
+        "commit_frequency_30d": 0,
+        "contributors": 0,
+        "open_issues": 112,
+        "license": "Apache-2.0",
+        "computed_quality_stars": 5,
+        "computed_trend": "in crescita"
+      },
+      "founder_disclaimer": "Plugin ufficiale Anthropic — verificare configurazione per ambito italiano prima dell'uso in produzione.",
+      "recommended_for": "Studi che vogliono un punto di partenza certificato Anthropic per flussi documentali legali.",
+      "added_to_bollettino": "2026-05-17",
+      "last_seen": "2026-05-17",
+      "italian_adaptation_status": "pending",
+      "critical_alert": false,
+      "critical_alert_message": null,
+      "critical_alert_severity": null,
+      "notes": null
+    },
+    {
+      "id": "terminalskills-contract-review",
+      "name": "TerminalSkills/skills",
+      "description_it": "Skill per revisione di contratti: individua clausole critiche e segnala rischi contrattuali.",
+      "repo_url": "https://github.com/TerminalSkills/skills",
+      "skill_path": "skills/contract-review/SKILL.md",
+      "source_repo": "TerminalSkills/skills",
+      "source_url": null,
+      "area": "commerciale",
+      "jurisdiction": "[?]",
+      "tier": 2,
+      "publisher": {
+        "name": "TerminalSkills",
+        "type": "company",
+        "italian_localized": false
+      },
+      "reputation": {
+        "stars": 51,
+        "last_commit": "2026-05-13",
+        "commit_frequency_30d": 0,
+        "contributors": 0,
+        "open_issues": 2,
+        "license": "Apache-2.0",
+        "computed_quality_stars": 4,
+        "computed_trend": "stabile"
+      },
+      "founder_disclaimer": "Skill generica — richiede adattamento su legge applicabile italiana prima dell'uso.",
+      "recommended_for": "Primo triage di bozze contrattuali per identificare clausole anomale.",
+      "added_to_bollettino": "2026-05-17",
+      "last_seen": "2026-05-17",
+      "italian_adaptation_status": "pending",
+      "critical_alert": false,
+      "critical_alert_message": null,
+      "critical_alert_severity": null,
+      "notes": null
+    }
+  ]
+}

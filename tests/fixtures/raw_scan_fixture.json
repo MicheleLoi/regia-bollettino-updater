@@ -49,5 +49,32 @@
         }
       }
     }
+  ],
+  "skill_sources_raw": [
+    {
+      "owner": "anthropics",
+      "name": "knowledge-work-plugins",
+      "resolved_tier": 1,
+      "resolved_jurisdiction": "[?]",
+      "resolved_license": "Apache-2.0",
+      "meta": {
+        "name": "knowledge-work-plugins",
+        "full_name": "anthropics/knowledge-work-plugins",
+        "owner": {"login": "anthropics"},
+        "html_url": "https://github.com/anthropics/knowledge-work-plugins",
+        "description": "Official Anthropic knowledge work plugins for Claude Cowork",
+        "stargazers_count": 12267,
+        "forks_count": 100,
+        "pushed_at": "2026-05-16T00:00:00Z",
+        "updated_at": "2026-05-16T00:00:00Z",
+        "default_branch": "main"
+      },
+      "skill_md": "---\ntier: 1\njurisdiction: \"[?]\"\nlicense: Apache-2.0\n---\n# knowledge-work-plugins\n\nOfficial Anthropic plugin for legal document workflows.\n",
+      "frontmatter": {
+        "tier": 1,
+        "jurisdiction": "[?]",
+        "license": "Apache-2.0"
+      }
+    }
   ]
 }
