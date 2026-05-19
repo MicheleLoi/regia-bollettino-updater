@@ -16,12 +16,19 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import warnings
+
 from src.scan import (
     _decode_readme,
     _get_with_retry,
     _github_headers,
     _parse_skill_frontmatter,
     _fetch_skill_source_data,
+    _load_scan_state,
+    _save_scan_state,
+    _empty_state,
+    STATE_SCHEMA_VERSION,
+    seed_state_from_raw,
 )
 
 
@@ -267,3 +274,403 @@ def test_run_creates_raw_file(tmp_path, monkeypatch):
     assert len(data["repos"]) == 1
     assert data["repos"][0]["owner"] == "test-org"
     assert data["skill_sources_raw"] == []  # no skill_sources configured
+
+
+# ---------------------------------------------------------------------------
+# State file helpers
+# ---------------------------------------------------------------------------
+
+def test_empty_state_schema():
+    state = _empty_state()
+    assert state["schema_version"] == STATE_SCHEMA_VERSION
+    assert state["last_full_scan_at"] is None
+    assert state["seen_forks"] == {}
+
+
+def test_load_scan_state_no_file(tmp_path):
+    """Returns empty state when file does not exist."""
+    state = _load_scan_state(tmp_path / "nonexistent.json")
+    assert state == _empty_state()
+
+
+def test_load_scan_state_valid(tmp_path):
+    state_path = tmp_path / "scan_state.json"
+    expected = {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "last_full_scan_at": "20260519T120000Z",
+        "seen_forks": {"org/repo": [111, 222, 333]},
+    }
+    state_path.write_text(json.dumps(expected), encoding="utf-8")
+    loaded = _load_scan_state(state_path)
+    assert loaded["seen_forks"]["org/repo"] == [111, 222, 333]
+    assert loaded["last_full_scan_at"] == "20260519T120000Z"
+
+
+def test_load_scan_state_schema_mismatch_warns_and_returns_empty(tmp_path):
+    state_path = tmp_path / "scan_state.json"
+    stale = {
+        "schema_version": "0.9.0",  # old/wrong version
+        "last_full_scan_at": "20260101T000000Z",
+        "seen_forks": {"org/repo": [1, 2, 3]},
+    }
+    state_path.write_text(json.dumps(stale), encoding="utf-8")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        state = _load_scan_state(state_path)
+    assert state == _empty_state()
+    assert any("schema_version mismatch" in str(w.message) for w in caught)
+
+
+def test_load_scan_state_invalid_json_warns_and_returns_empty(tmp_path):
+    state_path = tmp_path / "scan_state.json"
+    state_path.write_text("{not valid json", encoding="utf-8")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        state = _load_scan_state(state_path)
+    assert state == _empty_state()
+    assert any("not valid JSON" in str(w.message) for w in caught)
+
+
+def test_save_and_reload_state(tmp_path):
+    state_path = tmp_path / "scan_state.json"
+    state = {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "last_full_scan_at": "20260519T120000Z",
+        "seen_forks": {"owner/repo": [1, 2, 3]},
+    }
+    _save_scan_state(state, state_path)
+    assert state_path.exists()
+    reloaded = _load_scan_state(state_path)
+    assert reloaded["seen_forks"]["owner/repo"] == [1, 2, 3]
+
+
+# ---------------------------------------------------------------------------
+# seed_state_from_raw migration helper
+# ---------------------------------------------------------------------------
+
+def _make_raw_file(tmp_path: Path, forks: list[dict]) -> Path:
+    """Write a minimal raw JSON file with given fork entries."""
+    data = {
+        "scanned_at": "20260519T210000Z",
+        "repos": [
+            {
+                "owner": "seed-org",
+                "name": "seed-repo",
+                "is_fork": False,
+                "meta": {"id": 9999},
+            }
+        ] + forks,
+        "skill_sources_raw": [],
+    }
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = raw_dir / "20260519T210000Z.json"
+    raw_path.write_text(json.dumps(data), encoding="utf-8")
+    return raw_path
+
+
+def test_seed_state_from_raw_extracts_fork_ids(tmp_path):
+    forks = [
+        {
+            "owner": "fork-owner-1",
+            "name": "fork-repo",
+            "is_fork": True,
+            "forked_from": "seed-org/seed-repo",
+            "meta": {"id": 101},
+        },
+        {
+            "owner": "fork-owner-2",
+            "name": "fork-repo",
+            "is_fork": True,
+            "forked_from": "seed-org/seed-repo",
+            "meta": {"id": 202},
+        },
+    ]
+    raw_path = _make_raw_file(tmp_path, forks)
+    state_path = tmp_path / "scan_state.json"
+    seed_state_from_raw(raw_path, state_path)
+
+    state = _load_scan_state(state_path)
+    assert set(state["seen_forks"]["seed-org/seed-repo"]) == {101, 202}
+    assert state["last_full_scan_at"] == "20260519T210000Z"
+
+
+def test_seed_state_from_raw_no_forks(tmp_path):
+    raw_path = _make_raw_file(tmp_path, [])
+    state_path = tmp_path / "scan_state.json"
+    seed_state_from_raw(raw_path, state_path)
+    state = _load_scan_state(state_path)
+    assert state["seen_forks"] == {}
+
+
+# ---------------------------------------------------------------------------
+# run() — incremental scan (delta) tests
+# ---------------------------------------------------------------------------
+
+def _write_config_with_fork_seed(tmp_path: Path) -> Path:
+    """Write a minimal config.yaml with one follow_forks=true seed."""
+    config = {
+        "seeds": [{"owner": "seed-org", "name": "seed-repo", "follow_forks": True}],
+        "skill_sources": [],
+        "threshold_policy": {
+            "active_window_days": 90,
+            "warn_repos_changed_pct": 30,
+            "warn_new_patterns_count": 5,
+            "warn_skills_changed_count": 3,
+            "review_flag_max_age_minutes": 120,
+        },
+        "env_vars": {"github_token": "GITHUB_TOKEN"},
+        "output": {
+            "raw_dir": str(tmp_path / "raw"),
+            "scan_state_path": str(tmp_path / "scan_state.json"),
+            "ecosystem_path": str(tmp_path / "bulletin_ecosystem.json"),
+            "patterns_path": str(tmp_path / "bulletin_patterns.json"),
+            "skills_path": str(tmp_path / "bulletin_skills.json"),
+            "previous_suffix": ".previous.json",
+            "review_flag_path": str(tmp_path / ".review_flag"),
+        },
+    }
+    import yaml
+    config_path = tmp_path / "config.yaml"
+    with open(config_path, "w") as fh:
+        yaml.dump(config, fh)
+    return config_path
+
+
+def _make_mock_client_for_scan(repo_meta, readme_response, fork_stubs):
+    """
+    Build a mock httpx.Client that:
+    - Returns fork_stubs for /forks pagination URLs
+    - Returns repo_meta for all other GET calls
+    - Returns readme_response for /readme URLs
+    """
+    def mock_get(url, headers=None):
+        if "/forks" in url:
+            return _make_mock_response(200, fork_stubs)
+        elif "/readme" in url:
+            return _make_mock_response(200, readme_response)
+        elif "/license" in url:
+            return _make_mock_response(200, {"license": {"spdx_id": "AGPL-3.0"}})
+        else:
+            return _make_mock_response(200, repo_meta)
+
+    mock_client = MagicMock()
+    mock_client.get.side_effect = mock_get
+    mock_client.__enter__ = lambda s: mock_client
+    mock_client.__exit__ = MagicMock(return_value=False)
+    return mock_client
+
+
+def _make_fork_stubs(ids: list[int]) -> list[dict]:
+    return [
+        {
+            "id": fid,
+            "name": f"fork-repo-{fid}",
+            "owner": {"login": f"fork-owner-{fid}"},
+        }
+        for fid in ids
+    ]
+
+
+def test_run_first_run_no_state_does_full_scan(tmp_path):
+    """First run (no state file) triggers full scan — all forks fetched."""
+    config_path = _write_config_with_fork_seed(tmp_path)
+    (tmp_path / "raw").mkdir(parents=True, exist_ok=True)
+
+    repo_meta = {"id": 9999, "default_branch": "main"}
+    readme_b64 = base64.b64encode(b"# Test").decode()
+    readme_response = {"content": readme_b64, "encoding": "base64"}
+    fork_stubs = _make_fork_stubs([101, 102, 103])
+
+    mock_client = _make_mock_client_for_scan(repo_meta, readme_response, fork_stubs)
+
+    with patch("src.scan.httpx.Client", return_value=mock_client):
+        from src.scan import run
+        out_path = run(config_path=str(config_path))
+
+    with open(out_path) as fh:
+        data = json.load(fh)
+    forks_in_raw = [r for r in data["repos"] if r.get("is_fork")]
+    assert len(forks_in_raw) == 3  # all 3 forks fetched
+
+    # State written with all 3 IDs seen
+    state_path = tmp_path / "scan_state.json"
+    assert state_path.exists()
+    state = _load_scan_state(state_path)
+    assert set(state["seen_forks"]["seed-org/seed-repo"]) == {101, 102, 103}
+    assert state["last_full_scan_at"] is not None
+
+
+def test_run_incremental_only_fetches_new_forks(tmp_path):
+    """
+    Incremental scan: forks 101 + 102 already seen, fork 103 is new.
+    Verify only 1 new fetch, 2 carried from prior raw.
+    The carried forks retain their prior meta (id 101 / 102).
+    The new fork 103 is fetched fresh.
+    """
+    config_path = _write_config_with_fork_seed(tmp_path)
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write a prior raw file with forks 101 + 102 already present
+    prior_raw = {
+        "scanned_at": "20260518T120000Z",
+        "repos": [
+            {"owner": "seed-org", "name": "seed-repo", "is_fork": False,
+             "meta": {"id": 9999}},
+            {"owner": "fork-owner-101", "name": "fork-repo-101", "is_fork": True,
+             "forked_from": "seed-org/seed-repo",
+             "meta": {"id": 101}, "readme": "# Fork 101", "license": None},
+            {"owner": "fork-owner-102", "name": "fork-repo-102", "is_fork": True,
+             "forked_from": "seed-org/seed-repo",
+             "meta": {"id": 102}, "readme": "# Fork 102", "license": None},
+        ],
+        "skill_sources_raw": [],
+    }
+    (raw_dir / "20260518T120000Z.json").write_text(
+        json.dumps(prior_raw), encoding="utf-8"
+    )
+
+    # Write state: 101 + 102 already seen
+    state = {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "last_full_scan_at": "20260518T120000Z",
+        "seen_forks": {"seed-org/seed-repo": [101, 102]},
+    }
+    (tmp_path / "scan_state.json").write_text(json.dumps(state), encoding="utf-8")
+
+    # Fork list now has 101 + 102 + 103 (103 is new)
+    fork_stubs = _make_fork_stubs([101, 102, 103])
+    # Mock returns meta with id=103 for fork-repo-103, generic for others
+    readme_b64 = base64.b64encode(b"# Test").decode()
+    readme_response = {"content": readme_b64, "encoding": "base64"}
+
+    def smart_mock_get(url, headers=None):
+        if "/forks" in url:
+            return _make_mock_response(200, fork_stubs)
+        elif "/readme" in url:
+            return _make_mock_response(200, readme_response)
+        elif "/license" in url:
+            return _make_mock_response(200, {"license": {"spdx_id": "AGPL-3.0"}})
+        elif "fork-repo-103" in url:
+            return _make_mock_response(200, {"id": 103, "default_branch": "main"})
+        else:
+            return _make_mock_response(200, {"id": 9999, "default_branch": "main"})
+
+    mock_client = MagicMock()
+    mock_client.get.side_effect = smart_mock_get
+    mock_client.__enter__ = lambda s: mock_client
+    mock_client.__exit__ = MagicMock(return_value=False)
+
+    with patch("src.scan.httpx.Client", return_value=mock_client):
+        from src.scan import run
+        out_path = run(config_path=str(config_path), full=False)
+
+    with open(out_path) as fh:
+        data = json.load(fh)
+
+    forks_in_raw = [r for r in data["repos"] if r.get("is_fork")]
+    assert len(forks_in_raw) == 3  # all 3 present (2 carried + 1 new)
+
+    # Carried forks have original meta IDs; new fork 103 has id=103
+    fork_ids_in_raw = {r["meta"]["id"] for r in forks_in_raw}
+    assert fork_ids_in_raw == {101, 102, 103}
+
+    # State updated: all 3 IDs now seen
+    reloaded = _load_scan_state(tmp_path / "scan_state.json")
+    assert set(reloaded["seen_forks"]["seed-org/seed-repo"]) == {101, 102, 103}
+
+    # API verification: fork-repo-103 should have been fetched, fork-repo-101/102 should NOT
+    calls = [str(call) for call in mock_client.get.call_args_list]
+    fork_103_meta_calls = [
+        c for c in calls
+        if "fork-repo-103" in c and "readme" not in c and "license" not in c and "forks" not in c
+    ]
+    fork_101_meta_calls = [
+        c for c in calls
+        if "fork-repo-101" in c and "readme" not in c and "license" not in c and "forks" not in c
+    ]
+    assert len(fork_103_meta_calls) >= 1, "fork 103 should have been fetched"
+    assert len(fork_101_meta_calls) == 0, "fork 101 should NOT have been re-fetched"
+
+
+def test_run_full_flag_ignores_state(tmp_path):
+    """--full re-scans all forks even when state has seen IDs."""
+    config_path = _write_config_with_fork_seed(tmp_path)
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    # State already has 101 + 102 seen
+    state = {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "last_full_scan_at": "20260518T120000Z",
+        "seen_forks": {"seed-org/seed-repo": [101, 102]},
+    }
+    (tmp_path / "scan_state.json").write_text(json.dumps(state), encoding="utf-8")
+
+    fork_stubs = _make_fork_stubs([101, 102, 103])
+    repo_meta = {"id": 9999, "default_branch": "main"}
+    readme_b64 = base64.b64encode(b"# Test").decode()
+    readme_response = {"content": readme_b64, "encoding": "base64"}
+
+    mock_client = _make_mock_client_for_scan(repo_meta, readme_response, fork_stubs)
+
+    with patch("src.scan.httpx.Client", return_value=mock_client):
+        from src.scan import run
+        out_path = run(config_path=str(config_path), full=True)
+
+    with open(out_path) as fh:
+        data = json.load(fh)
+
+    forks_in_raw = [r for r in data["repos"] if r.get("is_fork")]
+    assert len(forks_in_raw) == 3  # all 3 re-fetched
+
+    # State updated with last_full_scan_at refreshed
+    reloaded = _load_scan_state(tmp_path / "scan_state.json")
+    assert reloaded["last_full_scan_at"] is not None
+    assert reloaded["last_full_scan_at"] != "20260518T120000Z"  # refreshed
+
+    # All 3 forks metadata should have been fetched (not just new ones)
+    calls = [str(call) for call in mock_client.get.call_args_list]
+    for fid in [101, 102, 103]:
+        fork_meta_calls = [c for c in calls if f"fork-repo-{fid}" in c and "readme" not in c and "license" not in c and "forks" not in c]
+        assert len(fork_meta_calls) >= 1, f"fork {fid} should have been re-fetched in --full mode"
+
+
+def test_run_schema_mismatch_triggers_full_scan(tmp_path):
+    """If scan_state.json has wrong schema_version, run falls back to full scan."""
+    config_path = _write_config_with_fork_seed(tmp_path)
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    stale_state = {
+        "schema_version": "0.0.1",
+        "last_full_scan_at": "20260101T000000Z",
+        "seen_forks": {"seed-org/seed-repo": [101, 102]},
+    }
+    (tmp_path / "scan_state.json").write_text(json.dumps(stale_state), encoding="utf-8")
+
+    fork_stubs = _make_fork_stubs([101, 102])
+    repo_meta = {"id": 9999, "default_branch": "main"}
+    readme_b64 = base64.b64encode(b"# Test").decode()
+    readme_response = {"content": readme_b64, "encoding": "base64"}
+
+    mock_client = _make_mock_client_for_scan(repo_meta, readme_response, fork_stubs)
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        with patch("src.scan.httpx.Client", return_value=mock_client):
+            from src.scan import run
+            out_path = run(config_path=str(config_path))
+
+    # Full scan should have been performed (all forks fetched)
+    with open(out_path) as fh:
+        data = json.load(fh)
+    forks_in_raw = [r for r in data["repos"] if r.get("is_fork")]
+    assert len(forks_in_raw) == 2
+
+    # State should now be correct schema
+    reloaded = _load_scan_state(tmp_path / "scan_state.json")
+    assert reloaded["schema_version"] == STATE_SCHEMA_VERSION
+    # Warning was issued
+    assert any("schema_version mismatch" in str(w.message) for w in caught)
