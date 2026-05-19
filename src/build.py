@@ -281,6 +281,28 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
             source_repos_with_patterns.add(f"{owner}/{name}")
             all_patterns.extend(patterns)
 
+    # --- Semantic dedup: collapse patterns with identical prompt_template ---
+    # Rationale: forks inheriting an unmodified README produce identical pattern
+    # extractions. After scanning Mike + 915 fork the patterns array can balloon
+    # to thousands of duplicates. Dedup by hash of prompt_template, keep first
+    # occurrence (iteration order = canonical source first via seeds list +
+    # follow_forks order — Mike before its forks).
+    seen_templates: set[str] = set()
+    deduped_patterns: list[Pattern] = []
+    for p in all_patterns:
+        template_hash = p.prompt_template
+        if template_hash in seen_templates:
+            continue
+        seen_templates.add(template_hash)
+        deduped_patterns.append(p)
+    dedup_dropped = len(all_patterns) - len(deduped_patterns)
+    if dedup_dropped > 0:
+        print(
+            f"  Dedup: {dedup_dropped} duplicate pattern(s) collapsed "
+            f"({len(all_patterns)} → {len(deduped_patterns)})."
+        )
+    all_patterns = deduped_patterns
+
     # --- Build bulletin_skills.json from skill_sources_raw ---
     scan_date_str = now.strftime("%Y-%m-%d")
     skill_entries: list[SkillEntry] = []
