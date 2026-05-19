@@ -118,8 +118,8 @@ def _make_bulletin_fixture(tmp_path: Path) -> None:
 
 
 def test_publish_run_calls_ssh(tmp_path, monkeypatch):
-    """publish.run() should connect via SSH and upload ecosystem + patterns bulletins.
-    (skills bulletin is skipped when bulletin_skills.json is absent from output/)"""
+    """publish.run() should connect via SSH and upload all 3 bulletins
+    (ecosystem + patterns + skills) post-Phase-II refactor."""
     config_path = _write_config(tmp_path)
     _make_bulletin_fixture(tmp_path)
 
@@ -145,8 +145,8 @@ def test_publish_run_calls_ssh(tmp_path, monkeypatch):
         run(config_path=str(config_path))
 
     mock_ssh_instance.connect.assert_called_once()
-    # sftp.put should have been called twice (eco + patterns)
-    assert mock_sftp.put.call_count == 2
+    # sftp.put should have been called 3 times (eco + patterns + skills)
+    assert mock_sftp.put.call_count == 3
 
 
 def test_publish_run_aborts_without_review(tmp_path, monkeypatch):
