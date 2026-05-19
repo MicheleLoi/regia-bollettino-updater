@@ -25,9 +25,24 @@ def cli() -> None:
     show_default=True,
     help="Path to config.yaml",
 )
-def scan_cmd(config: str) -> None:
-    """Interroga GitHub API e raccoglie dati grezzi in output/raw/."""
-    scan.run(config_path=config)
+@click.option(
+    "--full",
+    is_flag=True,
+    default=False,
+    help=(
+        "Force full re-scan of all forks (ignores scan_state.json). "
+        "Updates last_full_scan_at in state. "
+        "Default: incremental (only new forks since last scan)."
+    ),
+)
+def scan_cmd(config: str, full: bool) -> None:
+    """Interroga GitHub API e raccoglie dati grezzi in output/raw/.
+
+    Di default usa la scansione incrementale: solo i fork nuovi (non ancora
+    visti in output/scan_state.json) vengono interrogati via API. Usa --full
+    per ri-scansionare tutti i fork (utile per re-verifica periodica).
+    """
+    scan.run(config_path=config, full=full)
 
 
 @cli.command(name="build")
