@@ -281,7 +281,10 @@ def run(config_path: str = "config.yaml") -> Path:
                     results.append(fork_data)
 
         # --- Skill sources scan ---
-        for skill_source in cfg.get("skill_sources", []):
+        # Handle YAML quirk: when all skill_sources entries are commented out, the
+        # parsed value is None (not missing). Fallback to empty list to avoid
+        # TypeError on iteration.
+        for skill_source in (cfg.get("skill_sources") or []):
             owner = skill_source["owner"]
             name = skill_source["name"]
             default_tier = int(skill_source.get("default_tier", 2))

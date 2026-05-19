@@ -2,13 +2,31 @@
 # Edit this file to configure your seed repositories and thresholds.
 
 seeds:
-  - owner: example-org      # placeholder; il founder configura il vero seed prima del primo scan
-    name: legal-ai-tool
+  # Seed canonico: willchen96/mike (Mike OSS, ~3.1k stars, AGPL-3.0) + fork principali
+  # nazionali documentati in MHC-Work notes/research/mhc-l/license_audit_closure_20260510.md.
+  # follow_forks: true → scan paginates fork list di Mike (~915 fork) e raccoglie
+  # metadata. Refactor incrementale in roadmap: first scan = full (~30-60 min, ~2755
+  # API calls), subsequent scan = solo fork nuovi (delta vs state file).
+  - owner: willchen96
+    name: mike
     follow_forks: true
-  # Aggiungi ulteriori seed qui:
-  # - owner: another-org
-  #   name: another-repo
-  #   follow_forks: false
+  # Fork nazionali noti elencati esplicitamente (li scopre comunque via follow_forks di mike,
+  # ma elencarli rende il bollettino deterministico se la fork list di GitHub cambia):
+  - owner: rafal-fryc
+    name: mikelocal
+    follow_forks: false
+  - owner: jamietso
+    name: mike-redline
+    follow_forks: false
+  - owner: Jeroen1991z
+    name: mikeNL
+    follow_forks: false
+  - owner: veronica-builds
+    name: emilie
+    follow_forks: false
+  - owner: AlexAlves87
+    name: ContextSafe
+    follow_forks: false
 
 threshold_policy:
   # Soglia per is_active: un repo con last_activity piu' vecchia di questo numero di giorni
