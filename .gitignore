@@ -1,0 +1,33 @@
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Build artefacts
+*.egg-info/
+dist/
+build/
+
+# Raw scan output (large, not tracked)
+output/raw/
+
+# Review flag (runtime state, not tracked)
+output/.review_flag
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
