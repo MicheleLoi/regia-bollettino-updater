@@ -1,19 +1,20 @@
 # regia-bollettino-updater
 
 Updater that monitors a configurable list of GitHub repositories in the
-legal-AI open-source space, builds two JSON bulletin files, and publishes
+legal-AI open-source space, builds three JSON bulletin files, and publishes
 them to a founder-operated VPS.
 
 The bulletins are consumed by the **BeccarIA** plugin (`legal-tech-cowork`)
-via its `ecosystem-scout` and `pattern-extractor` skills.
+via its `ecosystem-scout`, `pattern-extractor`, and `catalogo` skills.
 
 ## What it does
 
 1. **scan** — Queries the GitHub API for configured seed repositories and
    their forks. Writes a timestamped raw JSON file to `output/raw/`.
 2. **build** — Reads the latest raw file, infers jurisdiction and legal-AI
-   capabilities from README text, extracts prompt patterns, validates all
-   output against Pydantic schemas, and writes two bulletin JSON files.
+   capabilities from README text, extracts prompt patterns, builds the skill
+   catalog from `skill_sources`, validates all output against Pydantic schemas,
+   and writes three bulletin JSON files.
 3. **review** — Shows a human-readable diff against the previous bulletin,
    checks configurable thresholds, and requests typed confirmation from the
    founder. Writes a review flag on approval.
@@ -39,7 +40,7 @@ pip install -e .[dev]
 | Command          | Description                                        |
 |------------------|----------------------------------------------------|
 | `updater scan`   | Fetch GitHub API data → `output/raw/*.json`        |
-| `updater build`  | Process raw data → two bulletin JSON files         |
+| `updater build`  | Process raw data → three bulletin JSON files       |
 | `updater review` | Show diff + threshold check + request confirmation |
 | `updater publish`| Upload bulletins to VPS (requires review flag)     |
 
@@ -55,10 +56,21 @@ seeds:
     name: <repo-name>
     follow_forks: true   # also scan all forks
 
+skill_sources:
+  # Founder configures real sources here before first production scan.
+  # Format: { owner, name, default_tier (1 or 2), default_jurisdiction (IT/EU/[?]/other) }
+  # default_tier and default_jurisdiction are fallbacks when SKILL.md declares nothing.
+  #
+  # - owner: anthropics
+  #   name: claude-skills
+  #   default_tier: 1
+  #   default_jurisdiction: "[?]"
+
 threshold_policy:
   active_window_days: 90          # repo older than this → is_active: false
   warn_repos_changed_pct: 30      # trigger typed confirm if >30% repos changed
   warn_new_patterns_count: 5      # trigger typed confirm if >5 new patterns
+  warn_skills_changed_count: 3    # trigger typed confirm if >3 skill changes
   review_flag_max_age_minutes: 120
 ```
 
@@ -141,6 +153,75 @@ Key fields for `pattern-extractor` skill:
   (plausible with minor interpretation), or `"low"` (heuristically reconstructed).
 - `source_license`: SPDX identifier — required for AGPL attribution.
 
+### `bulletin_skills.json`
+
+Consumed by the **BeccarIA `catalogo` skill** (autonomous fetch from
+`bulletins.micheleloi.pro/bulletin_skills.json`).
+
+Schema model: `BulletinSkills` in `src/schema/skills.py`. Backward-compatible
+with `legal-tech-cowork/beccaria/bollettino.json` (BeccarIA v3.x legacy format).
+
+```json
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-05-17T10:00:00+00:00",
+  "source_count": 1,
+  "skills": [
+    {
+      "id": "anthropics-knowledge-work-legal",
+      "name": "anthropics/knowledge-work-plugins",
+      "description_it": "Plugin legale ufficiale Anthropic per Claude Cowork.",
+      "repo_url": "https://github.com/anthropics/knowledge-work-plugins",
+      "skill_path": "legal/.claude-plugin/plugin.json",
+      "source_repo": "anthropics/knowledge-work-plugins",
+      "source_url": null,
+      "area": "commerciale",
+      "jurisdiction": "[?]",
+      "tier": 1,
+      "publisher": {
+        "name": "Anthropic",
+        "type": "anthropic-official",
+        "italian_localized": false
+      },
+      "reputation": {
+        "stars": 12267,
+        "last_commit": "2026-05-16",
+        "commit_frequency_30d": 0,
+        "contributors": 0,
+        "open_issues": 112,
+        "license": "Apache-2.0",
+        "computed_quality_stars": 5,
+        "computed_trend": "in crescita"
+      },
+      "founder_disclaimer": "Plugin ufficiale Anthropic — verificare adattamento IT prima dell'uso.",
+      "recommended_for": "Studi che vogliono un punto di partenza certificato Anthropic.",
+      "added_to_bollettino": "2026-05-17",
+      "last_seen": "2026-05-17",
+      "italian_adaptation_status": "pending",
+      "critical_alert": false,
+      "critical_alert_message": null,
+      "critical_alert_severity": null,
+      "notes": null
+    }
+  ]
+}
+```
+
+Key fields for `catalogo` skill consumer:
+- `id`: stable slug key (`owner-name` kebab-case). Used for diff in review step.
+- `tier`: `1` = Anthropic-official; `2` = community vetted. REFUSE entries are
+  filtered upstream and never reach this file.
+- `jurisdiction`: `IT` | `EU` skips the Italian adaptation prompt at install;
+  `other` | `none` | `[?]` triggers it.
+- `italian_adaptation_status`: `pending` | `ready` | `stale`.
+- `critical_alert`: if `true`, the `catalogo` skill should surface the
+  `critical_alert_message` prominently before suggesting installation.
+
+The `updater scan` step now fetches SKILL.md for each `skill_sources` entry and
+parses YAML frontmatter for `tier` / `jurisdiction` / `license` declarations.
+Config `default_tier` / `default_jurisdiction` are fallbacks when frontmatter is
+absent or incomplete.
+
 ### Exporting JSON Schema
 
 ```bash
@@ -148,10 +229,13 @@ python -c "
 import json
 from src.schema.ecosystem import BulletinEcosystem
 from src.schema.patterns import BulletinPatterns
+from src.schema.skills import BulletinSkills
 with open('docs/bulletin_ecosystem.schema.json', 'w') as f:
     json.dump(BulletinEcosystem.model_json_schema(), f, indent=2)
 with open('docs/bulletin_patterns.schema.json', 'w') as f:
     json.dump(BulletinPatterns.model_json_schema(), f, indent=2)
+with open('docs/bulletin_skills.schema.json', 'w') as f:
+    json.dump(BulletinSkills.model_json_schema(), f, indent=2)
 "
 ```
 
