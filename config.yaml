@@ -17,6 +17,7 @@ threshold_policy:
   # Soglie per warning su large changes (review step)
   warn_repos_changed_pct: 30   # >30% repos changed rispetto al bollettino precedente → warning
   warn_new_patterns_count: 5   # >5 nuovi pattern rispetto al bollettino precedente → warning
+  warn_skills_changed_count: 3  # >3 skill changes (add/remove/update) → warning conferma typed
   # Finestra di validita' del review flag (minuti): publish rifiuta se review e' piu' vecchio
   review_flag_max_age_minutes: 120
 
@@ -31,5 +32,22 @@ output:
   raw_dir: output/raw
   ecosystem_path: output/bulletin_ecosystem.json
   patterns_path: output/bulletin_patterns.json
+  skills_path: output/bulletin_skills.json
   previous_suffix: .previous.json
   review_flag_path: output/.review_flag
+
+skill_sources:
+  # Placeholder — founder configura sources reali prima del primo scan production.
+  # Formato: { owner, name, default_tier (1 o 2), default_jurisdiction (IT/EU/[?]/other) }
+  # Il campo default_tier e default_jurisdiction vengono usati come fallback se SKILL.md
+  # non dichiara esplicitamente tier/jurisdiction nel frontmatter YAML.
+  #
+  # Esempio (decommentare e adattare):
+  # - owner: anthropics
+  #   name: claude-skills
+  #   default_tier: 1
+  #   default_jurisdiction: "[?]"
+  # - owner: TerminalSkills
+  #   name: skills
+  #   default_tier: 2
+  #   default_jurisdiction: "[?]"

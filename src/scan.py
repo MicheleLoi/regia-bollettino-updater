@@ -100,6 +100,113 @@ def _fetch_repo_data(
     }
 
 
+def _fetch_skill_md(
+    client: httpx.Client,
+    owner: str,
+    name: str,
+    default_branch: str = "main",
+) -> str:
+    """
+    Fetch raw SKILL.md content from GitHub raw content CDN.
+    Falls back to 'master' branch if 'main' returns 404.
+    Returns empty string if not found.
+    """
+    for branch in (default_branch, "master"):
+        url = f"https://raw.githubusercontent.com/{owner}/{name}/{branch}/SKILL.md"
+        try:
+            resp = client.get(url)
+            if resp.status_code == 200:
+                return resp.text
+        except Exception:
+            pass
+    return ""
+
+
+def _parse_skill_frontmatter(skill_md: str) -> dict[str, Any]:
+    """
+    Parse YAML frontmatter from SKILL.md content.
+
+    Frontmatter is delimited by '---' on its own line at the top.
+    Returns a dict with any declared keys (tier, jurisdiction, license, etc.),
+    or an empty dict if no frontmatter is present or parsing fails.
+    """
+    if not skill_md.startswith("---"):
+        return {}
+    lines = skill_md.splitlines()
+    end_idx = None
+    for i, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            end_idx = i
+            break
+    if end_idx is None:
+        return {}
+    frontmatter_text = "\n".join(lines[1:end_idx])
+    try:
+        parsed = yaml.safe_load(frontmatter_text) or {}
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception:
+        return {}
+
+
+def _fetch_skill_source_data(
+    client: httpx.Client,
+    headers: dict[str, str],
+    owner: str,
+    name: str,
+    default_tier: int,
+    default_jurisdiction: str,
+) -> dict[str, Any]:
+    """
+    Fetch all relevant data for a single skill source repo.
+
+    Retrieves repo metadata + SKILL.md, parses frontmatter for
+    tier/jurisdiction/license declarations. Falls back to defaults from config.
+    """
+    base = f"https://api.github.com/repos/{owner}/{name}"
+    repo_meta = _get_with_retry(client, base, headers) or {}
+
+    # Infer default branch from API response
+    default_branch = repo_meta.get("default_branch", "main")
+
+    skill_md = _fetch_skill_md(client, owner, name, default_branch)
+    frontmatter = _parse_skill_frontmatter(skill_md)
+
+    # Resolve tier: SKILL.md frontmatter > config default
+    raw_tier = frontmatter.get("tier", default_tier)
+    try:
+        tier = int(raw_tier)
+    except (TypeError, ValueError):
+        tier = default_tier
+
+    # Resolve jurisdiction: SKILL.md frontmatter > config default
+    jurisdiction = str(frontmatter.get("jurisdiction", default_jurisdiction))
+
+    # Resolve license: SKILL.md frontmatter > repo API > Unknown
+    license_from_frontmatter = frontmatter.get("license", "")
+    if not license_from_frontmatter:
+        license_data = _get_with_retry(client, f"{base}/license", headers)
+        if license_data:
+            lic = (license_data.get("license") or {})
+            spdx = lic.get("spdx_id", "")
+            if spdx and spdx.upper() != "NOASSERTION":
+                license_from_frontmatter = spdx
+            else:
+                license_from_frontmatter = lic.get("name", "Unknown")
+        else:
+            license_from_frontmatter = "Unknown"
+
+    return {
+        "meta": repo_meta,
+        "skill_md": skill_md,
+        "frontmatter": frontmatter,
+        "owner": owner,
+        "name": name,
+        "resolved_tier": tier,
+        "resolved_jurisdiction": jurisdiction,
+        "resolved_license": license_from_frontmatter,
+    }
+
+
 def _fetch_forks(
     client: httpx.Client,
     headers: dict[str, str],
@@ -142,14 +249,16 @@ def run(config_path: str = "config.yaml") -> Path:
     raw_dir.mkdir(parents=True, exist_ok=True)
 
     results: list[dict[str, Any]] = []
+    skill_results: list[dict[str, Any]] = []
 
     with httpx.Client(timeout=30.0) as client:
+        # --- Ecosystem seeds scan ---
         for seed in cfg.get("seeds", []):
             owner = seed["owner"]
             name = seed["name"]
             follow_forks = seed.get("follow_forks", False)
 
-            print(f"Scanning {owner}/{name}...")
+            print(f"Scanning ecosystem seed {owner}/{name}...")
             repo_data = _fetch_repo_data(client, headers, owner, name)
             repo_data["owner"] = owner
             repo_data["name"] = name
@@ -171,10 +280,35 @@ def run(config_path: str = "config.yaml") -> Path:
                     fork_data["forked_from"] = f"{owner}/{name}"
                     results.append(fork_data)
 
+        # --- Skill sources scan ---
+        for skill_source in cfg.get("skill_sources", []):
+            owner = skill_source["owner"]
+            name = skill_source["name"]
+            default_tier = int(skill_source.get("default_tier", 2))
+            default_jurisdiction = str(skill_source.get("default_jurisdiction", "[?]"))
+
+            print(f"Scanning skill source {owner}/{name}...")
+            skill_data = _fetch_skill_source_data(
+                client, headers, owner, name, default_tier, default_jurisdiction
+            )
+            skill_results.append(skill_data)
+
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out_path = raw_dir / f"{timestamp}.json"
     with open(out_path, "w", encoding="utf-8") as fh:
-        json.dump({"scanned_at": timestamp, "repos": results}, fh, indent=2, default=str)
+        json.dump(
+            {
+                "scanned_at": timestamp,
+                "repos": results,
+                "skill_sources_raw": skill_results,
+            },
+            fh,
+            indent=2,
+            default=str,
+        )
 
-    print(f"Scan complete. {len(results)} repos written to {out_path}")
+    print(
+        f"Scan complete. {len(results)} ecosystem repos, "
+        f"{len(skill_results)} skill source(s) written to {out_path}"
+    )
     return out_path
