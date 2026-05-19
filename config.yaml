@@ -55,17 +55,24 @@ output:
   review_flag_path: output/.review_flag
 
 skill_sources:
-  # Placeholder — founder configura sources reali prima del primo scan production.
-  # Formato: { owner, name, default_tier (1 o 2), default_jurisdiction (IT/EU/[?]/other) }
-  # Il campo default_tier e default_jurisdiction vengono usati come fallback se SKILL.md
-  # non dichiara esplicitamente tier/jurisdiction nel frontmatter YAML.
+  # Repo Anthropic-official verified (gh api 2026-05-20). Tier 1 (Anthropic publisher).
+  # default_jurisdiction "[?]" — i repo aggregano skill di vari domini; il scan estrae
+  # eventuali tier/jurisdiction override dal frontmatter SKILL.md per skill specifiche.
   #
-  # Esempio (decommentare e adattare):
-  # - owner: anthropics
-  #   name: claude-skills
-  #   default_tier: 1
-  #   default_jurisdiction: "[?]"
-  # - owner: TerminalSkills
-  #   name: skills
-  #   default_tier: 2
-  #   default_jurisdiction: "[?]"
+  # NOTA architetturale: questi repo sono MARKETPLACE containers (SKILL.md vivono nelle
+  # sotto-cartelle dei singoli plugin, non al root). Lo scan corrente cerca SKILL.md
+  # al root del repo — quindi otterrà metadata + README + LICENSE ma NON tier/jurisdiction
+  # da SKILL.md. Fine per Phase II — refactor per scan multi-skill via sub-folder è
+  # roadmap future enhancement.
+  - owner: anthropics
+    name: claude-for-legal
+    default_tier: 1
+    default_jurisdiction: "[?]"
+  - owner: anthropics
+    name: skills
+    default_tier: 1
+    default_jurisdiction: "[?]"
+  - owner: anthropics
+    name: knowledge-work-plugins
+    default_tier: 1
+    default_jurisdiction: "[?]"
