@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-04-15T10:00:00+00:00",
+  "source_count": 1,
+  "patterns": [
+    {
+      "task_name": "contract_review",
+      "description": "Contract Review pattern from test-org/test-repo",
+      "prompt_template": "Review the following contract clause and identify potential risks:\n\n[CONTRACT TEXT HERE]\n\nProvide a structured analysis with: 1) Risk summary 2) Specific clauses of concern.",
+      "example_input": null,
+      "example_output": null,
+      "source_repo": "test-org/test-repo",
+      "source_owner": "test-org",
+      "source_url": "https://github.com/test-org/test-repo",
+      "source_commit": null,
+      "source_license": "AGPL-3.0",
+      "extraction_confidence": "high"
+    }
+  ]
+}

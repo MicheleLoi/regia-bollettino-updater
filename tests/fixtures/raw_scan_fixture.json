@@ -1,0 +1,53 @@
+{
+  "scanned_at": "20260415T103000Z",
+  "repos": [
+    {
+      "owner": "test-org",
+      "name": "test-repo",
+      "is_fork": false,
+      "meta": {
+        "name": "test-repo",
+        "full_name": "test-org/test-repo",
+        "owner": {"login": "test-org"},
+        "html_url": "https://github.com/test-org/test-repo",
+        "description": "A legal-AI tool for contract review and clause extraction",
+        "stargazers_count": 42,
+        "forks_count": 7,
+        "pushed_at": "2026-04-15T10:30:00Z",
+        "updated_at": "2026-04-15T10:30:00Z"
+      },
+      "readme": "# test-repo\n\nA legal-AI tool for contract review.\n\n## Usage\n\nThis tool supports contract review and clause extraction.\n\n## Examples\n\n### Contract Review\n\n```\nReview the following contract clause and identify potential risks:\n\n[CONTRACT TEXT HERE]\n\nProvide a structured analysis with: 1) Risk summary 2) Specific clauses of concern.\n```\n",
+      "license": {
+        "license": {
+          "key": "agpl-3.0",
+          "name": "GNU Affero General Public License v3.0",
+          "spdx_id": "AGPL-3.0"
+        }
+      }
+    },
+    {
+      "owner": "italian-legal-lab",
+      "name": "codice-civile-parser",
+      "is_fork": false,
+      "meta": {
+        "name": "codice-civile-parser",
+        "full_name": "italian-legal-lab/codice-civile-parser",
+        "owner": {"login": "italian-legal-lab"},
+        "html_url": "https://github.com/italian-legal-lab/codice-civile-parser",
+        "description": "Parser per il Codice Civile italiano con supporto AI",
+        "stargazers_count": 15,
+        "forks_count": 3,
+        "pushed_at": "2025-10-01T00:00:00Z",
+        "updated_at": "2025-10-01T00:00:00Z"
+      },
+      "readme": "# Codice Civile Parser\n\nTool per analizzare il Codice Civile italiano con assistenza AI.\nRicerca giurisprudenziale e pseudonimizzazione documenti legali.\n",
+      "license": {
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT"
+        }
+      }
+    }
+  ]
+}

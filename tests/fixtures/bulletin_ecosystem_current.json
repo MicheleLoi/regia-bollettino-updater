@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-04-15T10:00:00+00:00",
+  "source_count": 2,
+  "repos": [
+    {
+      "name": "test-repo",
+      "owner": "test-org",
+      "url": "https://github.com/test-org/test-repo",
+      "description": "A legal-AI tool for contract review and clause extraction",
+      "license": "AGPL-3.0",
+      "inferred_jurisdiction": "Unknown",
+      "inferred_capabilities": ["contract_review", "clause_extraction"],
+      "last_activity": "2026-04-15T10:30:00+00:00",
+      "stars": 42,
+      "fork_count": 7,
+      "is_active": true,
+      "notes": null
+    },
+    {
+      "name": "codice-civile-parser",
+      "owner": "italian-legal-lab",
+      "url": "https://github.com/italian-legal-lab/codice-civile-parser",
+      "description": "Parser per il Codice Civile italiano con supporto AI",
+      "license": "MIT",
+      "inferred_jurisdiction": "IT",
+      "inferred_capabilities": ["legal_research", "pseudonymization"],
+      "last_activity": "2025-10-01T00:00:00+00:00",
+      "stars": 15,
+      "fork_count": 3,
+      "is_active": false,
+      "notes": null
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 2345678,
+    "name": "test-repo",
+    "full_name": "fork-org/test-repo",
+    "owner": {
+      "login": "fork-org",
+      "id": 8765432
+    },
+    "html_url": "https://github.com/fork-org/test-repo",
+    "description": "Fork of test-org/test-repo with Italian law adaptations",
+    "fork": true,
+    "stargazers_count": 5,
+    "forks_count": 1,
+    "license": {
+      "key": "agpl-3.0",
+      "name": "GNU Affero General Public License v3.0",
+      "spdx_id": "AGPL-3.0",
+      "url": "https://api.github.com/licenses/agpl-3.0"
+    },
+    "pushed_at": "2026-03-20T08:00:00Z",
+    "updated_at": "2026-03-20T08:00:00Z",
+    "created_at": "2025-06-01T00:00:00Z",
+    "default_branch": "main"
+  }
+]

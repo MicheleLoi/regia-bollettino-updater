@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-04-01T10:00:00+00:00",
+  "source_count": 1,
+  "repos": [
+    {
+      "name": "test-repo",
+      "owner": "test-org",
+      "url": "https://github.com/test-org/test-repo",
+      "description": "A legal-AI tool for contract review",
+      "license": "AGPL-3.0",
+      "inferred_jurisdiction": "Unknown",
+      "inferred_capabilities": ["contract_review"],
+      "last_activity": "2026-03-01T10:00:00+00:00",
+      "stars": 30,
+      "fork_count": 5,
+      "is_active": true,
+      "notes": null
+    }
+  ]
+}
