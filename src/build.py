@@ -19,6 +19,7 @@ import yaml
 
 from .schema.ecosystem import BulletinEcosystem, EcosystemRepo, SCHEMA_VERSION as ECO_VERSION
 from .schema.patterns import BulletinPatterns, Pattern, SCHEMA_VERSION as PAT_VERSION, ConfidenceLevel
+from .schema.skills import BulletinSkills, SkillEntry, SCHEMA_VERSION as SKL_VERSION
 
 
 # ---------------------------------------------------------------------------
@@ -158,9 +159,54 @@ def _spdx_from_license_data(license_data: dict[str, Any] | None) -> str:
     return lic.get("name") or "Unknown"
 
 
-def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
+def _build_skill_entry_from_raw(raw: dict[str, Any], scan_date: str) -> SkillEntry:
     """
-    Execute the build step. Returns (ecosystem_path, patterns_path).
+    Convert a raw skill_sources_raw entry (from scan output) into a SkillEntry.
+
+    Uses resolved_tier, resolved_jurisdiction, resolved_license from the scan step.
+    Falls back gracefully for any missing field.
+    """
+    meta = raw.get("meta") or {}
+    owner = raw.get("owner") or meta.get("owner", {}).get("login", "unknown")
+    name = raw.get("name") or meta.get("name", "unknown")
+    repo_url = meta.get("html_url") or f"https://github.com/{owner}/{name}"
+    description = meta.get("description") or ""
+
+    slug = f"{owner}-{name}".lower().replace("/", "-").replace("_", "-")
+
+    tier_raw = raw.get("resolved_tier", 2)
+    try:
+        tier = int(tier_raw)
+        if tier not in (1, 2):
+            tier = 2
+    except (TypeError, ValueError):
+        tier = 2
+
+    jurisdiction_raw = raw.get("resolved_jurisdiction", "[?]")
+    valid_jurisdictions = {"IT", "EU", "US", "other", "none", "[?]"}
+    jurisdiction = jurisdiction_raw if jurisdiction_raw in valid_jurisdictions else "[?]"
+
+    license_val = raw.get("resolved_license", "Unknown")
+
+    return SkillEntry(
+        id=slug,
+        name=f"{owner}/{name}",
+        description_it=description,
+        repo_url=repo_url,
+        source_repo=f"{owner}/{name}",
+        jurisdiction=jurisdiction,  # type: ignore[arg-type]
+        tier=tier,  # type: ignore[arg-type]
+        last_seen=scan_date,
+        italian_adaptation_status="pending",
+        reputation=None,
+        publisher=None,
+        notes=None,
+    )
+
+
+def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
+    """
+    Execute the build step. Returns (ecosystem_path, patterns_path, skills_path).
     """
     with open(config_path, "r", encoding="utf-8") as fh:
         cfg = yaml.safe_load(fh)
@@ -168,6 +214,7 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
     raw_dir = Path(cfg["output"]["raw_dir"])
     eco_path = Path(cfg["output"]["ecosystem_path"])
     pat_path = Path(cfg["output"]["patterns_path"])
+    skl_path = Path(cfg["output"].get("skills_path", "output/bulletin_skills.json"))
     active_days = cfg["threshold_policy"]["active_window_days"]
 
     raw_file = _latest_raw_file(raw_dir)
@@ -234,6 +281,18 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
             source_repos_with_patterns.add(f"{owner}/{name}")
             all_patterns.extend(patterns)
 
+    # --- Build bulletin_skills.json from skill_sources_raw ---
+    scan_date_str = now.strftime("%Y-%m-%d")
+    skill_entries: list[SkillEntry] = []
+    for raw_skill in raw_data.get("skill_sources_raw", []):
+        try:
+            entry = _build_skill_entry_from_raw(raw_skill, scan_date_str)
+            skill_entries.append(entry)
+        except Exception as exc:
+            owner_s = raw_skill.get("owner", "?")
+            name_s = raw_skill.get("name", "?")
+            print(f"  Warning: skipping skill source {owner_s}/{name_s}: {exc}")
+
     bulletin_eco = BulletinEcosystem(
         schema_version=ECO_VERSION,
         generated_at=now,
@@ -246,6 +305,12 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
         source_count=len(source_repos_with_patterns),
         patterns=all_patterns,
     )
+    bulletin_skl = BulletinSkills(
+        schema_version=SKL_VERSION,
+        generated_at=now,
+        source_count=len(skill_entries),
+        skills=skill_entries,
+    )
 
     eco_path.parent.mkdir(parents=True, exist_ok=True)
     with open(eco_path, "w", encoding="utf-8") as fh:
@@ -254,8 +319,13 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
     with open(pat_path, "w", encoding="utf-8") as fh:
         fh.write(bulletin_pat.model_dump_json(indent=2))
 
+    skl_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(skl_path, "w", encoding="utf-8") as fh:
+        fh.write(bulletin_skl.model_dump_json(indent=2))
+
     print(
-        f"Build complete. {len(eco_repos)} repos, {len(all_patterns)} patterns. "
-        f"Written to {eco_path} and {pat_path}."
+        f"Build complete. {len(eco_repos)} repos, {len(all_patterns)} patterns, "
+        f"{len(skill_entries)} skill(s). "
+        f"Written to {eco_path}, {pat_path}, and {skl_path}."
     )
-    return eco_path, pat_path
+    return eco_path, pat_path, skl_path
