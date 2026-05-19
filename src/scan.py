@@ -7,6 +7,20 @@ when follow_forks is true). Writes a raw timestamped JSON file to output/raw/.
 
 No calls to the real GitHub API are made in tests — all HTTP is mockable via
 the httpx transport layer.
+
+## Incremental fork scanning
+
+For seeds with ``follow_forks: true``, subsequent runs are incremental by
+default: only *new* forks (IDs not in scan_state.json) trigger full metadata
+fetches.  Previously-seen forks are carried forward from the most recent raw
+file, so the raw output always contains the *complete* fork set and build.py
+needs no changes.
+
+Use ``full=True`` (or ``updater scan --full``) to force a complete re-scan
+of all forks (useful for periodic re-verification).
+
+State file: ``output/scan_state.json`` (configurable via config.yaml
+``output.scan_state_path``).  Created automatically on first run.
 """
 
 from __future__ import annotations
@@ -15,6 +29,7 @@ import base64
 import json
 import os
 import time
+import warnings
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -22,6 +37,64 @@ from typing import Any
 import httpx
 import yaml
 
+
+# ---------------------------------------------------------------------------
+# State file helpers
+# ---------------------------------------------------------------------------
+
+STATE_SCHEMA_VERSION = "1.0.0"
+
+
+def _load_scan_state(state_path: Path) -> dict[str, Any]:
+    """
+    Load persisted scan state from *state_path*.
+
+    Returns a fresh empty state dict if the file does not exist.
+    Returns a fresh empty state dict (with a warning) if the file exists but
+    the schema_version does not match.
+    """
+    if not state_path.exists():
+        return _empty_state()
+
+    with open(state_path, "r", encoding="utf-8") as fh:
+        try:
+            data = json.load(fh)
+        except json.JSONDecodeError:
+            warnings.warn(
+                f"scan_state.json at {state_path} is not valid JSON — treating as first run.",
+                stacklevel=2,
+            )
+            return _empty_state()
+
+    if data.get("schema_version") != STATE_SCHEMA_VERSION:
+        warnings.warn(
+            f"scan_state.json schema_version mismatch "
+            f"(got {data.get('schema_version')!r}, expected {STATE_SCHEMA_VERSION!r}) "
+            f"— treating as first run (full scan).",
+            stacklevel=2,
+        )
+        return _empty_state()
+
+    return data
+
+
+def _empty_state() -> dict[str, Any]:
+    return {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "last_full_scan_at": None,
+        "seen_forks": {},
+    }
+
+
+def _save_scan_state(state: dict[str, Any], state_path: Path) -> None:
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(state_path, "w", encoding="utf-8") as fh:
+        json.dump(state, fh, indent=2, default=str)
+
+
+# ---------------------------------------------------------------------------
+# Config + auth helpers
+# ---------------------------------------------------------------------------
 
 def _load_config(config_path: str = "config.yaml") -> dict[str, Any]:
     with open(config_path, "r", encoding="utf-8") as fh:
@@ -37,6 +110,10 @@ def _github_headers(token: str | None) -> dict[str, str]:
         headers["Authorization"] = f"Bearer {token}"
     return headers
 
+
+# ---------------------------------------------------------------------------
+# HTTP helpers
+# ---------------------------------------------------------------------------
 
 def _get_with_retry(
     client: httpx.Client,
@@ -80,6 +157,10 @@ def _decode_readme(readme_data: dict[str, Any] | None) -> str:
             return ""
     return content
 
+
+# ---------------------------------------------------------------------------
+# Repo-level fetch helpers
+# ---------------------------------------------------------------------------
 
 def _fetch_repo_data(
     client: httpx.Client,
@@ -207,13 +288,17 @@ def _fetch_skill_source_data(
     }
 
 
+# ---------------------------------------------------------------------------
+# Fork helpers
+# ---------------------------------------------------------------------------
+
 def _fetch_forks(
     client: httpx.Client,
     headers: dict[str, str],
     owner: str,
     name: str,
 ) -> list[dict[str, Any]]:
-    """Fetch all forks with full pagination."""
+    """Fetch all forks with full pagination (cheap — 1 API call per 100 forks)."""
     forks: list[dict[str, Any]] = []
     page = 1
     while True:
@@ -231,9 +316,98 @@ def _fetch_forks(
     return forks
 
 
-def run(config_path: str = "config.yaml") -> Path:
+def _load_previous_fork_data(raw_dir: Path, seed_key: str) -> dict[int, dict[str, Any]]:
+    """
+    Load fork data from the most recent raw file for a given seed_key.
+
+    Returns a dict mapping fork repo ID → repo entry dict.
+    Used in incremental mode to carry forward previously-seen fork data without
+    re-fetching from the API.
+    """
+    files = sorted(raw_dir.glob("*.json"), reverse=True)
+    for raw_file in files:
+        try:
+            with open(raw_file, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (json.JSONDecodeError, OSError):
+            continue
+        result: dict[int, dict[str, Any]] = {}
+        for entry in data.get("repos", []):
+            if entry.get("is_fork") and entry.get("forked_from") == seed_key:
+                repo_id = entry.get("meta", {}).get("id")
+                if repo_id is not None:
+                    result[repo_id] = entry
+        if result:
+            return result
+    return {}
+
+
+# ---------------------------------------------------------------------------
+# Migration seed helper
+# ---------------------------------------------------------------------------
+
+def seed_state_from_raw(
+    raw_path: Path | str,
+    state_path: Path | str,
+) -> None:
+    """
+    One-time migration: initialize scan_state.json from an existing raw file.
+
+    Extracts all fork IDs present in *raw_path* and writes them to *state_path*
+    so that the next ``updater scan`` treats those forks as already-seen and
+    only fetches truly new forks.
+
+    Usage (one-shot, run after the first full scan completes):
+        python -c "
+        from pathlib import Path
+        from src.scan import seed_state_from_raw
+        seed_state_from_raw('output/raw/20260519T211600Z.json', 'output/scan_state.json')
+        "
+    """
+    raw_path = Path(raw_path)
+    state_path = Path(state_path)
+
+    with open(raw_path, "r", encoding="utf-8") as fh:
+        raw_data = json.load(fh)
+
+    state = _empty_state()
+    state["last_full_scan_at"] = raw_data.get("scanned_at")
+
+    for entry in raw_data.get("repos", []):
+        if not entry.get("is_fork"):
+            continue
+        forked_from = entry.get("forked_from", "")
+        repo_id = entry.get("meta", {}).get("id")
+        if forked_from and repo_id is not None:
+            state["seen_forks"].setdefault(forked_from, [])
+            if repo_id not in state["seen_forks"][forked_from]:
+                state["seen_forks"][forked_from].append(repo_id)
+
+    _save_scan_state(state, state_path)
+    total = sum(len(v) for v in state["seen_forks"].values())
+    print(
+        f"State seeded from {raw_path.name}: "
+        f"{total} fork ID(s) across {len(state['seen_forks'])} seed(s) → {state_path}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Main run
+# ---------------------------------------------------------------------------
+
+def run(config_path: str = "config.yaml", full: bool = False) -> Path:
     """
     Execute the scan step. Returns the path of the raw output file written.
+
+    Parameters
+    ----------
+    config_path:
+        Path to config.yaml.
+    full:
+        When True, ignore scan_state.json and re-scan ALL forks for every
+        seed with follow_forks=true.  Updates last_full_scan_at in state.
+        When False (default), only new forks (IDs not in state) are fetched;
+        previously-seen forks are carried forward from the most recent raw file.
     """
     cfg = _load_config(config_path)
     token = os.environ.get(cfg.get("env_vars", {}).get("github_token", "GITHUB_TOKEN"))
@@ -248,6 +422,18 @@ def run(config_path: str = "config.yaml") -> Path:
     raw_dir = Path(cfg["output"]["raw_dir"])
     raw_dir.mkdir(parents=True, exist_ok=True)
 
+    state_path = Path(
+        cfg.get("output", {}).get("scan_state_path", str(raw_dir.parent / "scan_state.json"))
+    )
+
+    state = _load_scan_state(state_path)
+
+    # If state is empty (first run or schema mismatch), force full scan
+    is_first_run = (state["last_full_scan_at"] is None and not state["seen_forks"])
+    if is_first_run:
+        print("No prior scan state found — performing full scan (first run).")
+        full = True
+
     results: list[dict[str, Any]] = []
     skill_results: list[dict[str, Any]] = []
 
@@ -257,8 +443,9 @@ def run(config_path: str = "config.yaml") -> Path:
             owner = seed["owner"]
             name = seed["name"]
             follow_forks = seed.get("follow_forks", False)
+            seed_key = f"{owner}/{name}"
 
-            print(f"Scanning ecosystem seed {owner}/{name}...")
+            print(f"Scanning ecosystem seed {seed_key}...")
             repo_data = _fetch_repo_data(client, headers, owner, name)
             repo_data["owner"] = owner
             repo_data["name"] = name
@@ -266,19 +453,90 @@ def run(config_path: str = "config.yaml") -> Path:
             results.append(repo_data)
 
             if follow_forks:
-                forks = _fetch_forks(client, headers, owner, name)
-                print(f"  Found {len(forks)} fork(s), fetching details...")
-                for fork_meta in forks:
-                    fork_owner = fork_meta.get("owner", {}).get("login", "")
-                    fork_name = fork_meta.get("name", "")
-                    if not fork_owner or not fork_name:
-                        continue
-                    fork_data = _fetch_repo_data(client, headers, fork_owner, fork_name)
-                    fork_data["owner"] = fork_owner
-                    fork_data["name"] = fork_name
-                    fork_data["is_fork"] = True
-                    fork_data["forked_from"] = f"{owner}/{name}"
-                    results.append(fork_data)
+                # Always fetch the fork list (cheap: 1 call per 100 forks)
+                all_fork_stubs = _fetch_forks(client, headers, owner, name)
+                print(f"  Found {len(all_fork_stubs)} fork(s) in fork list.")
+
+                if full:
+                    # Full scan: fetch metadata for every fork
+                    print(f"  Full scan — fetching metadata for all {len(all_fork_stubs)} fork(s)...")
+                    new_fork_count = 0
+                    for fork_stub in all_fork_stubs:
+                        fork_owner = fork_stub.get("owner", {}).get("login", "")
+                        fork_name = fork_stub.get("name", "")
+                        fork_id = fork_stub.get("id")
+                        if not fork_owner or not fork_name:
+                            continue
+                        fork_data = _fetch_repo_data(client, headers, fork_owner, fork_name)
+                        fork_data["owner"] = fork_owner
+                        fork_data["name"] = fork_name
+                        fork_data["is_fork"] = True
+                        fork_data["forked_from"] = seed_key
+                        results.append(fork_data)
+                        new_fork_count += 1
+
+                    # Update state
+                    seen_ids = [
+                        stub.get("id")
+                        for stub in all_fork_stubs
+                        if stub.get("id") is not None
+                    ]
+                    state["seen_forks"][seed_key] = seen_ids
+                    print(f"  Full scan complete: {new_fork_count} fork(s) fetched.")
+
+                else:
+                    # Incremental scan: compute delta
+                    already_seen: set[int] = set(state["seen_forks"].get(seed_key, []))
+                    new_stubs = [
+                        stub for stub in all_fork_stubs
+                        if stub.get("id") not in already_seen
+                    ]
+                    print(
+                        f"  Incremental scan — {len(already_seen)} already seen, "
+                        f"{len(new_stubs)} new fork(s) to fetch."
+                    )
+
+                    # Carry forward previously-seen fork data from most recent raw
+                    prior_fork_data = _load_previous_fork_data(raw_dir, seed_key)
+
+                    # Add all previously-seen forks (from prior raw) to results
+                    carried = 0
+                    for fork_id in already_seen:
+                        if fork_id in prior_fork_data:
+                            results.append(prior_fork_data[fork_id])
+                            carried += 1
+
+                    if carried < len(already_seen):
+                        missing = len(already_seen) - carried
+                        print(
+                            f"  Warning: {missing} previously-seen fork(s) not found in "
+                            f"prior raw files — they will be absent from this run's output."
+                        )
+
+                    # Fetch new forks
+                    new_ids: list[int] = []
+                    for fork_stub in new_stubs:
+                        fork_owner = fork_stub.get("owner", {}).get("login", "")
+                        fork_name = fork_stub.get("name", "")
+                        fork_id = fork_stub.get("id")
+                        if not fork_owner or not fork_name:
+                            continue
+                        fork_data = _fetch_repo_data(client, headers, fork_owner, fork_name)
+                        fork_data["owner"] = fork_owner
+                        fork_data["name"] = fork_name
+                        fork_data["is_fork"] = True
+                        fork_data["forked_from"] = seed_key
+                        results.append(fork_data)
+                        if fork_id is not None:
+                            new_ids.append(fork_id)
+
+                    # Update state: append new IDs
+                    current_ids = list(already_seen) + new_ids
+                    state["seen_forks"][seed_key] = current_ids
+                    print(
+                        f"  Incremental scan complete: {len(new_ids)} new fork(s) fetched, "
+                        f"{carried} carried from prior raw."
+                    )
 
         # --- Skill sources scan ---
         # Handle YAML quirk: when all skill_sources entries are commented out, the
@@ -297,6 +555,11 @@ def run(config_path: str = "config.yaml") -> Path:
             skill_results.append(skill_data)
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+    if full:
+        state["last_full_scan_at"] = timestamp
+    _save_scan_state(state, state_path)
+
     out_path = raw_dir / f"{timestamp}.json"
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(
