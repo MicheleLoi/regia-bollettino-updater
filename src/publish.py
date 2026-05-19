@@ -20,6 +20,7 @@ import yaml
 
 from .schema.ecosystem import BulletinEcosystem
 from .schema.patterns import BulletinPatterns
+from .schema.skills import BulletinSkills
 
 
 def _check_review_flag(review_flag_path: Path, max_age_minutes: int) -> None:
@@ -97,6 +98,7 @@ def run(config_path: str = "config.yaml") -> None:
 
     eco_path = Path(cfg["output"]["ecosystem_path"])
     pat_path = Path(cfg["output"]["patterns_path"])
+    skl_path = Path(cfg["output"].get("skills_path", "output/bulletin_skills.json"))
     review_flag_path = Path(cfg["output"]["review_flag_path"])
     previous_suffix = cfg["output"]["previous_suffix"]
     max_age = cfg["threshold_policy"]["review_flag_max_age_minutes"]
@@ -105,7 +107,7 @@ def run(config_path: str = "config.yaml") -> None:
     # Gate: review flag check
     _check_review_flag(review_flag_path, max_age)
 
-    # Gate: bulletin files exist
+    # Gate: core bulletin files exist (skills bulletin may be absent if no sources configured)
     for p in (eco_path, pat_path):
         if not p.exists():
             print(f"Error: bulletin file not found: {p}. Run `updater build` first.")
@@ -140,10 +142,21 @@ def run(config_path: str = "config.yaml") -> None:
 
     ssh.connect(**connect_kwargs)
 
-    for local_path, schema_class in [
+    # Upload the two core bulletins
+    upload_targets = [
         (eco_path, BulletinEcosystem),
         (pat_path, BulletinPatterns),
-    ]:
+    ]
+    # Upload skills bulletin only if the file was produced by the build step
+    if skl_path.exists():
+        upload_targets.append((skl_path, BulletinSkills))
+    else:
+        print(
+            f"Note: {skl_path} not found — skipping bulletin_skills.json upload. "
+            "Configure skill_sources in config.yaml and re-run `updater build` to enable."
+        )
+
+    for local_path, _schema_class in upload_targets:
         _sftp_backup_and_upload(ssh, local_path, vps_path, previous_suffix)
 
     ssh.close()
@@ -159,6 +172,11 @@ def run(config_path: str = "config.yaml") -> None:
             f"{vps_base_url.rstrip('/')}/bulletin_patterns.json",
             BulletinPatterns,
         )
+        if skl_path.exists():
+            _verify_remote(
+                f"{vps_base_url.rstrip('/')}/bulletin_skills.json",
+                BulletinSkills,
+            )
     else:
         print(
             "Note: VPS_BULLETIN_URL not set — skipping post-upload HTTP verification. "

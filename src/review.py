@@ -19,6 +19,7 @@ import yaml
 
 from .schema.ecosystem import BulletinEcosystem
 from .schema.patterns import BulletinPatterns
+from .schema.skills import BulletinSkills
 
 
 def _load_bulletin_json(path: Path) -> dict[str, Any] | None:
@@ -103,6 +104,61 @@ def _print_eco_diff(diff: dict[str, Any]) -> None:
         print("  (no changes)")
 
 
+def _diff_skills(prev: dict[str, Any] | None, curr: dict[str, Any]) -> dict[str, Any]:
+    """Compute a structured diff between previous and current skills bulletins."""
+    if prev is None:
+        return {"added": curr.get("skills", []), "removed": [], "changed": []}
+
+    prev_by_id = {s["id"]: s for s in prev.get("skills", [])}
+    curr_by_id = {s["id"]: s for s in curr.get("skills", [])}
+
+    added = [s for k, s in curr_by_id.items() if k not in prev_by_id]
+    removed = [s for k, s in prev_by_id.items() if k not in curr_by_id]
+    changed = []
+
+    for k, curr_s in curr_by_id.items():
+        if k in prev_by_id:
+            prev_s = prev_by_id[k]
+            diffs: dict[str, Any] = {}
+            for field in (
+                "tier",
+                "jurisdiction",
+                "italian_adaptation_status",
+                "critical_alert",
+                "description_it",
+            ):
+                if curr_s.get(field) != prev_s.get(field):
+                    diffs[field] = {"prev": prev_s.get(field), "curr": curr_s.get(field)}
+            if diffs:
+                changed.append({"skill": k, "diffs": diffs})
+
+    return {"added": added, "removed": removed, "changed": changed}
+
+
+def _print_skl_diff(diff: dict[str, Any]) -> None:
+    added = diff["added"]
+    removed = diff["removed"]
+    changed = diff["changed"]
+
+    print("\n=== SKILLS DIFF ===")
+    if added:
+        print(f"  + ADDED ({len(added)} skill{'s' if len(added) != 1 else ''}):")
+        for s in added:
+            print(f"      [{s.get('tier')}] {s.get('id')} — {s.get('name', '')}")
+    if removed:
+        print(f"  - REMOVED ({len(removed)}):")
+        for s in removed:
+            print(f"      {s.get('id')}")
+    if changed:
+        print(f"  ~ CHANGED ({len(changed)} skill{'s' if len(changed) != 1 else ''}):")
+        for c in changed:
+            print(f"      {c['skill']}:")
+            for field, delta in c["diffs"].items():
+                print(f"        {field}: {delta['prev']!r} → {delta['curr']!r}")
+    if not added and not removed and not changed:
+        print("  (no changes)")
+
+
 def _print_pat_diff(diff: dict[str, Any]) -> None:
     added = diff["added"]
     removed = diff["removed"]
@@ -136,10 +192,12 @@ def run(config_path: str = "config.yaml") -> bool:
 
     eco_path = Path(cfg["output"]["ecosystem_path"])
     pat_path = Path(cfg["output"]["patterns_path"])
+    skl_path = Path(cfg["output"].get("skills_path", "output/bulletin_skills.json"))
     prev_suffix = cfg["output"]["previous_suffix"]
     review_flag_path = Path(cfg["output"]["review_flag_path"])
     warn_pct = cfg["threshold_policy"]["warn_repos_changed_pct"]
     warn_pat_count = cfg["threshold_policy"]["warn_new_patterns_count"]
+    warn_skl_count = cfg["threshold_policy"].get("warn_skills_changed_count", 3)
 
     if not eco_path.exists() or not pat_path.exists():
         print("Error: bulletin files not found. Run `updater build` first.")
@@ -147,23 +205,30 @@ def run(config_path: str = "config.yaml") -> bool:
 
     curr_eco = _load_bulletin_json(eco_path)
     curr_pat = _load_bulletin_json(pat_path)
+    curr_skl = _load_bulletin_json(skl_path)  # may be None if file doesn't exist yet
 
     eco_prev_path = eco_path.with_suffix("").with_suffix(prev_suffix)
     pat_prev_path = pat_path.with_suffix("").with_suffix(prev_suffix)
+    skl_prev_path = skl_path.with_suffix("").with_suffix(prev_suffix)
 
     prev_eco = _load_bulletin_json(eco_prev_path)
     prev_pat = _load_bulletin_json(pat_prev_path)
+    prev_skl = _load_bulletin_json(skl_prev_path)
 
     eco_diff = _diff_ecosystems(prev_eco, curr_eco)
     pat_diff = _diff_patterns(prev_pat, curr_pat)
+    skl_diff = _diff_skills(prev_skl, curr_skl) if curr_skl is not None else {"added": [], "removed": [], "changed": []}
 
     _print_eco_diff(eco_diff)
     _print_pat_diff(pat_diff)
+    _print_skl_diff(skl_diff)
 
     # Validate against pydantic schema
     try:
         BulletinEcosystem.model_validate(curr_eco)
         BulletinPatterns.model_validate(curr_pat)
+        if curr_skl is not None:
+            BulletinSkills.model_validate(curr_skl)
         print("\nSchema validation: OK")
     except Exception as exc:
         print(f"\nSchema validation FAILED: {exc}")
@@ -174,6 +239,9 @@ def run(config_path: str = "config.yaml") -> bool:
     changed_count = len(eco_diff["added"]) + len(eco_diff["removed"]) + len(eco_diff["changed"])
     changed_pct = (changed_count / total_repos * 100) if total_repos > 0 else 0
     new_patterns_count = len(pat_diff["added"])
+    total_skills = len(curr_skl.get("skills", [])) if curr_skl else 0
+    skill_changed_count = len(skl_diff["added"]) + len(skl_diff["removed"]) + len(skl_diff["changed"])
+    skill_changed_pct = (skill_changed_count / total_skills * 100) if total_skills > 0 else 0
 
     warnings: list[str] = []
     if changed_pct > warn_pct:
@@ -185,6 +253,16 @@ def run(config_path: str = "config.yaml") -> bool:
         warnings.append(
             f"WARNING: {new_patterns_count} new patterns "
             f"(threshold: {warn_pat_count})"
+        )
+    if skill_changed_count > warn_skl_count:
+        warnings.append(
+            f"WARNING: {skill_changed_count} skill change(s) "
+            f"(threshold: {warn_skl_count})"
+        )
+    if total_skills > 0 and skill_changed_pct > 30:
+        warnings.append(
+            f"WARNING: {skill_changed_pct:.0f}% of skills changed "
+            f"(threshold: 30%)"
         )
 
     print()
