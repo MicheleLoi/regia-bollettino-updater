@@ -1,0 +1,30 @@
+[project]
+name = "regia-bollettino-updater"
+version = "0.1.0"
+description = "Updater che alimenta i bollettini JSON consumati dal plugin BeccarIA"
+license = { text = "AGPL-3.0-only" }
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.0",
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "paramiko>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-mock>=3.0",
+]
+
+[project.scripts]
+updater = "src.cli:cli"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
