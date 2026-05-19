@@ -1,0 +1,261 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+"""
+build.py — Build bollettini JSON from raw scan output.
+
+Reads the most recent raw/*.json file, infers jurisdiction and capabilities
+from README text, computes is_active, extracts patterns, validates against
+pydantic schema, and writes the two bulletin JSON files.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from .schema.ecosystem import BulletinEcosystem, EcosystemRepo, SCHEMA_VERSION as ECO_VERSION
+from .schema.patterns import BulletinPatterns, Pattern, SCHEMA_VERSION as PAT_VERSION, ConfidenceLevel
+
+
+# ---------------------------------------------------------------------------
+# Jurisdiction inference helpers
+# ---------------------------------------------------------------------------
+
+_JURISDICTION_RULES: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"\b(codice civile|codice penale|tribunale|avvocato|italiano)\b", re.I), "IT"),
+    (re.compile(r"\b(european union|eu law|gdpr|regulation \(eu\))\b", re.I), "EU"),
+    (re.compile(r"\b(united states code|u\.s\.c\.|federal register|american law)\b", re.I), "US"),
+    (re.compile(r"\b(schweizer recht|loi suisse|diritto svizzero)\b", re.I), "CH"),
+]
+
+
+def _infer_jurisdiction(readme: str, owner: str = "", name: str = "") -> str:
+    for pattern, jurisdiction in _JURISDICTION_RULES:
+        if pattern.search(readme):
+            return jurisdiction
+    return "Unknown"
+
+
+# ---------------------------------------------------------------------------
+# Capability inference helpers
+# ---------------------------------------------------------------------------
+
+_CAPABILITY_RULES: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"\bcontract[\s_-]?review\b|\breview[\s_-]?contract\b", re.I), "contract_review"),
+    (re.compile(r"\bredlin\w*|\bmarkup\b", re.I), "redlining"),
+    (re.compile(r"\bclause[\s_-]?extract|\bextract[\s_-]?clause", re.I), "clause_extraction"),
+    (re.compile(r"\bpseudonym\w*|\banonymiz\w*|\bde-?identif\w*", re.I), "pseudonymization"),
+    (re.compile(r"\bcase[\s_-]?summar|\bsummar[\s_-]?case|\bcase[\s_-]?brief", re.I), "case_summarization"),
+    (re.compile(r"\bdeposition\b", re.I), "deposition_analysis"),
+    (re.compile(r"\bdue[\s_-]?diligence\b", re.I), "due_diligence"),
+    (re.compile(r"\blegal[\s_-]?research|\bresearch[\s_-]?legal|\bgiurisprudenz", re.I), "legal_research"),
+    (re.compile(r"\btemplate\b|\bboilerplate\b|\bdraft\b", re.I), "document_drafting"),
+]
+
+
+def _infer_capabilities(readme: str) -> list[str]:
+    found: list[str] = []
+    for pattern, cap in _CAPABILITY_RULES:
+        if pattern.search(readme) and cap not in found:
+            found.append(cap)
+    return found
+
+
+# ---------------------------------------------------------------------------
+# Pattern extraction helpers
+# ---------------------------------------------------------------------------
+
+# Matches fenced code blocks with an optional label line above them
+_CODE_FENCE_PATTERN = re.compile(
+    r"(?:^#+\s*(?P<label>[^\n]+)\n)?```[a-z]*\n(?P<body>.*?)```",
+    re.DOTALL | re.MULTILINE,
+)
+
+# Sections in README that typically contain prompt examples
+_PROMPT_SECTION_PATTERN = re.compile(
+    r"^#{1,3}\s*(examples?|usage|prompts?|templates?|how to use)\s*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def _extract_patterns(
+    readme: str,
+    owner: str,
+    name: str,
+    url: str,
+    license_spdx: str,
+) -> list[Pattern]:
+    """
+    Best-effort extraction of prompt patterns from a README.
+
+    Heuristic strategy:
+    1. Look for sections labelled Examples/Usage/Prompts/Templates.
+    2. Within those sections, extract code-fenced blocks.
+    3. Assign extraction_confidence based on explicitness of delimiters.
+
+    This is an interpretive step — extraction_confidence reflects certainty.
+    """
+    patterns: list[Pattern] = []
+
+    # Find all code-fenced blocks
+    for match in _CODE_FENCE_PATTERN.finditer(readme):
+        body = match.group("body").strip()
+        label = (match.group("label") or "").strip()
+
+        if len(body) < 20:
+            continue
+
+        # Determine confidence
+        section_match = _PROMPT_SECTION_PATTERN.search(
+            readme[: match.start()][-500:]  # look back 500 chars for a section heading
+        )
+        if label and section_match:
+            confidence: ConfidenceLevel = "high"
+            task_name = re.sub(r"\W+", "_", label.lower()).strip("_") or "unknown_task"
+        elif section_match:
+            confidence = "medium"
+            task_name = "extracted_task"
+        else:
+            confidence = "low"
+            task_name = "heuristic_task"
+
+        patterns.append(
+            Pattern(
+                task_name=task_name,
+                description=label or f"Pattern extracted from {owner}/{name} README",
+                prompt_template=body,
+                source_repo=f"{owner}/{name}",
+                source_owner=owner,
+                source_url=url,
+                source_license=license_spdx,
+                extraction_confidence=confidence,
+            )
+        )
+
+    return patterns
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _latest_raw_file(raw_dir: Path) -> Path | None:
+    files = sorted(raw_dir.glob("*.json"), reverse=True)
+    return files[0] if files else None
+
+
+def _spdx_from_license_data(license_data: dict[str, Any] | None) -> str:
+    if license_data is None:
+        return "Unknown"
+    lic = license_data.get("license") or {}
+    spdx = lic.get("spdx_id") or ""
+    if spdx and spdx.upper() != "NOASSERTION":
+        return spdx
+    return lic.get("name") or "Unknown"
+
+
+def run(config_path: str = "config.yaml") -> tuple[Path, Path]:
+    """
+    Execute the build step. Returns (ecosystem_path, patterns_path).
+    """
+    with open(config_path, "r", encoding="utf-8") as fh:
+        cfg = yaml.safe_load(fh)
+
+    raw_dir = Path(cfg["output"]["raw_dir"])
+    eco_path = Path(cfg["output"]["ecosystem_path"])
+    pat_path = Path(cfg["output"]["patterns_path"])
+    active_days = cfg["threshold_policy"]["active_window_days"]
+
+    raw_file = _latest_raw_file(raw_dir)
+    if raw_file is None:
+        raise FileNotFoundError(
+            f"No raw scan file found in {raw_dir}. Run `updater scan` first."
+        )
+
+    print(f"Building from {raw_file}...")
+
+    with open(raw_file, "r", encoding="utf-8") as fh:
+        raw_data = json.load(fh)
+
+    now = datetime.now(timezone.utc)
+    active_cutoff = now - timedelta(days=active_days)
+
+    eco_repos: list[EcosystemRepo] = []
+    all_patterns: list[Pattern] = []
+    source_repos_with_patterns: set[str] = set()
+
+    for entry in raw_data.get("repos", []):
+        meta = entry.get("meta") or {}
+        readme = entry.get("readme") or ""
+        license_data = entry.get("license")
+
+        owner = entry.get("owner") or meta.get("owner", {}).get("login", "")
+        name = entry.get("name") or meta.get("name", "")
+        if not owner or not name:
+            continue
+
+        url = meta.get("html_url") or f"https://github.com/{owner}/{name}"
+        description = meta.get("description") or ""
+        license_spdx = _spdx_from_license_data(license_data)
+
+        pushed_at_str = meta.get("pushed_at") or meta.get("updated_at") or ""
+        try:
+            last_activity = datetime.fromisoformat(pushed_at_str.replace("Z", "+00:00"))
+        except (ValueError, AttributeError):
+            last_activity = datetime(2000, 1, 1, tzinfo=timezone.utc)
+
+        is_active = last_activity >= active_cutoff
+
+        jurisdiction = _infer_jurisdiction(readme, owner, name)
+        capabilities = _infer_capabilities(readme)
+
+        eco_repos.append(
+            EcosystemRepo(
+                name=name,
+                owner=owner,
+                url=url,
+                description=description,
+                license=license_spdx,
+                inferred_jurisdiction=jurisdiction,
+                inferred_capabilities=capabilities,
+                last_activity=last_activity,
+                stars=meta.get("stargazers_count", 0),
+                fork_count=meta.get("forks_count", 0),
+                is_active=is_active,
+            )
+        )
+
+        patterns = _extract_patterns(readme, owner, name, url, license_spdx)
+        if patterns:
+            source_repos_with_patterns.add(f"{owner}/{name}")
+            all_patterns.extend(patterns)
+
+    bulletin_eco = BulletinEcosystem(
+        schema_version=ECO_VERSION,
+        generated_at=now,
+        source_count=len(eco_repos),
+        repos=eco_repos,
+    )
+    bulletin_pat = BulletinPatterns(
+        schema_version=PAT_VERSION,
+        generated_at=now,
+        source_count=len(source_repos_with_patterns),
+        patterns=all_patterns,
+    )
+
+    eco_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(eco_path, "w", encoding="utf-8") as fh:
+        fh.write(bulletin_eco.model_dump_json(indent=2))
+
+    with open(pat_path, "w", encoding="utf-8") as fh:
+        fh.write(bulletin_pat.model_dump_json(indent=2))
+
+    print(
+        f"Build complete. {len(eco_repos)} repos, {len(all_patterns)} patterns. "
+        f"Written to {eco_path} and {pat_path}."
+    )
+    return eco_path, pat_path
