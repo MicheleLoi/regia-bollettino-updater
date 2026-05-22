@@ -33,9 +33,10 @@ threshold_policy:
   # viene marcato is_active: false
   active_window_days: 90
   # Soglie per warning su large changes (review step)
-  warn_repos_changed_pct: 30   # >30% repos changed rispetto al bollettino precedente → warning
-  warn_new_patterns_count: 5   # >5 nuovi pattern rispetto al bollettino precedente → warning
+  warn_repos_changed_pct: 30   # >30% github_scanned repos changed → warning
+  warn_new_patterns_count: 5   # >5 nuovi pattern → warning
   warn_skills_changed_count: 3  # >3 skill changes (add/remove/update) → warning conferma typed
+  warn_human_picks_changed_count: 3  # >3 human picks add/remove/changed → warning (absolute count, set piccolo)
   # Finestra di validita' del review flag (minuti): publish rifiuta se review e' piu' vecchio
   review_flag_max_age_minutes: 120
 
@@ -76,3 +77,30 @@ skill_sources:
     name: knowledge-work-plugins
     default_tier: 1
     default_jurisdiction: "[?]"
+
+human_picks:
+  # Sorgenti curate manualmente dal founder (URL siti, articoli, prodotti) che si
+  # affiancano allo scan automatico GitHub MikeOSS. Ogni entry e' un'aggiunta
+  # editoriale: il bollettino diventa knowledge product curato, non aggregatore
+  # meccanico. Le skill BeccarIA distinguono le fonti via source_type nella
+  # risposta all'avvocato ("Dall'ecosistema GitHub..." vs "Dalla curation del fornitore...").
+  #
+  # Schema voce:
+  #   url:                    HTTPS URL della sorgente (obbligatorio)
+  #   topic:                  Titolo curatoriale breve (obbligatorio)
+  #   notes:                  Rationale del founder al momento della curation (multiline)
+  #   added_date:             ISO 8601 date (YYYY-MM-DD)
+  #   tags:                   Flat list di tag (orthogonal a inferred_capabilities)
+  #   inferred_jurisdiction:  Override opzionale ("IT"/"EU"/"US"/"UK"/...). Default "Unknown".
+  #   license:                Licenza opzionale. Default "Unknown".
+  - url: https://suzielaw.com/
+    topic: "Open-core legal AI workspace UK"
+    notes: |
+      Pattern open-core + servizi managed legal (Scissero, Mathias Strasser).
+      Validazione architettonica del modello RegIA: 'baseline legal AI should be
+      free' + servizi commerciali a valore aggiunto da law firm regolamentata.
+      Lanciato maggio 2026.
+    added_date: 2026-05-22
+    tags: [open-core, uk, managed-legal-services, pattern-validation]
+    inferred_jurisdiction: UK
+    license: "(proprietary)"

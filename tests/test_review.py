@@ -186,3 +186,139 @@ def test_diff_skills_threshold_warning_count():
     # 2 new additions — not above threshold of 3
     total_changes = len(diff["added"]) + len(diff["removed"]) + len(diff["changed"])
     assert total_changes < warn_count + 1  # 2 < 4
+
+
+# ---------------------------------------------------------------------------
+# _split_eco_by_source_type + _diff_eco_human_picks (human_picks support)
+# ---------------------------------------------------------------------------
+
+from src.review import _split_eco_by_source_type, _diff_eco_human_picks
+
+
+def test_split_eco_by_source_type_separates_correctly():
+    """Mixed bulletin splits cleanly into github_scanned and human_picked sub-bulletins."""
+    curr = _load_fixture("bulletin_ecosystem_with_human_picks_current.json")
+    gh, hp = _split_eco_by_source_type(curr)
+    # Fixture has 1 github_scanned + 2 human_picked
+    assert len(gh["repos"]) == 1
+    assert len(hp["repos"]) == 2
+    assert all(r["source_type"] == "github_scanned" for r in gh["repos"])
+    assert all(r["source_type"] == "human_picked" for r in hp["repos"])
+
+
+def test_split_eco_by_source_type_legacy_previous_no_source_type():
+    """Forward-compat: previous bulletin entries without source_type default to github_scanned.
+
+    Without this default, the first diff after the v1.0.0 → v1.1.0 upgrade would
+    misclassify every previous entry as human-picked (because v1.0.0 bulletins
+    never wrote the field).
+    """
+    legacy_bulletin = {
+        "schema_version": "1.0.0",
+        "generated_at": "2026-04-01T00:00:00+00:00",
+        "source_count": 2,
+        "repos": [
+            {"name": "a", "owner": "x", "url": "https://github.com/x/a"},  # no source_type
+            {"name": "b", "owner": "y", "url": "https://github.com/y/b"},  # no source_type
+        ],
+    }
+    gh, hp = _split_eco_by_source_type(legacy_bulletin)
+    assert len(gh["repos"]) == 2
+    assert len(hp["repos"]) == 0
+
+
+def test_split_eco_by_source_type_none_input():
+    """When the previous bulletin is None (first run), split returns (None, None)."""
+    gh, hp = _split_eco_by_source_type(None)
+    assert gh is None
+    assert hp is None
+
+
+def test_diff_eco_human_picks_detects_added():
+    """A human pick present in current but not in previous shows up under 'added'."""
+    prev = _load_fixture("bulletin_ecosystem_with_human_picks_previous.json")
+    curr = _load_fixture("bulletin_ecosystem_with_human_picks_current.json")
+
+    _, prev_hp = _split_eco_by_source_type(prev)
+    _, curr_hp = _split_eco_by_source_type(curr)
+
+    diff = _diff_eco_human_picks(prev_hp, curr_hp)
+    added_owners = [r["owner"] for r in diff["added"]]
+    assert "another-curated.com" in added_owners
+
+
+def test_diff_eco_human_picks_detects_changed_curatorial_fields():
+    """Changes to topic/tags/notes_curatorial/description are detected."""
+    prev = _load_fixture("bulletin_ecosystem_with_human_picks_previous.json")
+    curr = _load_fixture("bulletin_ecosystem_with_human_picks_current.json")
+
+    _, prev_hp = _split_eco_by_source_type(prev)
+    _, curr_hp = _split_eco_by_source_type(curr)
+
+    diff = _diff_eco_human_picks(prev_hp, curr_hp)
+    # example-curated.test/example-curated-test should be in changed (topic, tags, description, notes_curatorial all changed)
+    changed_keys = [c["repo"] for c in diff["changed"]]
+    assert "example-curated.test/example-curated-test" in changed_keys
+    # Verify the watched fields are surfaced
+    changed_entry = next(c for c in diff["changed"] if c["repo"] == "example-curated.test/example-curated-test")
+    assert "topic" in changed_entry["diffs"]
+    assert "tags" in changed_entry["diffs"]
+    assert "notes_curatorial" in changed_entry["diffs"]
+    assert "description" in changed_entry["diffs"]
+
+
+def test_diff_eco_human_picks_no_previous():
+    """When prev is None, all current human picks are 'added'."""
+    curr = _load_fixture("bulletin_ecosystem_with_human_picks_current.json")
+    _, curr_hp = _split_eco_by_source_type(curr)
+    diff = _diff_eco_human_picks(None, curr_hp)
+    assert len(diff["added"]) == 2  # both human-picked entries in fixture
+
+
+def test_diff_ecosystems_does_not_include_human_picks_with_split():
+    """When we pre-split, _diff_ecosystems on the github_scanned subset should not see human picks."""
+    prev = _load_fixture("bulletin_ecosystem_with_human_picks_previous.json")
+    curr = _load_fixture("bulletin_ecosystem_with_human_picks_current.json")
+
+    prev_gh, _ = _split_eco_by_source_type(prev)
+    curr_gh, _ = _split_eco_by_source_type(curr)
+
+    diff = _diff_ecosystems(prev_gh, curr_gh)
+    # Only test-org/test-repo (the one github_scanned repo) should appear in diff
+    all_keys = (
+        [f"{r['owner']}/{r['name']}" for r in diff["added"]]
+        + [f"{r['owner']}/{r['name']}" for r in diff["removed"]]
+        + [c["repo"] for c in diff["changed"]]
+    )
+    for key in all_keys:
+        assert "curated.test" not in key
+        assert "curated.com" not in key
+
+
+def test_eco_repo_v1_0_0_previous_bulletin_validates_against_v1_1_0_schema():
+    """A v1.0.0 bulletin (without source_type) must still validate as v1.1.0 (additive change)."""
+    from src.schema.ecosystem import BulletinEcosystem
+    legacy_repo = {
+        "name": "legacy",
+        "owner": "legacy-owner",
+        "url": "https://github.com/legacy-owner/legacy",
+        "description": "Old entry from v1.0.0 bulletin",
+        "license": "AGPL-3.0",
+        "inferred_jurisdiction": "Unknown",
+        "inferred_capabilities": [],
+        "last_activity": "2025-01-01T00:00:00+00:00",
+        "stars": 10,
+        "fork_count": 2,
+        "is_active": False,
+        # NB: no source_type field → must default to "github_scanned"
+    }
+    legacy_bulletin = {
+        "schema_version": "1.0.0",
+        "generated_at": "2026-04-01T00:00:00+00:00",
+        "source_count": 1,
+        "repos": [legacy_repo],
+    }
+    validated = BulletinEcosystem.model_validate(legacy_bulletin)
+    assert validated.repos[0].source_type == "github_scanned"
+    assert validated.repos[0].curator is None
+    assert validated.repos[0].topic is None

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-05-01T00:00:00+00:00",
+  "source_count": 2,
+  "repos": [
+    {
+      "name": "test-repo",
+      "owner": "test-org",
+      "url": "https://github.com/test-org/test-repo",
+      "description": "A legal-AI tool",
+      "license": "AGPL-3.0",
+      "inferred_jurisdiction": "Unknown",
+      "inferred_capabilities": ["contract_review"],
+      "last_activity": "2026-04-01T00:00:00+00:00",
+      "stars": 40,
+      "fork_count": 5,
+      "is_active": true,
+      "source_type": "github_scanned"
+    },
+    {
+      "name": "example-curated-test",
+      "owner": "example-curated.test",
+      "url": "https://example-curated.test/",
+      "description": "OG Description from previous run.",
+      "license": "(proprietary)",
+      "inferred_jurisdiction": "UK",
+      "inferred_capabilities": [],
+      "last_activity": null,
+      "stars": null,
+      "fork_count": null,
+      "is_active": null,
+      "source_type": "human_picked",
+      "topic": "Curated source for testing",
+      "notes_curatorial": "Old version of curatorial notes.",
+      "added_date": "2026-04-15",
+      "tags": ["open-core", "test-fixture"],
+      "curator": "Michele Loi"
+    }
+  ]
+}

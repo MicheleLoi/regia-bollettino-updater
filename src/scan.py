@@ -36,6 +36,15 @@ from typing import Any
 
 import httpx
 import yaml
+from bs4 import BeautifulSoup
+
+# User-Agent used for arbitrary-URL fetches (human_picks).
+# Identifies the updater so site owners can correlate hits; some WordPress
+# installs serve 403 to requests with no User-Agent header.
+_HUMAN_PICK_USER_AGENT = (
+    "regia-bollettino-updater/0.1 "
+    "(+https://github.com/MicheleLoi/regia-bollettino-updater)"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -289,6 +298,132 @@ def _fetch_skill_source_data(
 
 
 # ---------------------------------------------------------------------------
+# Human-pick fetch helpers (curated URLs from config.yaml human_picks)
+# ---------------------------------------------------------------------------
+#
+# Robots.txt and crawl politeness are out of scope here: human picks are
+# hand-selected URLs from a small list, low volume (< few dozen entries
+# expected), no crawling depth. Each scan does one GET per URL.
+
+def _fetch_url_html(
+    client: httpx.Client,
+    url: str,
+    max_retries: int = 3,
+) -> str | None:
+    """
+    GET an arbitrary HTTPS URL and return its body as text.
+
+    Sibling of `_get_with_retry` but for HTML responses (no JSON parse).
+    Reuses the same exponential backoff on 429/503. Sends a custom
+    User-Agent identifying the updater (some WordPress installs 403 on
+    missing UA). Returns None on non-200 (including 404) after retries.
+    """
+    headers = {"User-Agent": _HUMAN_PICK_USER_AGENT}
+    delay = 1.0
+    for attempt in range(max_retries):
+        try:
+            response = client.get(url, headers=headers, follow_redirects=True)
+        except httpx.HTTPError:
+            time.sleep(delay)
+            delay *= 2
+            continue
+        if response.status_code == 200:
+            return response.text
+        if response.status_code in (429, 503):
+            time.sleep(delay)
+            delay *= 2
+            continue
+        # 404 or other non-retriable
+        return None
+    return None
+
+
+def _parse_html_meta(html: str) -> dict[str, str]:
+    """
+    Extract title + meta + Open Graph tags from an HTML document.
+
+    Defensive: returns an empty dict on any parse failure or missing
+    document. Keys returned (when present):
+      - "title"            : <title> text
+      - "description"      : <meta name="description" content="...">
+      - "og:title"         : <meta property="og:title" content="...">
+      - "og:description"   : <meta property="og:description" content="...">
+      - "og:image"         : <meta property="og:image" content="...">
+      - "og:site_name"     : <meta property="og:site_name" content="...">
+    """
+    if not html:
+        return {}
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+    except Exception:
+        return {}
+
+    out: dict[str, str] = {}
+
+    try:
+        title_tag = soup.find("title")
+        if title_tag and title_tag.string:
+            out["title"] = title_tag.string.strip()
+    except Exception:
+        pass
+
+    try:
+        desc_tag = soup.find("meta", attrs={"name": "description"})
+        if desc_tag:
+            content = desc_tag.get("content")
+            if content:
+                out["description"] = content.strip()
+    except Exception:
+        pass
+
+    for og_key in ("og:title", "og:description", "og:image", "og:site_name"):
+        try:
+            tag = soup.find("meta", attrs={"property": og_key})
+            if tag:
+                content = tag.get("content")
+                if content:
+                    out[og_key] = content.strip()
+        except Exception:
+            continue
+
+    return out
+
+
+def _fetch_human_pick(
+    client: httpx.Client,
+    entry: dict[str, Any],
+) -> dict[str, Any]:
+    """
+    Fetch + parse a single human-pick URL entry.
+
+    Mirrors the dict shape of `_fetch_repo_data` so build.py consumes both
+    sources uniformly. On fetch failure, returns the entry with
+    `fetch_status="failed"` and empty meta — the entry is preserved so the
+    founder sees a "this URL no longer responds" signal at review time
+    instead of a silent drop.
+    """
+    url = entry.get("url", "")
+    fetched_at = datetime.now(timezone.utc).isoformat()
+    html = _fetch_url_html(client, url)
+    if html is None:
+        return {
+            "url": url,
+            "config_entry": entry,
+            "fetched_at": fetched_at,
+            "meta": {},
+            "fetch_status": "failed",
+        }
+    meta = _parse_html_meta(html)
+    return {
+        "url": url,
+        "config_entry": entry,
+        "fetched_at": fetched_at,
+        "meta": meta,
+        "fetch_status": "ok",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Fork helpers
 # ---------------------------------------------------------------------------
 
@@ -436,6 +571,7 @@ def run(config_path: str = "config.yaml", full: bool = False) -> Path:
 
     results: list[dict[str, Any]] = []
     skill_results: list[dict[str, Any]] = []
+    human_pick_results: list[dict[str, Any]] = []
 
     with httpx.Client(timeout=30.0) as client:
         # --- Ecosystem seeds scan ---
@@ -554,6 +690,20 @@ def run(config_path: str = "config.yaml", full: bool = False) -> Path:
             )
             skill_results.append(skill_data)
 
+        # --- Human picks scan (curated URLs from config.yaml) ---
+        # Same YAML quirk handling as skill_sources: `or []` covers the case
+        # where the section is present in YAML but parses to None.
+        for entry in (cfg.get("human_picks") or []):
+            url = entry.get("url", "")
+            if not url:
+                print("  Warning: human_picks entry without 'url' — skipping.")
+                continue
+            print(f"Fetching human pick: {url}...")
+            pick_data = _fetch_human_pick(client, entry)
+            if pick_data["fetch_status"] == "failed":
+                print(f"  Warning: fetch failed for {url} — entry kept with empty meta.")
+            human_pick_results.append(pick_data)
+
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     if full:
@@ -567,6 +717,7 @@ def run(config_path: str = "config.yaml", full: bool = False) -> Path:
                 "scanned_at": timestamp,
                 "repos": results,
                 "skill_sources_raw": skill_results,
+                "human_picks_raw": human_pick_results,
             },
             fh,
             indent=2,
@@ -575,6 +726,7 @@ def run(config_path: str = "config.yaml", full: bool = False) -> Path:
 
     print(
         f"Scan complete. {len(results)} ecosystem repos, "
-        f"{len(skill_results)} skill source(s) written to {out_path}"
+        f"{len(skill_results)} skill source(s), "
+        f"{len(human_pick_results)} human pick(s) written to {out_path}"
     )
     return out_path

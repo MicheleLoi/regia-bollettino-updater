@@ -144,7 +144,8 @@ def test_build_run_produces_valid_bulletins(tmp_path):
         eco_data = json.load(fh)
     eco_bulletin = BulletinEcosystem.model_validate(eco_data)
     assert eco_bulletin.source_count == len(eco_bulletin.repos)
-    assert eco_bulletin.schema_version == "1.0.0"
+    # Schema bumped 1.0.0 → 1.1.0 with the human_picks feature (additive change).
+    assert eco_bulletin.schema_version == "1.1.0"
 
     with open(pat_path) as fh:
         pat_data = json.load(fh)
@@ -292,3 +293,178 @@ def test_bulletin_skills_json_schema_export():
     assert "properties" in schema
     assert "skills" in schema["properties"]
     assert schema.get("title") == "BulletinSkills"
+
+
+# ---------------------------------------------------------------------------
+# Unit: _build_human_pick_eco_entry
+# ---------------------------------------------------------------------------
+
+from datetime import date as _date, datetime as _datetime
+from src.build import _build_human_pick_eco_entry
+
+
+def _human_pick_raw(url: str = "https://example-curated.test/", **overrides):
+    """Build a synthetic raw human-pick entry for unit tests."""
+    config_entry = {
+        "url": url,
+        "topic": "Curated source for testing",
+        "notes": "Synthetic test fixture entry.",
+        "added_date": "2026-04-15",
+        "tags": ["open-core", "test-fixture"],
+        "inferred_jurisdiction": "UK",
+        "license": "(proprietary)",
+    }
+    config_entry.update(overrides.get("config_entry", {}))
+    return {
+        "url": url,
+        "fetched_at": "2026-04-15T10:30:00+00:00",
+        "fetch_status": overrides.get("fetch_status", "ok"),
+        "meta": overrides.get("meta", {
+            "og:title": "Curated OG Title",
+            "og:description": "OG Description of the curated source.",
+        }),
+        "config_entry": config_entry,
+    }
+
+
+def test_build_human_pick_basic_fields():
+    """Human pick entry produces an EcosystemRepo with source_type='human_picked' and curator."""
+    raw = _human_pick_raw()
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.source_type == "human_picked"
+    assert eco.curator == "Michele Loi"
+    assert eco.topic == "Curated source for testing"
+    assert eco.notes_curatorial == "Synthetic test fixture entry."
+    assert eco.added_date == _date(2026, 4, 15)
+    assert eco.tags == ["open-core", "test-fixture"]
+    assert eco.inferred_jurisdiction == "UK"
+    assert eco.license == "(proprietary)"
+
+
+def test_build_human_pick_github_fields_are_none():
+    """Human picks have no GitHub metadata → all GitHub-only fields are None."""
+    raw = _human_pick_raw()
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.last_activity is None
+    assert eco.stars is None
+    assert eco.fork_count is None
+    assert eco.is_active is None
+
+
+def test_build_human_pick_description_fallback_chain():
+    """Description prefers og:description → meta[description] → og:title → title → fallback."""
+    # og:description present
+    raw = _human_pick_raw(meta={"og:description": "OG Desc"})
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.description == "OG Desc"
+
+    # only og:title
+    raw = _human_pick_raw(meta={"og:title": "OG Title Only"})
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.description == "OG Title Only"
+
+    # only <title>
+    raw = _human_pick_raw(meta={"title": "Bare Title"})
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.description == "Bare Title"
+
+    # nothing — fallback
+    raw = _human_pick_raw(meta={})
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.description == "[no description available]"
+
+
+def test_build_human_pick_name_owner_from_url():
+    """Name + owner derived from URL host, with path slug appended when path is non-trivial."""
+    # Root path → host_slug only
+    raw = _human_pick_raw(url="https://suzielaw.com/")
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.owner == "suzielaw.com"
+    assert eco.name == "suzielaw-com"
+
+    # With path → host_slug_path-slug
+    raw = _human_pick_raw(url="https://example.com/blog/article-name")
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.owner == "example.com"
+    assert eco.name.startswith("example-com_")
+    assert "blog" in eco.name
+    assert "article-name" in eco.name
+
+
+def test_build_human_pick_no_capability_inference():
+    """Human pick description containing 'contract review' must NOT acquire capability tag.
+
+    This is the design decision: curator's `tags` carry semantic intent;
+    running regex inference on short marketing copy produces noisy false matches.
+    """
+    raw = _human_pick_raw(meta={"og:description": "Contract review and clause extraction service"})
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.inferred_capabilities == []
+
+
+def test_build_human_pick_added_date_parses_iso_string():
+    """added_date as ISO string in config is parsed to date object."""
+    raw = _human_pick_raw()
+    raw["config_entry"]["added_date"] = "2026-01-15"
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.added_date == _date(2026, 1, 15)
+
+
+def test_build_human_pick_added_date_invalid_string_yields_none():
+    """Malformed added_date string falls back to None without raising."""
+    raw = _human_pick_raw()
+    raw["config_entry"]["added_date"] = "not-a-date"
+    eco = _build_human_pick_eco_entry(raw, _datetime(2026, 4, 15))
+    assert eco.added_date is None
+
+
+def test_build_run_includes_human_picks_from_fixture(tmp_path):
+    """build_run() integrates human_picks_raw entries into bulletin_ecosystem.json."""
+    fixtures_dir = Path(__file__).parent / "fixtures"
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+    shutil.copy(fixtures_dir / "raw_scan_fixture.json", raw_dir / "20260415T103000Z.json")
+
+    config_path = _make_config(tmp_path, raw_dir)
+    eco_path, _, _ = build_run(config_path=str(config_path))
+
+    with open(eco_path) as fh:
+        eco_data = json.load(fh)
+
+    # Validate schema
+    eco_bulletin = BulletinEcosystem.model_validate(eco_data)
+
+    # Find the human-picked entry
+    human_picked = [r for r in eco_bulletin.repos if r.source_type == "human_picked"]
+    assert len(human_picked) == 1
+    hp = human_picked[0]
+    assert hp.url == "https://example-curated.test/"
+    assert hp.curator == "Michele Loi"
+    assert hp.topic == "Curated source for testing"
+    assert hp.tags == ["open-core", "test-fixture", "legal-ai"]
+    assert hp.last_activity is None
+    assert hp.stars is None
+
+
+def test_build_run_existing_repos_get_explicit_source_type(tmp_path):
+    """github_scanned repos should be stamped with explicit source_type='github_scanned'."""
+    fixtures_dir = Path(__file__).parent / "fixtures"
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+    shutil.copy(fixtures_dir / "raw_scan_fixture.json", raw_dir / "20260415T103000Z.json")
+
+    config_path = _make_config(tmp_path, raw_dir)
+    eco_path, _, _ = build_run(config_path=str(config_path))
+
+    with open(eco_path) as fh:
+        eco_data = json.load(fh)
+
+    github_scanned = [r for r in eco_data["repos"] if r.get("source_type") == "github_scanned"]
+    # raw_scan_fixture has 2 github_scanned repos
+    assert len(github_scanned) == 2
+    for r in github_scanned:
+        # All GitHub fields must be populated for github_scanned entries
+        assert r.get("last_activity") is not None
+        assert r.get("stars") is not None
+        assert r.get("fork_count") is not None
+        assert r.get("is_active") is not None

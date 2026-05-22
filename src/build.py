@@ -11,9 +11,10 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 
@@ -204,6 +205,82 @@ def _build_skill_entry_from_raw(raw: dict[str, Any], scan_date: str) -> SkillEnt
     )
 
 
+def _build_human_pick_eco_entry(raw: dict[str, Any], now: datetime) -> EcosystemRepo:
+    """
+    Convert a raw human_picks_raw entry (from scan output) into an EcosystemRepo.
+
+    Design choices specific to human picks:
+    - GitHub-only fields (last_activity, stars, fork_count, is_active) are left None
+    - inferred_capabilities is always empty: the curator's `tags` carry the
+      semantic intent. Running the github_scanned regex inference on a short
+      og:description string would produce noisy false matches.
+    - source_type is stamped "human_picked"; curator defaults to "Michele Loi"
+      (the founder operating the updater).
+    - description follows a fallback chain (og:description → meta[description]
+      → og:title → <title> → '[no description available]') so the field is never
+      empty (the schema requires it).
+    - name is derived from the URL host (and a path slug when the URL has a
+      non-trivial path), so two picks from the same domain do not collide.
+    """
+    config_entry = raw.get("config_entry") or {}
+    meta = raw.get("meta") or {}
+    url = raw.get("url") or config_entry.get("url", "")
+
+    # Description fallback chain.
+    description = (
+        meta.get("og:description")
+        or meta.get("description")
+        or meta.get("og:title")
+        or meta.get("title")
+        or "[no description available]"
+    )
+
+    # Derive name + owner from URL host (and path, when non-root).
+    parsed = urlparse(url)
+    host = parsed.netloc or url
+    path = parsed.path.strip("/")
+    host_slug = host.lower().replace(".", "-").replace(":", "-")
+    if path:
+        # Slugify path: lowercase + non-alphanumeric → '-', clamp 30 chars.
+        path_slug = re.sub(r"[^a-z0-9]+", "-", path.lower()).strip("-")[:30]
+        name = f"{host_slug}_{path_slug}" if path_slug else host_slug
+    else:
+        name = host_slug
+    owner = host
+
+    # added_date may arrive as ISO string (from YAML) or as a date (already parsed).
+    added_date_raw = config_entry.get("added_date")
+    added_date_val = None
+    if isinstance(added_date_raw, date):
+        added_date_val = added_date_raw
+    elif isinstance(added_date_raw, str):
+        try:
+            added_date_val = datetime.fromisoformat(added_date_raw).date()
+        except ValueError:
+            added_date_val = None
+
+    return EcosystemRepo(
+        name=name,
+        owner=owner,
+        url=url,
+        description=description,
+        license=config_entry.get("license") or "Unknown",
+        inferred_jurisdiction=config_entry.get("inferred_jurisdiction") or "Unknown",
+        inferred_capabilities=[],
+        last_activity=None,
+        stars=None,
+        fork_count=None,
+        is_active=None,
+        notes=None,
+        source_type="human_picked",
+        topic=config_entry.get("topic"),
+        notes_curatorial=config_entry.get("notes"),
+        added_date=added_date_val,
+        tags=list(config_entry.get("tags") or []),
+        curator=config_entry.get("curator") or "Michele Loi",
+    )
+
+
 def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     """
     Execute the build step. Returns (ecosystem_path, patterns_path, skills_path).
@@ -273,6 +350,7 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
                 stars=meta.get("stargazers_count", 0),
                 fork_count=meta.get("forks_count", 0),
                 is_active=is_active,
+                source_type="github_scanned",
             )
         )
 
@@ -280,6 +358,21 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
         if patterns:
             source_repos_with_patterns.add(f"{owner}/{name}")
             all_patterns.extend(patterns)
+
+    # --- Human picks: append to eco_repos with source_type='human_picked' ---
+    # Curated entries from config.yaml. The scan step produced these in
+    # raw_data['human_picks_raw']; build.py's only job is to map them to
+    # EcosystemRepo with the right provenance + curator metadata.
+    human_pick_count = 0
+    for raw_pick in raw_data.get("human_picks_raw", []):
+        try:
+            eco_repos.append(_build_human_pick_eco_entry(raw_pick, now))
+            human_pick_count += 1
+        except Exception as exc:
+            url_dbg = raw_pick.get("url", "?")
+            print(f"  Warning: skipping human pick {url_dbg}: {exc}")
+    if human_pick_count > 0:
+        print(f"  Added {human_pick_count} human-picked entr{'y' if human_pick_count == 1 else 'ies'} to ecosystem bulletin.")
 
     # --- Semantic dedup: collapse patterns with identical prompt_template ---
     # Rationale: forks inheriting an unmodified README produce identical pattern

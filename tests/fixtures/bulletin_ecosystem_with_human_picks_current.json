@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-05-22T00:00:00+00:00",
+  "source_count": 3,
+  "repos": [
+    {
+      "name": "test-repo",
+      "owner": "test-org",
+      "url": "https://github.com/test-org/test-repo",
+      "description": "A legal-AI tool",
+      "license": "AGPL-3.0",
+      "inferred_jurisdiction": "Unknown",
+      "inferred_capabilities": ["contract_review"],
+      "last_activity": "2026-05-15T00:00:00+00:00",
+      "stars": 45,
+      "fork_count": 5,
+      "is_active": true,
+      "source_type": "github_scanned"
+    },
+    {
+      "name": "example-curated-test",
+      "owner": "example-curated.test",
+      "url": "https://example-curated.test/",
+      "description": "Updated OG Description.",
+      "license": "(proprietary)",
+      "inferred_jurisdiction": "UK",
+      "inferred_capabilities": [],
+      "last_activity": null,
+      "stars": null,
+      "fork_count": null,
+      "is_active": null,
+      "source_type": "human_picked",
+      "topic": "Curated source for testing (updated)",
+      "notes_curatorial": "New curatorial notes — replaced previous version.",
+      "added_date": "2026-04-15",
+      "tags": ["open-core", "test-fixture", "new-tag"],
+      "curator": "Michele Loi"
+    },
+    {
+      "name": "another-curated-com",
+      "owner": "another-curated.com",
+      "url": "https://another-curated.com/",
+      "description": "A second curated source added in current bulletin.",
+      "license": "Unknown",
+      "inferred_jurisdiction": "Unknown",
+      "inferred_capabilities": [],
+      "last_activity": null,
+      "stars": null,
+      "fork_count": null,
+      "is_active": null,
+      "source_type": "human_picked",
+      "topic": "Second curated source",
+      "notes_curatorial": "Added in current run for diff testing.",
+      "added_date": "2026-05-22",
+      "tags": ["test-fixture"],
+      "curator": "Michele Loi"
+    }
+  ]
+}

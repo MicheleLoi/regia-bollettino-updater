@@ -29,8 +29,40 @@ def _load_bulletin_json(path: Path) -> dict[str, Any] | None:
         return json.load(fh)
 
 
+def _split_eco_by_source_type(
+    bulletin: dict[str, Any] | None,
+    default_source_type: str = "github_scanned",
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Split an ecosystem bulletin into (github_scanned, human_picked) sub-bulletins.
+
+    Forward-compat invariant: a repo entry without `source_type` defaults to
+    `github_scanned` — without this, the first diff after the v1.0.0 → v1.1.0
+    upgrade would misclassify every previous entry as human-picked (because
+    .previous.json files written by v1.0.0 lack the field entirely).
+
+    Returns (None, None) if the input bulletin is None (no previous file).
+    """
+    if bulletin is None:
+        return None, None
+    gh_repos: list[dict[str, Any]] = []
+    hp_repos: list[dict[str, Any]] = []
+    for r in bulletin.get("repos", []):
+        src = r.get("source_type", default_source_type)
+        if src == "human_picked":
+            hp_repos.append(r)
+        else:
+            gh_repos.append(r)
+    return {"repos": gh_repos}, {"repos": hp_repos}
+
+
 def _diff_ecosystems(prev: dict[str, Any] | None, curr: dict[str, Any]) -> dict[str, Any]:
-    """Compute a structured diff between previous and current ecosystem bulletins."""
+    """Compute a structured diff between previous and current ecosystem bulletins.
+
+    Watches GitHub-scanned-style fields (description, license, jurisdiction,
+    capabilities, is_active, stars). For a human-picks-focused diff, see
+    `_diff_eco_human_picks` which watches different fields (topic, tags,
+    notes_curatorial).
+    """
     if prev is None:
         return {"added": curr.get("repos", []), "removed": [], "changed": [], "unchanged": []}
 
@@ -50,9 +82,41 @@ def _diff_ecosystems(prev: dict[str, Any] | None, curr: dict[str, Any]) -> dict[
                           "inferred_capabilities", "is_active"):
                 if curr_r.get(field) != prev_r.get(field):
                     diffs[field] = {"prev": prev_r.get(field), "curr": curr_r.get(field)}
-            stars_delta = curr_r.get("stars", 0) - prev_r.get("stars", 0)
+            stars_delta = (curr_r.get("stars") or 0) - (prev_r.get("stars") or 0)
             if abs(stars_delta) >= 10:
                 diffs["stars_delta"] = stars_delta
+            if diffs:
+                changed.append({"repo": k, "diffs": diffs})
+            else:
+                unchanged.append(k)
+
+    return {"added": added, "removed": removed, "changed": changed, "unchanged": unchanged}
+
+
+def _diff_eco_human_picks(prev: dict[str, Any] | None, curr: dict[str, Any]) -> dict[str, Any]:
+    """Compute a structured diff for the human-picked subset of the ecosystem bulletin.
+
+    Watches curatorial fields (topic, tags, notes_curatorial) plus `description`
+    (which reflects og:description and may change if the source site updates).
+    """
+    if prev is None:
+        return {"added": curr.get("repos", []), "removed": [], "changed": [], "unchanged": []}
+
+    prev_by_key = {f"{r['owner']}/{r['name']}": r for r in prev.get("repos", [])}
+    curr_by_key = {f"{r['owner']}/{r['name']}": r for r in curr.get("repos", [])}
+
+    added = [r for k, r in curr_by_key.items() if k not in prev_by_key]
+    removed = [r for k, r in prev_by_key.items() if k not in curr_by_key]
+    changed = []
+    unchanged = []
+
+    for k, curr_r in curr_by_key.items():
+        if k in prev_by_key:
+            prev_r = prev_by_key[k]
+            diffs: dict[str, Any] = {}
+            for field in ("topic", "tags", "notes_curatorial", "description"):
+                if curr_r.get(field) != prev_r.get(field):
+                    diffs[field] = {"prev": prev_r.get(field), "curr": curr_r.get(field)}
             if diffs:
                 changed.append({"repo": k, "diffs": diffs})
             else:
@@ -81,11 +145,12 @@ def _diff_patterns(prev: dict[str, Any] | None, curr: dict[str, Any]) -> dict[st
 
 
 def _print_eco_diff(diff: dict[str, Any]) -> None:
+    """Print the github_scanned subset of the ecosystem diff."""
     added = diff["added"]
     removed = diff["removed"]
     changed = diff["changed"]
 
-    print("\n=== ECOSYSTEM DIFF ===")
+    print("\n=== ECOSYSTEM DIFF (github_scanned) ===")
     if added:
         print(f"  + ADDED ({len(added)} repo{'s' if len(added) != 1 else ''}):")
         for r in added:
@@ -100,6 +165,49 @@ def _print_eco_diff(diff: dict[str, Any]) -> None:
             print(f"      {c['repo']}:")
             for field, delta in c["diffs"].items():
                 print(f"        {field}: {delta['prev']!r} → {delta['curr']!r}")
+    if not added and not removed and not changed:
+        print("  (no changes)")
+
+
+def _print_eco_diff_human_picks(diff: dict[str, Any]) -> None:
+    """Print the human-picked subset of the ecosystem diff.
+
+    Shows curator metadata (`topic`, `notes_curatorial` truncated) on ADDED
+    entries so the founder confirms visually that the curated picks landed
+    correctly.
+    """
+    added = diff["added"]
+    removed = diff["removed"]
+    changed = diff["changed"]
+
+    print("\n=== HUMAN PICKS DIFF (curated by founder) ===")
+    if added:
+        print(f"  + ADDED ({len(added)} pick{'s' if len(added) != 1 else ''}):")
+        for r in added:
+            topic = r.get("topic") or "(no topic)"
+            url = r.get("url", "")
+            print(f"      {url}")
+            print(f"        topic: {topic}")
+            notes = r.get("notes_curatorial") or ""
+            if notes:
+                first_line = notes.strip().splitlines()[0]
+                snippet = first_line[:120]
+                print(f"        notes : {snippet}{'...' if len(first_line) > 120 else ''}")
+            tags = r.get("tags") or []
+            if tags:
+                print(f"        tags  : {', '.join(tags)}")
+    if removed:
+        print(f"  - REMOVED ({len(removed)} pick{'s' if len(removed) != 1 else ''}):")
+        for r in removed:
+            print(f"      {r.get('url') or r.get('owner', '')}")
+    if changed:
+        print(f"  ~ CHANGED ({len(changed)} pick{'s' if len(changed) != 1 else ''}):")
+        for c in changed:
+            print(f"      {c['repo']}:")
+            for field, delta in c["diffs"].items():
+                prev_repr = repr(delta['prev'])[:80]
+                curr_repr = repr(delta['curr'])[:80]
+                print(f"        {field}: {prev_repr} → {curr_repr}")
     if not added and not removed and not changed:
         print("  (no changes)")
 
@@ -198,6 +306,7 @@ def run(config_path: str = "config.yaml") -> bool:
     warn_pct = cfg["threshold_policy"]["warn_repos_changed_pct"]
     warn_pat_count = cfg["threshold_policy"]["warn_new_patterns_count"]
     warn_skl_count = cfg["threshold_policy"].get("warn_skills_changed_count", 3)
+    warn_hp_count = cfg["threshold_policy"].get("warn_human_picks_changed_count", 3)
 
     if not eco_path.exists() or not pat_path.exists():
         print("Error: bulletin files not found. Run `updater build` first.")
@@ -215,11 +324,21 @@ def run(config_path: str = "config.yaml") -> bool:
     prev_pat = _load_bulletin_json(pat_prev_path)
     prev_skl = _load_bulletin_json(skl_prev_path)
 
-    eco_diff = _diff_ecosystems(prev_eco, curr_eco)
+    # Split ecosystem bulletins by source_type so diffs / threshold gates
+    # operate per-track. Forward-compat invariant: entries without source_type
+    # in the previous bulletin default to 'github_scanned' (otherwise the
+    # first diff after v1.0.0 → v1.1.0 upgrade would misclassify all previous
+    # entries as human-picked).
+    prev_eco_gh, prev_eco_hp = _split_eco_by_source_type(prev_eco)
+    curr_eco_gh, curr_eco_hp = _split_eco_by_source_type(curr_eco)
+
+    eco_diff = _diff_ecosystems(prev_eco_gh, curr_eco_gh or {"repos": []})
+    eco_diff_hp = _diff_eco_human_picks(prev_eco_hp, curr_eco_hp or {"repos": []})
     pat_diff = _diff_patterns(prev_pat, curr_pat)
     skl_diff = _diff_skills(prev_skl, curr_skl) if curr_skl is not None else {"added": [], "removed": [], "changed": []}
 
     _print_eco_diff(eco_diff)
+    _print_eco_diff_human_picks(eco_diff_hp)
     _print_pat_diff(pat_diff)
     _print_skl_diff(skl_diff)
 
@@ -234,20 +353,36 @@ def run(config_path: str = "config.yaml") -> bool:
         print(f"\nSchema validation FAILED: {exc}")
         sys.exit(1)
 
-    # Threshold checks
-    total_repos = len(curr_eco.get("repos", [])) if curr_eco else 0
-    changed_count = len(eco_diff["added"]) + len(eco_diff["removed"]) + len(eco_diff["changed"])
-    changed_pct = (changed_count / total_repos * 100) if total_repos > 0 else 0
+    # Threshold checks.
+    # For github_scanned ecosystem: percentage-based threshold (the set is large
+    # ~900+ forks, so absolute count is noisy). For human_picked: absolute count
+    # threshold (the set is small, expected < few dozen entries, so percentage
+    # would over-trigger).
+    gh_total = len(curr_eco_gh.get("repos", [])) if curr_eco_gh else 0
+    gh_changed_count = (
+        len(eco_diff["added"]) + len(eco_diff["removed"]) + len(eco_diff["changed"])
+    )
+    gh_changed_pct = (gh_changed_count / gh_total * 100) if gh_total > 0 else 0
+
+    hp_changed_count = (
+        len(eco_diff_hp["added"]) + len(eco_diff_hp["removed"]) + len(eco_diff_hp["changed"])
+    )
+
     new_patterns_count = len(pat_diff["added"])
     total_skills = len(curr_skl.get("skills", [])) if curr_skl else 0
     skill_changed_count = len(skl_diff["added"]) + len(skl_diff["removed"]) + len(skl_diff["changed"])
     skill_changed_pct = (skill_changed_count / total_skills * 100) if total_skills > 0 else 0
 
     warnings: list[str] = []
-    if changed_pct > warn_pct:
+    if gh_changed_pct > warn_pct:
         warnings.append(
-            f"WARNING: {changed_pct:.0f}% of repos changed "
+            f"WARNING: {gh_changed_pct:.0f}% of github_scanned repos changed "
             f"(threshold: {warn_pct}%)"
+        )
+    if hp_changed_count > warn_hp_count:
+        warnings.append(
+            f"WARNING: {hp_changed_count} human pick change(s) "
+            f"(threshold: {warn_hp_count} absolute)"
         )
     if new_patterns_count > warn_pat_count:
         warnings.append(

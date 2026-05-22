@@ -29,6 +29,8 @@ from src.scan import (
     _empty_state,
     STATE_SCHEMA_VERSION,
     seed_state_from_raw,
+    _parse_html_meta,
+    _fetch_human_pick,
 )
 
 
@@ -674,3 +676,113 @@ def test_run_schema_mismatch_triggers_full_scan(tmp_path):
     assert reloaded["schema_version"] == STATE_SCHEMA_VERSION
     # Warning was issued
     assert any("schema_version mismatch" in str(w.message) for w in caught)
+
+
+# ---------------------------------------------------------------------------
+# _parse_html_meta (human_picks support)
+# ---------------------------------------------------------------------------
+
+def _load_html_fixture(name: str) -> str:
+    """Load an HTML fixture from tests/fixtures/html_samples/."""
+    fixtures_dir = Path(__file__).parent / "fixtures" / "html_samples"
+    with open(fixtures_dir / name, encoding="utf-8") as fh:
+        return fh.read()
+
+
+def test_parse_html_meta_extracts_og_tags():
+    """A page with full og:* metadata should yield all four og: keys + title + description."""
+    html = _load_html_fixture("full_og.html")
+    meta = _parse_html_meta(html)
+    assert meta.get("og:title") == "OG Title Value"
+    assert meta.get("og:description", "").startswith("OG Description")
+    assert meta.get("og:image") == "https://example-curated.test/og-image.png"
+    assert meta.get("og:site_name") == "Example Site Name"
+    assert "Full OG Page" in meta.get("title", "")
+    assert "Meta description" in meta.get("description", "")
+
+
+def test_parse_html_meta_handles_missing_tags():
+    """A page with only <title> should yield 'title' and nothing else."""
+    html = _load_html_fixture("bare_title_only.html")
+    meta = _parse_html_meta(html)
+    assert meta.get("title") == "Bare Title Only Sample"
+    assert "og:title" not in meta
+    assert "description" not in meta
+
+
+def test_parse_html_meta_malformed_html_does_not_crash():
+    """Malformed HTML should yield (at most) a partial dict, never raise."""
+    html = _load_html_fixture("malformed.html")
+    meta = _parse_html_meta(html)
+    # bs4 with html.parser is permissive; the title MAY be extracted partially or not at all.
+    # Either way the function must not raise.
+    assert isinstance(meta, dict)
+
+
+def test_parse_html_meta_empty_string():
+    """Empty input returns empty dict, no crash."""
+    assert _parse_html_meta("") == {}
+
+
+# ---------------------------------------------------------------------------
+# _fetch_human_pick (human_picks support)
+# ---------------------------------------------------------------------------
+
+def test_fetch_human_pick_success():
+    """A successful fetch returns fetch_status='ok' with parsed og: meta."""
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.text = (
+        '<html><head>'
+        '<title>Test Page</title>'
+        '<meta property="og:title" content="OG Title">'
+        '<meta property="og:description" content="OG Desc">'
+        '</head><body></body></html>'
+    )
+    mock_client = MagicMock()
+    mock_client.get.return_value = mock_response
+
+    entry = {"url": "https://example-curated.test/", "topic": "Test Curated Source"}
+    result = _fetch_human_pick(mock_client, entry)
+
+    assert result["url"] == "https://example-curated.test/"
+    assert result["fetch_status"] == "ok"
+    assert result["meta"].get("og:title") == "OG Title"
+    assert result["meta"].get("og:description") == "OG Desc"
+    assert result["config_entry"] == entry
+    assert "fetched_at" in result
+
+
+def test_fetch_human_pick_network_failure():
+    """On 503 exhausting retries, returns fetch_status='failed' with empty meta — entry preserved."""
+    mock_response = MagicMock()
+    mock_response.status_code = 503
+    mock_response.text = ""
+    mock_response.headers = {}
+    mock_client = MagicMock()
+    mock_client.get.return_value = mock_response
+
+    entry = {"url": "https://unresponsive.test/", "topic": "Unresponsive"}
+    with patch("src.scan.time.sleep"):  # skip retry sleeps in test
+        result = _fetch_human_pick(mock_client, entry)
+
+    assert result["fetch_status"] == "failed"
+    assert result["meta"] == {}
+    assert result["url"] == "https://unresponsive.test/"
+    assert result["config_entry"] == entry
+
+
+def test_fetch_human_pick_404_no_retry():
+    """A 404 (non-retriable) returns failed immediately with empty meta."""
+    mock_response = MagicMock()
+    mock_response.status_code = 404
+    mock_response.text = ""
+    mock_client = MagicMock()
+    mock_client.get.return_value = mock_response
+
+    entry = {"url": "https://gone.test/missing-page", "topic": "Gone"}
+    with patch("src.scan.time.sleep"):
+        result = _fetch_human_pick(mock_client, entry)
+
+    assert result["fetch_status"] == "failed"
+    assert result["meta"] == {}

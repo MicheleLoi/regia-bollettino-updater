@@ -76,5 +76,27 @@
         "license": "Apache-2.0"
       }
     }
+  ],
+  "human_picks_raw": [
+    {
+      "url": "https://example-curated.test/",
+      "fetched_at": "2026-04-15T10:30:00+00:00",
+      "fetch_status": "ok",
+      "meta": {
+        "title": "Example Curated Source",
+        "og:title": "Example Curated Source — Legal AI Workspace",
+        "og:description": "Open-core legal AI workspace for managed legal services. Contract review and document drafting tools.",
+        "og:site_name": "Example Curated"
+      },
+      "config_entry": {
+        "url": "https://example-curated.test/",
+        "topic": "Curated source for testing",
+        "notes": "Synthetic test fixture entry — represents a human-picked open-core legal AI source.",
+        "added_date": "2026-04-15",
+        "tags": ["open-core", "test-fixture", "legal-ai"],
+        "inferred_jurisdiction": "UK",
+        "license": "(proprietary)"
+      }
+    }
   ]
 }
