@@ -164,7 +164,7 @@ def _print_eco_diff(diff: dict[str, Any]) -> None:
         for c in changed:
             print(f"      {c['repo']}:")
             for field, delta in c["diffs"].items():
-                print(f"        {field}: {delta['prev']!r} → {delta['curr']!r}")
+                print(f"        {field}: {delta['prev']!r} -> {delta['curr']!r}")
     if not added and not removed and not changed:
         print("  (no changes)")
 
@@ -207,7 +207,7 @@ def _print_eco_diff_human_picks(diff: dict[str, Any]) -> None:
             for field, delta in c["diffs"].items():
                 prev_repr = repr(delta['prev'])[:80]
                 curr_repr = repr(delta['curr'])[:80]
-                print(f"        {field}: {prev_repr} → {curr_repr}")
+                print(f"        {field}: {prev_repr} -> {curr_repr}")
     if not added and not removed and not changed:
         print("  (no changes)")
 
@@ -262,7 +262,7 @@ def _print_skl_diff(diff: dict[str, Any]) -> None:
         for c in changed:
             print(f"      {c['skill']}:")
             for field, delta in c["diffs"].items():
-                print(f"        {field}: {delta['prev']!r} → {delta['curr']!r}")
+                print(f"        {field}: {delta['prev']!r} -> {delta['curr']!r}")
     if not added and not removed and not changed:
         print("  (no changes)")
 
@@ -277,7 +277,7 @@ def _print_pat_diff(diff: dict[str, Any]) -> None:
         print(f"  + ADDED ({len(added)} pattern{'s' if len(added) != 1 else ''}):")
         for p in added:
             print(f"      [{p.get('extraction_confidence')}] {p.get('task_name')} "
-                  f"← {p.get('source_repo')}")
+                  f"<- {p.get('source_repo')}")
     if removed:
         print(f"  - REMOVED ({len(removed)}):")
         for p in removed:
