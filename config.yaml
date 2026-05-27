@@ -104,3 +104,125 @@ human_picks:
     tags: [open-core, uk, managed-legal-services, pattern-validation]
     inferred_jurisdiction: UK
     license: "(proprietary)"
+
+  - url: https://legaldatahunter.com/
+    topic: "Multi-jurisdiction legal corpus indexing (18M doc, 110+ paesi, MCP server)"
+    notes: |
+      Layer di infrastruttura dati: indicizza fonti legali primarie
+      (giurisprudenza, legislazione, regolamenti) cross-jurisdiction. Espone
+      l'intero dataset via MCP server. Italia coperta 22/25 fonti.
+      Founder: Zacharie (zacharie@goodlegal.fr).
+
+      Modello open-core: i dati legali sottostanti sono pubblici/gratuiti;
+      LDH si fa pagare per il servizio di standardizzazione hostato. Gli
+      script di raccolta + normalizzazione sono pubblicati AGPL-3.0 su
+      worldwidelaw/legal-sources (244 stars). Script italiani gia'
+      presenti: CassazioneCivile/Lavoro/Tributaria, ConsiglioDiStato,
+      CorteCostituzionale, GarantePrivacy, GazzettaUfficiale, AGCM, AGCOM,
+      ARERA, CONSOB, AgenziaEntrate, BDP-Giustizia e altri.
+
+      Tre modi di accedere: (1) Free tier API 20 req/giorno $0;
+      (2) self-host degli script AGPL su propria infrastruttura
+      (license-coerente con plugin AGPL, no fee LDH); (3) Dev/Pro tier
+      API $39-104/mo per uso intenso senza ops. Enterprise on-premise
+      1000 EUR+/mo.
+    added_date: 2026-05-23
+    tags: [data-infrastructure, multi-jurisdiction, mcp-server, agpl-scripts-open, integration-target]
+    inferred_jurisdiction: EU
+    license: "(API proprietary; worldwidelaw/legal-sources scripts AGPL-3.0)"
+
+  - url: https://lawve.ai/en
+    topic: "Hub skill legali AI cross-jurisdiction (partnership Anthropic ufficiale)"
+    notes: |
+      Marketplace/catalogo curato di skill legali AI (formato SKILL.md
+      compatibile Claude/ChatGPT/Gemini). Rebrand recente Lawvable -> Lawve AI
+      con partnership Anthropic dichiarata: canale ufficiale di distribuzione
+      skill legali per ecosistema Anthropic. Licenze accettate: MIT, Apache
+      2.0, AGPL, others. Authors da Baker McKenzie, Clifford Chance, Simmons
+      & Simmons, Capgemini, Maastricht University. Catalogo italiano
+      attualmente vuoto -- opportunita' di country lead. Founders: Malik
+      Taiar + Antoine Louis. Contribuzione community via GitHub.
+    added_date: 2026-05-23
+    tags: [distribution-hub, anthropic-partnership, multi-vendor-ai, italian-catalog-empty, distribution-target]
+    inferred_jurisdiction: EU
+    license: "(proprietary platform; single skill licensable individually)"
+
+  - url: https://micheleloi.pro/beccaria/
+    topic: "BeccarIA — skill legal-AI per avvocato italiano (workflow layer RegIA, AGPL)"
+    notes: |
+      Plugin Claude pubblicato dal curator stesso di questo bollettino
+      (Michele Loi, RegIA). Bundle modulare di sei skill italiane:
+      verifica-fonti (live WebFetch su 10+ registri authoritative IT/EU),
+      catalogo, ecosystem-scout (la skill che sta leggendo ora questa
+      entry), skill-installer, adattamento-italiano, pattern-extractor.
+      Workflow layer IT-specific sopra ecosistemi dati (es. Legal Data
+      Hunter) e hub di distribuzione skill (es. Lawve AI).
+      Repo source: github.com/MicheleLoi/legal-tech-cowork.
+
+      Self-reference editoriale: il bollettino include BeccarIA per
+      coerenza — l'avvocato che interroga "che strumenti legal-AI esistono
+      per Italia?" deve trovare anche lo strumento che sta usando per
+      interrogare. Il curator e' lo stesso founder dello strumento,
+      dichiarato apertamente. AGPL-3.0 puro: derivate devono mantenere AGPL.
+    added_date: 2026-05-23
+    tags: [italian-niche, workflow-skill-bundle, agpl-pure, regia-suite, self-reference]
+    inferred_jurisdiction: IT
+    license: AGPL-3.0-only
+
+  - url: https://bettercallclaude.it/
+    topic: "BetterCallClaude Italia — 20 agenti legal AI per avvocato italiano (fork IT dedicato di BCC, AGPL dichiarata)"
+    notes: |
+      Adattamento italiano dedicato di BetterCallClaude (Federico Cesconi,
+      fedec65 — stesso publisher del BCC Svizzero multilingue
+      fedec65/bettercallmitch). Repo fresco creato 2026-05-19, ultimo push
+      2026-05-24. Brand position: "Un team di avvocati AI. Nato per
+      l'Italia. Dentro Claude".
+
+      Features dichiarate (sito + README):
+      - 20 agenti legali specializzati (ricerca giuridica, strategia,
+        compliance, redazione atti)
+      - Copertura 20 regioni italiane + livello nazionale
+      - 6 connettori MCP a banche dati ufficiali italiane (Cassazione,
+        Normattiva, Gazzetta Ufficiale)
+      - 30 slash command personalizzati
+      - Privacy-first: elaborazione LLM locale con Ollama (no cloud calls)
+      - GDPR + Codice Privacy compliant by design
+      - Audience target: avvocati italiani (Foro Milano/Roma/Torino,
+        civilisti)
+
+      Repo: github.com/fedec65/bettercallclaude_italia
+      Distinct dall'entry scanned-ecosystem fedec65/bettercallmitch (Swiss
+      multilingue de/fr/it/en, Unknown jurisdiction per heuristic gap) —
+      bettercallclaude_italia e' il branch italiano dedicato, repo
+      separato + struttura .claude-plugin con MCP connectors IT-specific.
+
+      AVVISO LICENSE GAP (importante per studio legale che valuta uso):
+      sito dichiara "AGPL v3 Open Source" ma il repo GitHub NON ha un
+      file LICENSE al root (verifica `gh api repos/fedec65/bettercallclaude_italia/contents/LICENSE`
+      → 404). License SPDX in metadata `null`. Implicazione legale:
+      senza LICENSE file esplicito il codice e' default proprietario;
+      l'avvocato che vuole installare/derivare dovrebbe chiedere al
+      maintainer chiarimento + commit di un file LICENSE prima di uso
+      commerciale per il proprio studio. Risolvibile in 5 minuti dal
+      maintainer ma non risolto al 2026-05-27.
+
+      Posizionamento vs concorrenza diretta: pattern complementare a
+      BeccarIA (BeccarIA = workflow layer + adapt italiano di skill
+      terze; BetterCallClaude Italia = stand-alone agentic platform
+      italiana gia' adapted). Overlap parziale su audience (avvocato
+      italiano). Differenza scope: BCC Italia offre 20 agenti integrati
+      bundled; BeccarIA offre infrastruttura adattamento+verifica per
+      skill di terzi che l'avvocato sceglie. L'avvocato puo' usare
+      entrambi.
+
+      Reputation indicators al 2026-05-27: 0 stars, 0 forks, sole-dev
+      (Cesconi). Threshold standard scan-tier fallirebbe (richiede
+      ≥50 stars o whitelist publisher); incluso come human_pick per
+      decisione editoriale founder (Michele Loi) — la reputation indiretta
+      del publisher (BCC Swiss precedente) + l'IT-focus immediato lo
+      rendono signal rilevante per l'avvocato italiano nonostante
+      l'assenza di validazione community attuale.
+    added_date: 2026-05-27
+    tags: [italian-niche, agentic-legal-ai, agpl-dichiarata, mcp-connectors-italian, privacy-local-ollama, cesconi, license-gap, fresh-2026]
+    inferred_jurisdiction: IT
+    license: "AGPL-3.0-only (dichiarata sul sito; LICENSE file assente nel repo al 2026-05-27)"
