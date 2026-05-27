@@ -69,12 +69,12 @@ def _sftp_backup_and_upload(
     try:
         sftp.stat(remote_path)
         sftp.rename(remote_path, remote_prev)
-        print(f"  Backed up remote {remote_path} → {remote_prev}")
+        print(f"  Backed up remote {remote_path} -> {remote_prev}")
     except FileNotFoundError:
         pass  # No existing file; no backup needed
 
     sftp.put(str(local_path), remote_path)
-    print(f"  Uploaded {local_path.name} → {remote_path}")
+    print(f"  Uploaded {local_path.name} -> {remote_path}")
     sftp.close()
 
 
@@ -84,7 +84,7 @@ def _verify_remote(url: str, schema_class: type) -> None:
         resp = httpx.get(url, timeout=15.0)
         resp.raise_for_status()
         schema_class.model_validate_json(resp.text)
-        print(f"  Verified: {url} → HTTP {resp.status_code}, schema OK")
+        print(f"  Verified: {url} -> HTTP {resp.status_code}, schema OK")
     except httpx.HTTPError as exc:
         print(f"  Warning: HTTP verification failed for {url}: {exc}")
     except Exception as exc:

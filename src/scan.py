@@ -522,7 +522,7 @@ def seed_state_from_raw(
     total = sum(len(v) for v in state["seen_forks"].values())
     print(
         f"State seeded from {raw_path.name}: "
-        f"{total} fork ID(s) across {len(state['seen_forks'])} seed(s) → {state_path}"
+        f"{total} fork ID(s) across {len(state['seen_forks'])} seed(s) -> {state_path}"
     )
 
 

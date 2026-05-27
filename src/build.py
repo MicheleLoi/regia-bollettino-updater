@@ -392,7 +392,7 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     if dedup_dropped > 0:
         print(
             f"  Dedup: {dedup_dropped} duplicate pattern(s) collapsed "
-            f"({len(all_patterns)} → {len(deduped_patterns)})."
+            f"({len(all_patterns)} -> {len(deduped_patterns)})."
         )
     all_patterns = deduped_patterns
 
