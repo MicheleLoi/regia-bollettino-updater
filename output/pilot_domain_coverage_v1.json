@@ -1,0 +1,245 @@
+[
+  {
+    "pattern_id": "legal_civile_contratti_trasporto_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "trasporto",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi contratto di trasporto",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_contratti_compravendita_immobiliare_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "compravendita_immobiliare",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi compravendita immobiliare",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_contratti_locazione_abitativa_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "locazione_abitativa",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi contratto locazione abitativa",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_contratti_appalto_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "appalto",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi contratto di appalto",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_civile_contratti_mandato_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "mandato",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi contratto di mandato",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_civile_contratti_agenzia_001",
+    "legal_area": "civile",
+    "topic_primary": "contratti",
+    "topic_sub": "agenzia",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi contratto di agenzia",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_civile_responsabilita_rc_auto_001",
+    "legal_area": "civile",
+    "topic_primary": "responsabilita",
+    "topic_sub": "rc_auto",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi sinistro RC auto",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_responsabilita_professionale_medica_001",
+    "legal_area": "civile",
+    "topic_primary": "responsabilita",
+    "topic_sub": "professionale_medica",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi responsabilità professionale medica",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_civile_responsabilita_danno_biologico_001",
+    "legal_area": "civile",
+    "topic_primary": "responsabilita",
+    "topic_sub": "danno_biologico",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi danno biologico permanente",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_civile_famiglia_separazione_consensuale_001",
+    "legal_area": "civile",
+    "topic_primary": "famiglia",
+    "topic_sub": "separazione_consensuale",
+    "jurisdiction": "IT",
+    "human_title_hint": "Verifica condizioni separazione consensuale",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_famiglia_affidamento_minori_001",
+    "legal_area": "civile",
+    "topic_primary": "famiglia",
+    "topic_sub": "affidamento_minori",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi affidamento minori (interesse del minore)",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_successioni_testamento_001",
+    "legal_area": "civile",
+    "topic_primary": "successioni",
+    "topic_sub": "testamento",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi testamento (validità + impugnazione)",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_civile_successioni_quota_legittima_001",
+    "legal_area": "civile",
+    "topic_primary": "successioni",
+    "topic_sub": "quota_legittima",
+    "jurisdiction": "IT",
+    "human_title_hint": "Calcolo quota legittima eredi",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_penale_querela_redazione_001",
+    "legal_area": "penale",
+    "topic_primary": "querela",
+    "topic_sub": "redazione",
+    "jurisdiction": "IT",
+    "human_title_hint": "Redazione querela di parte",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_penale_procedibilita_ufficio_001",
+    "legal_area": "penale",
+    "topic_primary": "procedibilita",
+    "topic_sub": "ufficio",
+    "jurisdiction": "IT",
+    "human_title_hint": "Verifica procedibilità d'ufficio vs querela",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_amministrativo_ricorso_tar_001",
+    "legal_area": "amministrativo",
+    "topic_primary": "ricorso",
+    "topic_sub": "tar",
+    "jurisdiction": "IT",
+    "human_title_hint": "Ricorso TAR (termini + struttura atto)",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_amministrativo_accesso_atti_241_001",
+    "legal_area": "amministrativo",
+    "topic_primary": "accesso_atti",
+    "topic_sub": "L_241_1990",
+    "jurisdiction": "IT",
+    "human_title_hint": "Istanza accesso atti L. 241/1990",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_tributario_ricorso_ctp_001",
+    "legal_area": "tributario",
+    "topic_primary": "ricorso",
+    "topic_sub": "commissione_tributaria_provinciale",
+    "jurisdiction": "IT",
+    "human_title_hint": "Ricorso commissione tributaria provinciale",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_tributario_avviso_accertamento_001",
+    "legal_area": "tributario",
+    "topic_primary": "accertamento",
+    "topic_sub": "avviso",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi avviso di accertamento Agenzia Entrate",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_lavoro_licenziamento_giusta_causa_001",
+    "legal_area": "lavoro",
+    "topic_primary": "licenziamento",
+    "topic_sub": "giusta_causa",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi licenziamento per giusta causa",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_lavoro_demansionamento_001",
+    "legal_area": "lavoro",
+    "topic_primary": "demansionamento",
+    "topic_sub": "generale",
+    "jurisdiction": "IT",
+    "human_title_hint": "Analisi demansionamento (art. 2103 cc)",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_gdpr_compliance_dpia_obbligatorieta_001",
+    "legal_area": "gdpr_compliance",
+    "topic_primary": "dpia",
+    "topic_sub": "obbligatorieta",
+    "jurisdiction": "UE-IT",
+    "human_title_hint": "Decisione obbligatorietà DPIA (art. 35 GDPR)",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_gdpr_compliance_breach_response_72h_001",
+    "legal_area": "gdpr_compliance",
+    "topic_primary": "breach_response",
+    "topic_sub": "notifica_72h",
+    "jurisdiction": "UE-IT",
+    "human_title_hint": "Breach response notifica 72h Garante",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_gdpr_compliance_clausole_dpa_001",
+    "legal_area": "gdpr_compliance",
+    "topic_primary": "dpa",
+    "topic_sub": "clausole_contratto",
+    "jurisdiction": "UE-IT",
+    "human_title_hint": "Analisi clausole DPA contratto trattamento",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_generic_parere_preventivo_struttura_001",
+    "legal_area": "generic",
+    "topic_primary": "parere",
+    "topic_sub": "preventivo_struttura",
+    "jurisdiction": "IT",
+    "human_title_hint": "Struttura parere preventivo (quesito-premesse-analisi-conclusioni)",
+    "priority": "high"
+  },
+  {
+    "pattern_id": "legal_generic_opinion_letter_struttura_001",
+    "legal_area": "generic",
+    "topic_primary": "opinion_letter",
+    "topic_sub": "struttura",
+    "jurisdiction": "IT",
+    "human_title_hint": "Struttura opinion letter (per cliente corporate)",
+    "priority": "medium"
+  },
+  {
+    "pattern_id": "legal_generic_due_diligence_corporate_001",
+    "legal_area": "generic",
+    "topic_primary": "due_diligence",
+    "topic_sub": "corporate_basic",
+    "jurisdiction": "IT",
+    "human_title_hint": "Due diligence corporate basic (M&A scope ristretto)",
+    "priority": "medium"
+  }
+]

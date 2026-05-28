@@ -1,0 +1,2660 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-05-28T09:48:55+00:00",
+  "batch_id": "batch_pilot_002_20260528",
+  "patterns": [
+    {
+      "pattern_id": "legal_civile_contratti_trasporto_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "trasporto",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "contratto trasporto merci",
+          "responsabilità vettore",
+          "danni carico",
+          "ritardo consegna",
+          "condizioni generali trasporto",
+          "esonero responsabilità",
+          "sinistro trasporto"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo VIII contratto di trasporto (artt. ~1678-1702 c.c.)",
+          "codice civile, responsabilità civile generale e limite di responsabilità (artt. ~1176-1229 c.c.)",
+          "Codice del Consumo, clausole vessatorie e condizioni generali (capo II titolo I, ~artt. 33-37)",
+          "norme internazionali trasporto — CMR, se vigente nel contratto (convenzione ~1956)"
+        ],
+        "use_case_examples": [
+          "Merce danneggiata al carico o in viaggio — accertamento responsabilità vettore e quantificazione danno",
+          "Ritardo nella consegna con perdita economica del carico — domanda risarcimento e prova del danno",
+          "Clausole di esonero illecite nel contratto trasporto per consumatori — invalidità e rimborso",
+          "Sinistro totale durante il trasporto — confronto tra responsabilità limitata e danni provati"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi responsabilità e danni in contratti trasporto",
+      "reasoning_explanation": "Ti propongo di affrontare il contratto trasporto su tre livelli: verificare innanzitutto gli obblighi del vettore e le cause d'esclusione previste dalla legge; poi controllare se il contratto contiene clausole di limitazione o esonero, e se queste sono valide rispetto al tuo cliente (consumatore o professionista); infine, quantificare il danno documentando la perdita concreta. È uno scheletro che parte dalla norma generale e discende nel fatto specifico.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Qualificazione della parte e del carico",
+          "rationale": "La legge protegge diversamente i consumatori e i professionisti. Stabilire chi è il mittente/destinatario e il valore/natura della merce ti dice quali norme applicare e se esistono limitazioni di responsabilità.",
+          "riferimenti_da_consultare": "definizione di consumatore e professionista nel Codice del Consumo; nozione di trasporto per conto di terzi nel codice civile"
+        },
+        {
+          "step_id": 2,
+          "name": "Identificazione degli obblighi del vettore e delle esclusioni",
+          "rationale": "Il trasportatore è responsabile dei danni al carico, ma la legge prevede cause di esclusione (forza maggiore, difetto insito della merce, imballaggio difettoso). Verificare se l'evento rientra nelle esclusioni ridimensiona la responsabilità.",
+          "riferimenti_da_consultare": "regole sulla responsabilità del vettore e cause di esclusione — sezione contratto trasporto del codice civile"
+        },
+        {
+          "step_id": 3,
+          "name": "Analisi delle clausole limitativa e di esonero nel contratto",
+          "rationale": "Molti contratti trasporto contengono clausole che limitano il risarcimento a una somma fissa o a un valore a tonnellata. Se la clausola è vessatoria o illegittima (soprattutto verso consumatori), puoi contestarla.",
+          "riferimenti_da_consultare": "clausole vessatorie nel Codice del Consumo; limiti di responsabilità — sezione generale obbligazioni e contratti"
+        },
+        {
+          "step_id": 4,
+          "name": "Documentazione e prova del danno",
+          "rationale": "Il danno deve essere provato in concreto: fattura di acquisto della merce, costo di sostituzione, perizie, comunicazioni di reclamo al vettore. Senza documentazione contemporanea, il danno resta contestabile.",
+          "riferimenti_da_consultare": "onere della prova nei contratti civili; modalità di comunicazione del reclamo al vettore — codice civile"
+        },
+        {
+          "step_id": 5,
+          "name": "Quantificazione del danno e interesse",
+          "rationale": "Risarcimento comprende valore della merce + costi diretti (trasporto sostitutivo, magazzino) + danno emergente, ma non lucro cessante salvo specifiche circostanze. Calcolare gli interessi da data del sinistro.",
+          "riferimenti_da_consultare": "criteri di quantificazione del danno da responsabilità civile; disciplina dell'interesse nel codice civile"
+        },
+        {
+          "step_id": 6,
+          "name": "Verifica di termini e prescrizione",
+          "rationale": "Il reclamo al vettore deve essere inoltrato entro termini brevi (spesso 3-8 giorni). La prescrizione dell'azione è breve (spesso 1 anno dal trasporto). Verificare i termini contrattuali e la data di inizio della decadenza.",
+          "riferimenti_da_consultare": "termini di reclamo al vettore e prescrizione — clausole standard e usanza trasporto; disciplina generale della prescrizione"
+        }
+      ],
+      "optional_variations": [
+        "Se il contratto rimanda a una convenzione internazionale (CMR, Convenzione di Varsavia per trasporto aereo), applica le norme internazionali al posto di quelle italiane pure — verifica quale convenzione vincula il trasportatore specifico.",
+        "Se il cliente è consumatore e il trasportatore è un operatore professionale, concentrati sulla validità delle clausole vessatorie (limitazioni di responsabilità, esclusioni) anziché sulla causa di esclusione: una clausola iniqua è nulla indipendentemente dalla forza maggiore.",
+        "Se il danno è da ritardo consegna (non perdita fisica), il calcolo cambia: non è il valore della merce, ma il lucro cessante provato (opportunità commerciale persa) — più difficile da quantificare e provare.",
+        "Se il trasportatore sostiene un difetto di imballaggio, controbatti richiedendo fattura/prova contemporanea dell'imballaggio; spesso il vettore non documenta il difetto prima di ritirare la merce."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_contratti_compravendita_immobiliare_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "compravendita_immobiliare",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "compravendita immobiliare",
+          "consenso e forma contratto",
+          "inadempimento obbligazioni",
+          "vizi della cosa venduta",
+          "garanzia per evizione",
+          "trasferimento della proprietà"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo II della compravendita (artt. ~1470-1510 c.c.)",
+          "codice civile, norme generali sui vizi e sulla responsabilità (artt. ~1476-1497 c.c.)",
+          "codice civile, disciplina della forma nei contratti e della trascrizione (artt. ~1350, 2643-2644 c.c.)",
+          "legge 47/1948, norme sulla trascrizione dei trasferimenti immobiliari e relative garanzie"
+        ],
+        "use_case_examples": [
+          "Risoluzione contratto per inadempimento della controparte nella stipula dell'atto pubblico entro il termine pattuito",
+          "Contestazione di vizi nella cosa venduta (umidità strutturale, difetti costruttivi) e richiesta di riduzione del prezzo",
+          "Controversia su oneri ipotecari non dichiarati dal venditore: accertamento evizione e diritto alla restituzione del prezzo",
+          "Discussione sulla tempestività della notifica dei vizi: verifica del termine massimo e delle eccezioni di buona fede"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Compravendita immobiliare: ciclo di validità e rimedi",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per una compravendita immobiliare. L'idea è partire dalla forma e dalla conclusione del contratto, poi scendere negli obblighi delle parti (consegna, pagamento, garanzie), e infine affrontare gli strumenti di reazione in caso di vizi o inadempimento. È un punto di partenza che puoi adattare al tuo caso: alcuni step potranno essere abbreviati, altri approfonditi in base alle circostanze concrete.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica della forma e della capacità contrattuale",
+          "rationale": "Una compravendita immobiliare deve soddisfare requisiti formali specifici per la validità e l'opponibilità ai terzi. È il presupposto iniziale per ogni valutazione successiva.",
+          "riferimenti_da_consultare": "norme sulla forma dei contratti immobiliari e capacità giuridica delle parti — sezione titolo III codice civile"
+        },
+        {
+          "step_id": 2,
+          "name": "Identificazione delle obbligazioni del venditore",
+          "rationale": "Il venditore è tenuto a trasferire la proprietà libera da oneri, garanzie la cosa, la consegna corretta. Mappiamo che cosa il venditore deve fare concretamente nel tuo caso.",
+          "riferimenti_da_consultare": "obblighi del venditore in materia di trasferimento proprietà e consegna della cosa — capo II compravendita codice civile"
+        },
+        {
+          "step_id": 3,
+          "name": "Identificazione delle obbligazioni dell'acquirente",
+          "rationale": "L'acquirente deve pagare il prezzo alle condizioni concordate e nel termine pattuit. Qui verifichiamo se ci sono contestazioni su tempi, modalità, o importo.",
+          "riferimenti_da_consultare": "obblighi di pagamento e loro estinzione — sezione obligazioni pagamento capo II codice civile"
+        },
+        {
+          "step_id": 4,
+          "name": "Analisi della garanzia per vizi della cosa e per evizione",
+          "rationale": "Se la cosa ha difetti occulti oppure il venditore non aveva il diritto di disporne (evizione), l'acquirente ha diritto a rimedi specifici. Occorre controllare i tempi di denuncia dei vizi.",
+          "riferimenti_da_consultare": "disciplina della garanzia per vizi e dell'evizione — artt. ~1476-1497 sezione garanzie venditore codice civile"
+        },
+        {
+          "step_id": 5,
+          "name": "Verifica della trascrizione e dei vincoli sulla proprietà",
+          "rationale": "La trascrizione del contratto nei registri immobiliari ha effetti di opponibilità verso terzi e tutela l'acquirente. Controlliamo se ci sono ipoteche, pignoramenti, vincoli che il venditore non ha dichiarato.",
+          "riferimenti_da_consultare": "regole sulla trascrizione dei trasferimenti e sulla responsabilità del venditore per oneri non dichiarati — legge 47/1948 e norme codice civile"
+        },
+        {
+          "step_id": 6,
+          "name": "Selezione dello strumento di reazione (riduzione prezzo, risoluzione, danni)",
+          "rationale": "Se c'è un inadempimento o un vizio, l'acquirente (o il venditore) ha vari rimedi: può chiedere il risarcimento, la risoluzione del contratto, oppure una riduzione del prezzo a seconda del tipo di difetto e della gravità.",
+          "riferimenti_da_consultare": "azioni per inadempimento e rimedi nei contratti di compravendita — sezioni responsabilità e risoluzione codice civile"
+        }
+      ],
+      "optional_variations": [
+        "Semplificazione: se il contratto è già concluso e registrato senza contestazioni sulla forma, salta lo step 1 e concentrati subito su vizi e pagamento.",
+        "Approfondimento finanziario: se è coinvolto un mutuo bancario, aggiungi una verifica della cessione del credito da parte della banca e delle clausole di riserva di proprietà fino al pagamento integrale.",
+        "Enfasi sulla trascrizione: se il caso riguarda principalmente diritti su immobili non ancora trascritti o conflitti con creditori del venditore, espandi lo step 5 in una analisi separata della catena titolativa.",
+        "Focus extracontrattuale: se il vizio è stato causato da comportamento ingannevole del venditore, valuta in parallelo un'azione di responsabilità civile oltre alle garanzie contrattuali."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_contratti_locazione_abitativa_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "locazione_abitativa",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "contratto locazione abitativa",
+          "risoluzione contratto affitto",
+          "clausole vessatorie locazione",
+          "morosità conduttore",
+          "diritti inquilino proprietario",
+          "deposito cauzione",
+          "manutenzione immobile affittato"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo III-bis della locazione (artt. ~1571-1627 c.c.)",
+          "Codice del Consumo, disciplina clausole vessatorie nei contratti dei consumatori (capo II titolo I, ~artt. 33-37)",
+          "legge n. 431/1998, disciplina della locazione di immobili urbani ad uso abitativo (artt. ~1-9)"
+        ],
+        "use_case_examples": [
+          "Proprietario intende risolvere contratto per morosità del conduttore oltre tre mesi",
+          "Inquilino contesta clausole ritenute abusive nel contratto di affitto stipulato",
+          "Controversia su manutenzione straordinaria: chi deve sostenere la spesa",
+          "Legittimità della trattenuta del deposito cauzione per danni all'immobile"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi contratti locazione abitativa",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per mappare il tuo caso di locazione abitativa. Cominci dalla qualificazione della parte (consumer o no?) e dalla forma del contratto, poi verifichi il contenuto clausolare rispetto alle norme di protezione, e infine affronti il profilo della controversia (morosità, risoluzione, manutenzione, cauzione). È un punto di partenza per isolare i rischi normativi e le argomentazioni disponibili.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica natura delle parti e applicabilità tutele",
+          "rationale": "Se una parte è consumatore, il contratto è soggetto a tutele aggravate (clausole vessatorie, trasparenza). Se entrambi sono operatori professionali, valgono le regole ordinarie di locazione.",
+          "riferimenti_da_consultare": "Definizione di consumatore — codice civile e Codice del Consumo; disciplina locazione ad uso abitativo — legge 431/1998"
+        },
+        {
+          "step_id": 2,
+          "name": "Qualificazione della forma e contenuti essenziali",
+          "rationale": "La locazione abitativa richiede forma specifica per determinate clausole (durata, canone, obblighi manutenzione). L'assenza o l'ambiguità sono fonti di invalidità o interpretazione contro il redattore.",
+          "riferimenti_da_consultare": "Forma del contratto di locazione e requisiti di certezza — capo III-bis codice civile sulla locazione"
+        },
+        {
+          "step_id": 3,
+          "name": "Screening clausole vessatorie e condizioni di squilibrio",
+          "rationale": "Se una parte è consumatore, le clausole che creano uno squilibrio significativo dei diritti-doveri sono vietate. Anche in contratti tra professionisti, clausole manifestamente irragionevoli possono essere impugnate.",
+          "riferimenti_da_consultare": "Lista grigia e nera delle clausole vessatorie — Codice del Consumo; esoneri da responsabilità abusivi nel codice civile"
+        },
+        {
+          "step_id": 4,
+          "name": "Identificazione della materia della controversia",
+          "rationale": "Ogni tipo di controversia (morosità, manutenzione straordinaria, cauzione, recesso, risoluzione) segue percorsi normativi e probatori diversi. Fissare il punto di frizione è indispensabile.",
+          "riferimenti_da_consultare": "Obblighi del locatario (pagamento, uso conforme) — obblighi del locatore (manutenzione ordinaria, godimento pacifico) — capo III-bis codice civile"
+        },
+        {
+          "step_id": 5,
+          "name": "Valutazione delle difese procedurali e sostanziali",
+          "rationale": "Prima di procedere all'azione (sfratto, risoluzione, risarcimento), verifica i termini di costituzione in mora, le comunicazioni pregresse, e se le condizioni sospensive o risolutive sono state verificate.",
+          "riferimenti_da_consultare": "Costituzione in mora del locatario — termini di preavviso per recesso o risoluzione — capo III-bis codice civile e legge 431/1998"
+        },
+        {
+          "step_id": 6,
+          "name": "Costruzione della strategia probatoria",
+          "rationale": "In locazione abitativa i fatti più critici (stato dell'immobile, rispetto delle manutenzioni, entità dei danni) richiedono documentazione contemporanea. Foto, report, verbali di sopralluogo sono spesso decisivi.",
+          "riferimenti_da_consultare": "Onere della prova — responsabilità per vizi dell'immobile e per inadempimento manutenzione — regole generali codice civile"
+        }
+      ],
+      "optional_variations": [
+        "Focalizzati solo su clausole vessatorie se il cliente è un consumatore che contesta il contratto come abusivo: salta gli step su morosità e manutenzione, concentrati su squilibrio e esoneri.",
+        "Aggiungi una disamina della legge 431/1998 sulla locazione agevolata se il canone è calmierato o se la legge lo richiede per il tipo di immobile (prima casa).",
+        "Se la controversia è già in corso (sfratto, mediazione), costruisci il pattern a partire dagli atti già depositati; gli step 1-2 potranno essere condensati.",
+        "In caso di disputa sulla cauzione, focalizza su vincoli di vincolo, restituzione, decadenza del diritto — scarta gli step generali e approfondisci il profilo tecnico della costituzione del deposito."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_contratti_appalto_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "appalto",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "contratto di appalto",
+          "obblighi appaltatore",
+          "responsabilità committente",
+          "inadempimento appalto",
+          "varianti in corso d'opera",
+          "sospensione lavori",
+          "collaudo e accettazione"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo II contratto d'appalto (artt. ~1655-1677 c.c.)",
+          "codice civile, norme sulla responsabilità contrattuale e inadempimento (artt. ~1218-1229 c.c.)",
+          "codice civile, capo sulla risoluzione del contratto (artt. ~1453-1469 c.c.)"
+        ],
+        "use_case_examples": [
+          "Appaltatore esegue lavori difformemente dal progetto; committente contesta e sospende i pagamenti",
+          "Variante in corso d'opera non concordata formalmente: lite su extra costi e termine esecuzione",
+          "Rifiuto del collaudo preliminare per difetti costruttivi; appaltatore chiede comunque il corrispettivo",
+          "Ritardo nei lavori per carenza di materiali dichiarata da appaltatore; committente richiede penale"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi contratto appalto: diritti e obblighi",
+      "reasoning_explanation": "Ti propongo uno scheletro per analizzare un contratto di appalto dal lato delle responsabilità reciproche. Procediamo dapprima sulla lettura della clausola contrattuale rispetto al quadro legale, poi sull'accertamento dell'inadempimento (se c'è), infine sulla strategia di tutela. È un punto di partenza per separare ciò che il contratto prevede da ciò che la legge impone: spesso fanno la differenza.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Mappatura del contratto vs. codice civile",
+          "rationale": "Devi capire se il contratto modifica, esclude o conferma i diritti/obblighi di legge. Le clausole vessatorie o derogatorie cambiano tutto.",
+          "riferimenti_da_consultare": "articoli sulla natura e forma del contratto d'appalto — codice civile parte generale"
+        },
+        {
+          "step_id": 2,
+          "name": "Identificazione dell'inadempimento (se rilevante)",
+          "rationale": "Accertare se e come l'appaltatore (o il committente) ha violato obblighi: modalità esecuzione, termine, qualità, documentazione.",
+          "riferimenti_da_consultare": "norme sulla responsabilità contrattuale e inadempimento — sezione generale codice civile"
+        },
+        {
+          "step_id": 3,
+          "name": "Analisi delle clausole di sospensione, variante e collaudo",
+          "rationale": "Molte liti nascono da varianti non formalizzate, collaudi rifiutati, o sospensioni senza causa. Chiedi dove il contratto parla di queste situazioni.",
+          "riferimenti_da_consultare": "clausole contrattuali su varianti, collaudo e sospensione dei lavori — regole sulla modifica del contratto di appalto"
+        },
+        {
+          "step_id": 4,
+          "name": "Verifica dei termini e delle penali",
+          "rationale": "Il contratto fissa termine, penali di ritardo, o esclusioni di responsabilità? Vanno verificati sia per forma che per ragionevolezza.",
+          "riferimenti_da_consultare": "clausole penali e termini esecutivi — codice civile disciplina sulla mora e della risoluzione"
+        },
+        {
+          "step_id": 5,
+          "name": "Scelta della strada: danno risarcibile vs. risoluzione",
+          "rationale": "A fronte dell'inadempimento, decidi se agire per il risarcimento del danno specifico, o chiedere la risoluzione del contratto. Hanno presupposti diversi.",
+          "riferimenti_da_consultare": "diritti del creditore in caso di inadempimento — codice civile sezione generale sulla responsabilità"
+        }
+      ],
+      "optional_variations": [
+        "Focus sulla sospensione temporanea senza risoluzione: il committente vuole congelare il cantiere (es. carenza di fondi) senza uscire dal contratto; analizza se è lecita e quali sono i costi di sospensione per l'appaltatore.",
+        "Variante integrativa vs. extra-contrattuale: se c'è stata una variante non concordata per iscritto, valuta se è comunque eseguibile di fatto e se l'appaltatore ha diritto a compenso aggiuntivo via equo compenso.",
+        "Collaudo fallito: focus su chi ha l'onere della prova dei difetti, quali difetti annullano l'accettazione, e se il collaudo preliminare vincolante può essere rifiutato per motivi bagatellari."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_contratti_mandato_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "mandato",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "mandato civile",
+          "revoca mandato",
+          "responsabilità mandatario",
+          "estinzione mandato",
+          "mandato senza rappresentanza",
+          "conflitto interessi mandatario"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo XV del libro IV mandato (~artt. 1703-1730 c.c.)",
+          "codice civile, disciplina generale del contratto (~artt. 1321-1469 c.c.)",
+          "codice civile, responsabilità e obblighi del mandatario (~artt. 1713-1723 c.c.)",
+          "codice civile, estinzione del mandato (~artt. 1724-1730 c.c.)"
+        ],
+        "use_case_examples": [
+          "Lite tra mandante e mandatario per mancato adempimento di istruzioni ricevute nel mandato di gestione immobiliare",
+          "Controversia sulla revoca del mandato e conseguenti danni causati dal mandatario dopo comunicazione di revoca",
+          "Conflitto su obblighi di rendicontazione e restituzione di somme gestite dal mandatario",
+          "Controversia su responsabilità del mandatario per inadempienza o negligenza nell'esecuzione del mandato"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi contratto mandato civile italiano",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per mappare un caso di mandato: partiamo dalla qualificazione del rapporto (mandato con/senza rappresentanza), poi analizziamo gli obblighi delle parti secondo il codice civile, verifichiamo l'estinzione o i vizi di revoca, e infine identifichiamo le conseguenze (responsabilità, risarcimento). È un punto di partenza per distinguere il tuo caso dalle varianti (mandato gratuito vs oneroso, mandato generale vs specifico).",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione tipo di mandato",
+          "rationale": "Il primo passaggio è chiarire se il mandato è con rappresentanza (mandante agisce in giudizio attraverso il mandatario) o senza (mandatario agisce in proprio nome per conto del mandante). Questa distinzione orienta tutta l'analisi di responsabilità e obblighi successiva.",
+          "riferimenti_da_consultare": "Definizione e caratteri del mandato nel codice civile — disciplina generale della rappresentanza volontaria"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica forma e contenuto dell'atto di mandato",
+          "rationale": "Accertare se esiste un atto scritto e quale forma è stata utilizzata (lettera, email, contratto formale). In caso di controversia sulla portata del mandato, il contenuto scritto è fondamentale. Verifica anche se ci sono limitazioni esplicite (ad es. 'solo per vendita immobile') o se il mandato è generale.",
+          "riferimenti_da_consultare": "Forme di conferimento del mandato e limiti imposti dal mandante — codice civile sez. mandato"
+        },
+        {
+          "step_id": 3,
+          "name": "Analisi degli obblighi della parte lesa",
+          "rationale": "Stabilisci chi è la parte danneggiata (mandante o mandatario) e quali sono stati gli obblighi di chi l'ha lesa. Se è il mandatario a essere inadempiente, verifica obblighi di esecuzione fedele, diligenza, rendicontazione. Se è il mandante, verifica obblighi di remuneration (se onoroso) e di cooperazione.",
+          "riferimenti_da_consultare": "Obblighi del mandatario e del mandante — norme generali sulla diligenza, fedeltà e rendicontazione"
+        },
+        {
+          "step_id": 4,
+          "name": "Valutazione dell'inadempienza e del nesso causale",
+          "rationale": "Verifica se la parte obbligata è effettivamente inadempiente (omissione o esecuzione difforme dalle istruzioni) e se il danno è conseguenza diretta dell'inadempienza. Raccogli prove di istruzioni ricevute vs azioni compiute.",
+          "riferimenti_da_consultare": "Principi generali di responsabilità contrattuale e causalità del danno — codice civile disciplina obbligazioni"
+        },
+        {
+          "step_id": 5,
+          "name": "Verifica modalità di estinzione del mandato",
+          "rationale": "Se il mandato è stato revocato (da una o entrambe le parti), accertane la forma, la comunicazione e l'efficacia. La revoca può essere vaticinata ma non comunicata al mandatario, generando responsabilità per azioni compiute dopo la revoca. Importante anche verificare morte, incapacità, o estinzione per scadenza.",
+          "riferimenti_da_consultare": "Cause di estinzione del mandato (revoca, morte, incapacità, scadenza) — codice civile capo XV"
+        },
+        {
+          "step_id": 6,
+          "name": "Quantificazione del danno e relativa documentazione",
+          "rationale": "Sulla base dell'inadempienza accertata, stima il danno (patrimoniale diretto: mancato guadagno, costi aggiuntivi; non patrimoniale in casi specifici). Raccogli tutta la documentazione probatoria: correspondence, rendiconti, perizie, danni quantificati con precisione.",
+          "riferimenti_da_consultare": "Regole sulla risarcibilità del danno nel contratto e criteri di quantificazione — codice civile obbligazioni"
+        },
+        {
+          "step_id": 7,
+          "name": "Impostazione della contestazione o della difesa",
+          "rationale": "A seconda che tu rappresenti il mandante o il mandatario, costruisci la linea argomentativa: contestazione degli obblighi violati, difesa dalle accuse, eccezioni (fatti estintivi, limitazioni di responsabilità, culpa concorrente del mandante).",
+          "riferimenti_da_consultare": "Difese e eccezioni in materia di responsabilità contrattuale — codice civile disciplina generale"
+        }
+      ],
+      "optional_variations": [
+        "Se il mandato è gratuito anziché oneroso: riduci lo standard di diligenza applicabile al mandatario (responsabilità per dolo e colpa grave anziché colpa lieve) e adatta i criteri di rendicontazione",
+        "Se il mandato è generale vs specifico: nel mandato generale la portata è più ampia e gli obblighi del mandante di controllo sono maggiori; nel mandato specifico ogni singola operazione è delimitata",
+        "Se il conflitto riguarda solo rendicontazione vs esecuzione: focalizza l'analisi su obblighi documentali e trasparenza informativa del mandatario, separando la controversia in tema di esecuzione",
+        "Se il mandato è stato revocato: concentrati sulla comunicazione tempestiva della revoca e sulla responsabilità del mandatario per azioni compiute successivamente, distinguendo fra revoca nota e revoca nascosta"
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_contratti_agenzia_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "contratti",
+        "topic_sub": "agenzia",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "contratto di agenzia",
+          "obblighi dell'agente",
+          "provvigione e retribuzione",
+          "recesso e indennità di fine rapporto",
+          "responsabilità dell'agente",
+          "diritti del preponente"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo XVII contratto di agenzia (~artt. 1742-1753 c.c.)",
+          "codice civile, norme generali sulla rappresentanza (~artt. 1387-1398 c.c.)",
+          "codice civile, disposizioni sulla responsabilità contrattuale (~artt. 1218-1226 c.c.)"
+        ],
+        "use_case_examples": [
+          "Agente commerciale non retribuito invoca indennità di fine rapporto e chiede risarcimento per rescissione unilaterale senza preavviso",
+          "Preponente contesta provvigioni rivendicate dall'agente e sostiene inadempimento negli obblighi di diligenza",
+          "Controversia su trasferimento della clientela e legittimità della clausola di non concorrenza post-recesso",
+          "Agente chiede integrazione della retribuzione minima per squilibrio nelle condizioni contrattuali"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi contratto di agenzia: obblighi, compenso, recesso",
+      "reasoning_explanation": "Ti propongo di scandire l'analisi del contratto di agenzia in tre zone: prima verifica quali sono gli obblighi concreti dell'agente (diligenza, riservatezza, non-concorrenza), poi esamina il regime di compenso e provvigione alla luce di quanto effettivamente prestato, infine ricostruisci le modalità e i termini del recesso e i diritti residui. È uno schema che serve a capire da subito se il contratto tiene piedi o se espone uno dei contraenti a rischi di inadempimento.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Mappatura obblighi dell'agente",
+          "rationale": "L'agente ha precisi doveri di diligenza, riservatezza e fedeltà al preponente. Verificare quali di questi obblighi sono stati assunti in forma espressa o tacita è il primo passo per valutare se c'è stata violazione o inadempimento.",
+          "riferimenti_da_consultare": "obblighi della diligenza, fedeltà e riservatezza dell'agente — codice civile, capo XVII contratto di agenzia"
+        },
+        {
+          "step_id": 2,
+          "name": "Analisi del regime di compenso e provvigione",
+          "rationale": "La retribuzione può essere fissa, a provvigione, o mista. Se assente, il diritto all'indennità è legale. Verifica se il compenso è commisurato alle prestazioni effettive e se ci sono lacune nella formula contrattuale.",
+          "riferimenti_da_consultare": "diritto alla provvigione, indennità di fine rapporto, compenso minimo — capo XVII codice civile"
+        },
+        {
+          "step_id": 3,
+          "name": "Ricostruzione della gestione della clientela",
+          "rationale": "Determina chi ha acquisito e gestito la clientela, come sono state mantenute le relazioni, e se il contratto contiene vincoli sul trasferimento dei contatti. Questo influisce su indennità e diritti post-recesso.",
+          "riferimenti_da_consultare": "rapporto con la clientela e legittimità delle restrizioni post-contrattuali — discipline sulla non-concorrenza e sulla cessazione del rapporto"
+        },
+        {
+          "step_id": 4,
+          "name": "Esame delle modalità di recesso e preavviso",
+          "rationale": "Il recesso può essere libero (salvo preavviso ragionevole) oppure vincolato a causa. Verifica se è stato rispettato il termine di preavviso e se sussistono obblighi di indemnità al momento della cessazione.",
+          "riferimenti_da_consultare": "recesso, preavviso ragionevole, indennità di fine rapporto — capo XVII codice civile (~artt. 1750-1753 c.c.)"
+        },
+        {
+          "step_id": 5,
+          "name": "Valutazione della responsabilità contrattuale e danni",
+          "rationale": "Se c'è stata violazione (es. recesso senza preavviso, mancato pagamento, violazione di fedeltà), quantifica i danni usando le norme sulla responsabilità contrattuale e il principio del danno differenziale.",
+          "riferimenti_da_consultare": "inadempimento e responsabilità contrattuale — codice civile, capo II titolo II (~artt. 1218-1226 c.c.)"
+        },
+        {
+          "step_id": 6,
+          "name": "Eventuale rivalutazione dell'equilibrio economico",
+          "rationale": "Se la retribuzione è palesemente squilibrata o il contratto è stato modificato di fatto nelle prestazioni, valuta se invocare riduzione del compenso o integrazione della retribuzione secondo equità.",
+          "riferimenti_da_consultare": "cause di squilibrio economico e rimedi equitativi — principi generali sulla forma e i contenuti dei contratti"
+        }
+      ],
+      "optional_variations": [
+        "Focalizzati solo sul calcolo e sulla legittimità della provvigione: salta i passi su obblighi e recesso se la controversia è puramente economica",
+        "Se la lite è su recesso e indennità, accelera il passo 4 e 5 e scarta l'analisi dettagliata della gestione della clientela (passo 3)",
+        "Se il contratto è assente o lacunoso, integra l'indagine con prove scritte (email, SMS, fatture) e testimonianze per ricostruire i termini tacitamente convenuti",
+        "Aggiungi una ricerca su prassi commerciale e consuetudini di settore per l'agenzia in questione (settore immobiliare, alimentare, ecc.) — spesso le corti la considerano in fase di interpretazione"
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_responsabilita_rc_auto_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "responsabilita",
+        "topic_sub": "rc_auto",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "responsabilità civile automobilistica",
+          "danno da sinistro stradale",
+          "colpa e nesso causale incidente auto",
+          "assicurazione obbligatoria rc auto",
+          "liquidazione danno patrimoniale e biologico",
+          "perizia tecnica automobilistica"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, responsabilità civile (artt. ~2043-2059 c.c., norme sulla responsabilità aquiliana)",
+          "codice civile, obbligazioni da fonte diversa dal contratto (artt. ~2054-2057 c.c., colpa e nesso causale nella circolazione veicoli)",
+          "decreto legislativo n. 209/2005, disciplina assicurazione rc auto (capo I, titolo I, norme sulla copertura obbligatoria e risarcimento danni)"
+        ],
+        "use_case_examples": [
+          "Rivendicazione danni da sinistro stradale con contestazione di colpa e determinazione percentuale responsabilità",
+          "Ricorso per liquidazione iniqua del danno biologico da parte della compagnia assicurativa convenuta",
+          "Azione di regresso tra assicurazione del danneggiato e assicurazione del responsabile dell'incidente"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Responsabilità civile in incidenti stradali",
+      "reasoning_explanation": "Ti propongo uno scheletro per costruire una domanda di risarcimento danni in tema di rc auto. L'idea di base è verificare tre zone: se c'è un fatto lesivo, chi l'ha causato e con quale grado di colpa, e infine come quantificare il danno. È un punto di partenza per mappare le prove e gli elementi normativi che serviranno nella memoria.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Ricostruzione dei fatti e della dinamica incidentale",
+          "rationale": "Devi fissare la versione contrastante dei fatti per mettere in luce chi ha violato le norme di circolazione. La perizia tecnica e i rilievi della polizia sono elementi base.",
+          "riferimenti_da_consultare": "norme sulla circolazione stradale e loro violazione — codice della strada; fotografie e rilievi incidentali"
+        },
+        {
+          "step_id": 2,
+          "name": "Accertamento della colpa e del nesso causale",
+          "rationale": "Serve provare che il comportamento del convenuto è stato negligente, imprudente o imperizia e che ha direttamente causato il danno. La colpa non presume automaticamente: va provata.",
+          "riferimenti_da_consultare": "responsabilità aquiliana per colpa nel codice civile — violazione di norme di prudenza e nesso causale tra fatto illecito e danno"
+        },
+        {
+          "step_id": 3,
+          "name": "Quantificazione del danno patrimoniale",
+          "rationale": "Documenta il costo di riparazione del veicolo, il noleggio sostitutivo se necessario, le spese mediche e ospedaliere, la perdita di guadagno. Servono fatture, preventivi, ricevute.",
+          "riferimenti_da_consultare": "principi generali di risarcimento del danno e sua prova — norme sulla liquidazione danni da sinistro stradale"
+        },
+        {
+          "step_id": 4,
+          "name": "Valutazione del danno biologico e morale",
+          "rationale": "Se ci sono lesioni personali, il danno biologico va calcolato con tabelle giurisprudenziali standard (Tribunale di Milano). Il danno morale esiste solo in casi gravi e provati.",
+          "riferimenti_da_consultare": "criteri di liquidazione danno biologico — giurisprudenza consolidata e linee guida Tribunale di Milano; danno morale per condotta consapevole particolarmente grave"
+        },
+        {
+          "step_id": 5,
+          "name": "Verifica della copertura assicurativa e delle esclusioni",
+          "rationale": "Accertati se il convenuto ha rc auto vigente. Se sì, verifica polizza per esclusioni, massimali, franchigie. Se no, agisci per insolvibilità verso il Fondo di Garanzia.",
+          "riferimenti_da_consultare": "regole sulla copertura obbligatoria rc auto — decreto legislativo 209/2005; Fondo di Garanzia per le Vittime della strada in caso di assicurazione assente o non pagante"
+        },
+        {
+          "step_id": 6,
+          "name": "Impostazione della domanda e contestazione difesa",
+          "rationale": "Nella memoria, demolisci punto per punto la versione della controparte e le eventuali eccezioni di colpa concorrente. Chiarisci la tua teoria del fatto.",
+          "riferimenti_da_consultare": "principi sul riparto della colpa — concorso di responsabilità in caso di negligenza reciproca; presunzioni derivanti dal codice della strada"
+        }
+      ],
+      "optional_variations": [
+        "Se la colpa è manifesta (ad es. ubriachezza comprovata, fuga dalla scena), puoi contrastare una difesa generica con urgenza processuale e richiesta di ammissione semplificata dei fatti.",
+        "Se ci sono testimoni, considera di deposare memoria con loro dichiarazioni schematiche per poi chiedere audizione; la perizia tecnica può bastare se la dinamica è obiettiva.",
+        "Se il danno è piccolo (<5000 euro) e il convenuto ammette colpa, valuta transazione in fase preliminare per evitare costi di processo e perizia.",
+        "Se sospetti dolo (frode assicurativa), segnala alla Guardia di Finanza o all'assicurazione; in questo caso il procedimento civile si lega eventualmente a profili penali."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_responsabilita_professionale_medica_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "responsabilita",
+        "topic_sub": "professionale_medica",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "responsabilità medica",
+          "colpa professionale",
+          "danno biologico",
+          "malasanità",
+          "nesso di causalità",
+          "culpa in omittendo",
+          "consenso informato",
+          "standard di diligenza medica"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, disciplina della responsabilità civile extracontrattuale (artt. ~2043-2059 c.c.)",
+          "codice civile, responsabilità contrattuale e prescrizione (artt. ~1218-1240, ~2946 c.c.)",
+          "legge 24/2017 (Legge Gelli-Bifo), responsabilità professionale sanitaria e risarcimento danni (artt. ~1-8)",
+          "regolamento di attuazione legge 24/2017, linee guida sulla diligenza professionale sanitaria"
+        ],
+        "use_case_examples": [
+          "Paziente sottoposto a intervento chirurgico con complicanze dovute a errore tecnico: accertamento della colpa e del danno biologico",
+          "Ritardo diagnostico nella rilevazione di tumore: analisi della culpa in omittendo e causalità tra omissione e danno",
+          "Carenza di informazione sul trattamento: violazione obbligo di consenso informato e conseguente responsabilità",
+          "Abbandono terapeutico o follow-up insufficiente: colpa nella gestione del percorso clinico post-intervento"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Responsabilità medica: schema di analisi e risarcimento",
+      "reasoning_explanation": "La responsabilità medica richiede di accertare tre elementi fondamentali: la violazione dello standard di diligenza professionale (colpa), il danno subito dal paziente, e il nesso causale tra omissione/azione errata e danno. Ti propongo di partire dall'elemento colpa (il fatto sanitario contestato e il confronto con le linee guida), poi verificare il danno quantificabile, infine tracciare il nesso causale. Questo ordine ti consente di escludere step precedenti se il primo elemento manca: se non c'è colpa, il resto non serve. È un punto di partenza per mappare il tuo caso e decidere se procedere con perizia tecnica.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Ricostruzione del fatto sanitario contestato",
+          "rationale": "Devi stabilire con chiarezza quale comportamento del professionista (o quale omissione) è contestato. Raccogli tutta la documentazione sanitaria (cartelle cliniche, referti, esami, certificati di morte, registri operatori) per descrivere cronologicamente l'intervento o il trattamento.",
+          "riferimenti_da_consultare": "Definizione di colpa professionale — codice civile, disciplina della responsabilità civile extracontrattuale; concetto di diligenza professionale secondo Legge Gelli-Bifo"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica della conformità dello standard di diligenza",
+          "rationale": "Accerta se il professionista ha rispettato le linee guida cliniche, i protocolli diffusi alla data del fatto, e le buone pratiche della specialità. La non conformità alle linee guida è indizio forte di colpa, ma puoi dimostrare anche scostamenti giustificati.",
+          "riferimenti_da_consultare": "Linee guida cliniche, linee di indirizzo dell'Istituto Superiore di Sanità, standard di diligenza della legge 24/2017; culpa in faciendo e culpa in omittendo nel codice civile"
+        },
+        {
+          "step_id": 3,
+          "name": "Accertamento del nesso causale tra colpa e danno",
+          "rationale": "Verifica se il danno denunciato è causato direttamente dalla violazione dello standard (causalità diretta), oppure se la responsabilità è attenuata da fattori intermedi, immunità relativa, o evoluzione naturale della patologia. Qui entra l'analisi del 'ma et nisi' (se il professionista avesse agito correttamente, il danno non si sarebbe verificato).",
+          "riferimenti_da_consultare": "Teoria del nesso di causalità nel codice civile — requisiti generali per la responsabilità extracontrattuale; caso concreto di colpa e danno derivato"
+        },
+        {
+          "step_id": 4,
+          "name": "Quantificazione del danno biologico e patrimoniale",
+          "rationale": "Distingui il danno biologico (perdita di integrità psicofisica) dal danno non patrimoniale (sofferenza morale, danno esistenziale), e dal danno patrimoniale (spese mediche, perdita di reddito). Usa tabelle forensi per il biologico; documentazione per il patrimoniale.",
+          "riferimenti_da_consultare": "Disciplina del danno biologico e non patrimoniale nel codice civile; valutazione secondo percentuali invalidità e tabelle liquidazione; danno patrimoniale quantificato da receipts"
+        },
+        {
+          "step_id": 5,
+          "name": "Analisi del consenso informato (se rilevante)",
+          "rationale": "Se il ricorso contesta anche l'assenza di informazione adeguata sul trattamento, accerta se il professionista ha fornito informazioni veritiere, complete e comprensibili sui rischi e benefici. La carenza è colpa autonoma anche se l'intervento fosse tecnicamente corretto.",
+          "riferimenti_da_consultare": "Obbligo di informazione e consenso informato — codice civile, disciplina contrattuale e deontologica medica; responsabilità per violazione dovere informativo nella legge 24/2017"
+        },
+        {
+          "step_id": 6,
+          "name": "Eventuale azione di regresso (se paziente è assicurato/SSN)",
+          "rationale": "Se la controversia coinvolge struttura sanitaria pubblica o assicurazione, verifica se il danno è coperto da coperture assicurative obbligatorie, fondi di garanzia, o responsabilità diretta della struttura. Questo influisce sulla sede giudiziale e le parti convenute.",
+          "riferimenti_da_consultare": "Responsabilità diretta della struttura e di regresso verso il professionista — codice civile; responsabilità civile negli esercenti professioni sanitarie, legge 24/2017 capo II"
+        },
+        {
+          "step_id": 7,
+          "name": "Valutazione della perizia tecnica come mezzo di prova",
+          "rationale": "La colpa medica è contestazione che richiede quasi sempre valutazione tecnica: una perizia di medici legali espande la prova della violazione dello standard. Decidi se ordinare perizia giudiziale o depositare relazione tecnica di parte già prima.",
+          "riferimenti_da_consultare": "Onere della prova nella responsabilità medica; utilizzo di perizia tecnica come strumento di accertamento della colpa; standard di prova nel processo civile italiano"
+        }
+      ],
+      "optional_variations": [
+        "Scarta i step 6-7 se il tuo cliente è una persona fisica che agisce in giudizio contro il professionista (no struttura): focus solo su colpa, danno, causalità quantificazione.",
+        "Aggiungi al step 2 un focus specifico su protocolli COVID-19 o emergenze sanitarie: se il fatto è durante stato di emergenza, lo standard di diligenza può abbassarsi (culpa levis in absentia). Documenta il contesto normativo della data del fatto.",
+        "Se la contestazione è su omissione diagnostica, enfatizza il step 3 (nesso causale) e il 'tempo di diagnosi': accerta se diagnosi tempestiva avrebbe permesso cura efficace, o se il danno sarebbe comunque insorto (perdita di chance).",
+        "Valuta la ricorso anche a risarcimento per danno da perdita di chance (se non certezza di causalità): il paziente può chiedere risarcimento anche della probabilità perduta di guarigione, non solo del danno certo — varia la quantificazione."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_responsabilita_danno_biologico_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "responsabilita",
+        "topic_sub": "danno_biologico",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "danno biologico",
+          "responsabilità civile",
+          "causalità giuridica",
+          "nesso di causalità",
+          "danno risarcibile",
+          "responsabilità colposa",
+          "valutazione del danno"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo II della responsabilità civile (artt. ~2043-2059 c.c.)",
+          "codice civile, disciplina dei contratti e responsabilità contrattuale (artt. ~1218-1229 c.c.)",
+          "norme sulla prova del danno biologico — giurisprudenza tabellare e metodologie di liquidazione"
+        ],
+        "use_case_examples": [
+          "Danno biologico da errore medico in ospedale: accertamento del nesso causale tra atto medico e lesione alla salute",
+          "Danno biologico da sinistro stradale: quantificazione dei giorni di malattia e delle conseguenze sulla capacità lavorativa",
+          "Danno biologico da esposizione ambientale prolungata: causalità tra fonte lesiva e patologia riscontrata",
+          "Danno biologico da inadempimento contrattuale: responsabilità per violazione dell'obbligo di prestazione"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Responsabilità civile e danno biologico: analisi strutturata",
+      "reasoning_explanation": "Ti propongo di scomporre il caso in tre zone logiche: anzitutto verificare l'elemento soggettivo (chi ha agito e con quale dolo o colpa), poi provare il nesso causale tra l'atto e la lesione biologica, infine quantificarne il valore secondo le metodologie consolidate. È uno scheletro di partenza su cui innestare i fatti specifici del tuo cliente.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione della fonte del danno e dell'elemento soggettivo",
+          "rationale": "Devi ricostruire chi è il soggetto responsabile e se ha agito con colpa (negligenza, imprudenza, imperizia) o dolo. Questo fonda il primo capo della responsabilità civile.",
+          "riferimenti_da_consultare": "responsabilità civile per fatto illecito — elemento soggettivo (culpa) nel codice civile"
+        },
+        {
+          "step_id": 2,
+          "name": "Accertamento del nesso causale tra condotta e danno biologico",
+          "rationale": "È il passaggio critico: devi provare che l'atto del convenuto ha causato la lesione alla salute. Usa il criterio della causalità adeguata e supportalo con documentazione medica (perizie, cartelle cliniche, certificazioni sanitarie).",
+          "riferimenti_da_consultare": "causalità giuridica nella responsabilità civile — metodologie di prova del nesso causale e standard della medicina legale"
+        },
+        {
+          "step_id": 3,
+          "name": "Raccolta della documentazione medica e di danno",
+          "rationale": "Il danno biologico è provato da cartelle cliniche, verbali di pronto soccorso, certificati medici, perizie medico-legali. Senza questa base documentale il capo decade.",
+          "riferimenti_da_consultare": "criteri di quantificazione del danno biologico — metodologie tabellari e giurisprudenziali consolidate"
+        },
+        {
+          "step_id": 4,
+          "name": "Quantificazione del danno biologico secondo tabelle e metodologie consolidate",
+          "rationale": "Il danno biologico si misura in giorni di malattia, invalidità percentuale permanente, o altre metriche secondo la giurisprudenza nazionale. Devi usare le tabelle di liquidazione adottate dalla corte competente.",
+          "riferimenti_da_consultare": "valutazione del danno biologico temporaneo e permanente — parametri di misura nel diritto civile italiano"
+        },
+        {
+          "step_id": 5,
+          "name": "Esclusione di cause di esonero da responsabilità",
+          "rationale": "Il convenuto potrebbe eccepire esonero per forza maggiore, fatto esclusivo della vittima, o rottura del nesso causale. Devi preventivamente escludere o contrastare queste difese.",
+          "riferimenti_da_consultare": "cause di esonero da responsabilità civile nel codice civile — forza maggiore, fatto di terzo, concorso di colpa"
+        },
+        {
+          "step_id": 6,
+          "name": "Calcolo dei danni non patrimoniali e danno morale eventuale",
+          "rationale": "Oltre al danno biologico strettamente inteso, puoi aggredire il danno morale (sofferenza, umiliazione) se il caso lo consente. Differenzia bene le due categorie davanti al giudice.",
+          "riferimenti_da_consultare": "danno non patrimoniale e danno morale nella responsabilità civile — criteri di ammissibilità e liquidazione"
+        }
+      ],
+      "optional_variations": [
+        "Focalizza solo il danno biologico temporaneo (giorni di ricovero/malattia) se il cliente si è ripreso completamente: semplifica la prova e accelera il contenzioso.",
+        "Aggiungi una richiesta di danno alla reputazione professionale (se il cliente è un medico, artigiano, professionista danneggiato nell'esercizio della professione): cambia la struttura del capo di danno.",
+        "Concentrati sulla responsabilità contrattuale (se c'è un rapporto contrattuale preesistente: medico-paziente, trasportatore-passeggero) anziché extracontrattuale: il regime di prova e i termini prescrizionali cambiano.",
+        "Escludi la quantificazione tabellare se il danno biologico è derivato da un fatto palesemente anomalo o catastrofale: ricorri allora al criterio equitativo con perizia ad hoc del giudice."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_famiglia_separazione_consensuale_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "famiglia",
+        "topic_sub": "separazione_consensuale",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "separazione consensuale",
+          "accordo sugli assegni",
+          "affidamento figli",
+          "divisione beni matrimoniali",
+          "domanda giudiziale",
+          "negoziazione extrajudiziale",
+          "omologazione tribunale",
+          "mediazione familiare"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, titolo IX della famiglia — separazione e divorzio (~artt. 150-217 c.c.)",
+          "codice civile, capo III della filiazione — affidamento e mantenimento dei figli (~artt. 155-171 c.c.)",
+          "codice civile, capo sulla comunione dei beni e regime patrimoniale (~artt. 177-229 c.c.)",
+          "codice di procedura civile, libro IV processo di separazione e divorzio (~artt. 706-713 c.p.c.)"
+        ],
+        "use_case_examples": [
+          "Coniugi con prole minore: accordo su affidamento condiviso, assegno di mantenimento, uso della casa coniugale e divisione della comunione",
+          "Separazione senza figli: negoziazione su liquidazione della comunione dei beni e assegno di divorzio per coniuge più debole economicamente",
+          "Accordo extrajudiziale con mediatore: le parti raggiungono intesa completa prima della presentazione in giudizio, necessita omologazione",
+          "Separazione con beni immobili significativi: definizione della divisione e della titolarità della casa familiare secondo regime patrimoniale"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Separazione consensuale: struttura e omologazione",
+      "reasoning_explanation": "Ti propongo una sequenza di passaggi per governare il percorso della separazione consensuale dal negoziato preliminare fino all'omologazione. L'obiettivo è che tu abbia uno scheletro ordinato: prima i temi sostanziali da concordare (figli, beni, assegni), poi la redazione dell'accordo, infine la presentazione in giudizio per l'omologazione. È un punto di partenza — potrai saltare step o invertire l'ordine in base al grado di consensualità che trovi con il coniuge.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Mappatura dei temi da concordare",
+          "rationale": "Devi identificare subito quali sono i nodi critici: figli minori, beni comuni, assegni, casa coniugale. Avere una lista chiara ti permette di capire se il consenso è reale o se ci sono zone ancora conflittuali.",
+          "riferimenti_da_consultare": "diritti e doveri dei coniugi in separazione — codice civile titolo IX (affidamento, mantenimento, assegno per il coniuge)"
+        },
+        {
+          "step_id": 2,
+          "name": "Negoziazione degli aspetti relativi ai figli",
+          "rationale": "Se ci sono minori, questo è il tema più delicato. Occorre concordare modalità di affidamento, mantenimento, uso della casa, tempi di frequentazione. Il giudice dovrà controllare che l'accordo non leda l'interesse dei figli.",
+          "riferimenti_da_consultare": "disciplina dell'affidamento condiviso e diritti del minore — codice civile capo III filiazione (~artt. 155-171 c.c.)"
+        },
+        {
+          "step_id": 3,
+          "name": "Definizione della divisione patrimoniale e della comunione",
+          "rationale": "Stabilisci come liquidare la comunione dei beni (se ancora vigente), chi assume quali debiti, se c'è assegno liquidativo, destinazione della casa coniugale. Questa zona spesso genera litigi: verifica che entrambi abbiano consultato un commercialista se i patrimoni sono complessi.",
+          "riferimenti_da_consultare": "regime patrimoniale della comunione e liquidazione — codice civile capo sulla comunione (~artt. 177-229 c.c.) e norme sulla divisione"
+        },
+        {
+          "step_id": 4,
+          "name": "Calcolo e concordamento dell'assegno periodico",
+          "rationale": "Se uno dei coniugi ha capacità economica inferiore, solitamente l'altro versa un assegno. Devi concordare importo, durata (fino al divorzio se solo separazione), forme di adeguamento. Verifica i parametri giurisprudenziali per la tua zona.",
+          "riferimenti_da_consultare": "obblighi economici tra coniugi in separazione — codice civile titolo IX (assegno di mantenimento per coniuge e figli)"
+        },
+        {
+          "step_id": 5,
+          "name": "Stesura del progetto di accordo",
+          "rationale": "Trasforma gli accordi verbali in un atto scritto (memoria d'intesa o schema di accordo). Questo documento sarà la base per la domanda giudiziale: deve essere chiaro, completo e firmato da entrambi (idealmente con assistenza legale). Includi tutte le variabili: figli, beni, assegni, date di efficacia.",
+          "riferimenti_da_consultare": "forma e contenuti dell'atto di separazione consensuale — codice di procedura civile (~artt. 706-713 c.p.c.)"
+        },
+        {
+          "step_id": 6,
+          "name": "Presentazione della domanda giudiziale e omologazione",
+          "rationale": "Deposita la domanda di separazione (consensuale) al tribunale competente, allegando l'accordo. Il giudice controllerà che il consenso sia reale, che non ci siano profili di violenza o sottrazione di minori, e che l'accordo tuteli gli interessi dei figli. Se tutto è in ordine, emette decreto di omologazione.",
+          "riferimenti_da_consultare": "procedimento di separazione consensuale e funzione di controllo del giudice — codice di procedura civile libro IV (~artt. 706-713 c.p.c.)"
+        },
+        {
+          "step_id": 7,
+          "name": "Verifiche finali e adempimenti post-omologazione",
+          "rationale": "Controlla che il decreto sia divenuto esecutivo, sottoscrivi gli atti di registrazione immobiliare o di trasferimento beni se necessari, notifica il decreto al coniuge e agli enti interessati (INPS, Agenzia delle Entrate). Conserva copia per future controversie sulla modifica delle condizioni.",
+          "riferimenti_da_consultare": "esecuzione del decreto di separazione e iscrizioni pubblicitarie — normativa su trascrizioni e registri immobiliari"
+        }
+      ],
+      "optional_variations": [
+        "Mediazione familiare preventiva: prima di coinvolgere avvocati, suggerisci ai coniugi un percorso di mediazione con mediatore qualificato per raggiungere accordo su tutti i punti critici. Se fallisce, sarai tu poi a formalizzare.",
+        "Separazione con minori e affido condiviso con ricorso: se c'è disaccordo solo su alcuni aspetti dei figli, non ricorrere a separazione giudiziale piena — negozia il resto e lascia che il giudice decida solo su affido/mantenimento minori.",
+        "Divisione della comunione differita: se i beni sono complessi (azienda, immobili plurimi), puoi concordare una separazione senza divisione completa della comunione, riservandoti la divisione giudiziale o stragiudiziale successiva.",
+        "Separazione extrajudiziale senza ricorso al giudice: in alcuni casi (coniugi senza figli, patrimonio modesto, totale consenso), valuta se è possibile risolvere con mera separazione di fatto concordata, rimandando il divorzio a momento successivo."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_famiglia_affidamento_minori_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "famiglia",
+        "topic_sub": "affidamento_minori",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "affidamento esclusivo",
+          "affidamento condiviso",
+          "interesse del minore",
+          "capacità genitoriale",
+          "ordini di protezione",
+          "mediazione familiare"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo II delle persone fisiche e della famiglia — disciplina generale dell'affidamento (artt. ~220-238 c.c.)",
+          "codice civile, capo IV della potestà dei genitori — diritti e doveri genitoriali (artt. ~316-330 c.c.)",
+          "legge 8 febbraio 2006 n. 54, disciplina dell'affidamento condiviso e dei criteri di valutazione dell'interesse del minore (capo I, artt. ~1-7)",
+          "codice di procedura civile, capo VII procedimento camerale in materia di famiglia (artt. ~709-713 c.p.c.)"
+        ],
+        "use_case_examples": [
+          "Ricorso per affidamento esclusivo di minore in seguito a separazione contesa, con valutazione di capacità genitoriale compromessa",
+          "Domanda di modifica di affidamento condiviso per cambiate circostanze (trasferimento geografico, cambio lavoro, problematiche comportamentali del minore)",
+          "Procedimento urgente di affidamento ai servizi sociali su richiesta di uno dei genitori con rischio di abuso o trascuratezza",
+          "Ricorso per affidamento condiviso in procedimento con minore già affidato in esclusiva"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi strutturata del procedimento di affidamento minori",
+      "reasoning_explanation": "Ti propongo uno scheletro di lavoro per costruire il ricorso o la controreplica su affidamento, partendo dall'accertamento delle circostanze di fatto (struttura familiare, capacità genitoriale, condizioni abitative) e dalle aree normative pertinenti. È un punto di partenza: ogni fase va calibrata sul tuo mandato concreto e sulla narrativa del fascicolo. Procediamo mappando tre zone: ricostruzione della situazione del minore, valutazione della capacità genitoriale di entrambi i genitori, e applicazione della normativa su affidamento esclusivo o condiviso.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Ricostruzione della situazione attuale del minore",
+          "rationale": "Prima di qualunque argomento legale, devi avere un quadro solido di dove vive il minore, in quale contesto educativo/scolastico, quali sono i suoi legami attuali. Questo è il substrato su cui poggia ogni valutazione di interesse.",
+          "riferimenti_da_consultare": "Principio fondamentale dell'interesse del minore — codice civile capo della potestà dei genitori + legge sull'affidamento condiviso"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica della capacità genitoriale di entrambi i genitori",
+          "rationale": "Devi accertare, con documenti e se utile relazioni peritali, quali sono le condizioni oggettive di cura (struttura abitativa, stabilità economica, continuità relazionale) e le condizioni psicologiche/comportamentali di ogni genitore in relazione ai bisogni specifici del minore.",
+          "riferimenti_da_consultare": "Criteri di valutazione della capacità genitoriale — legge affidamento condiviso, artt. ~1-3 + principi generali codice civile sulla potestà"
+        },
+        {
+          "step_id": 3,
+          "name": "Analisi della natura del conflitto fra i genitori",
+          "rationale": "Il conflitto genitoriale intenso è rilevante per scegliere fra affidamento esclusivo o condiviso. Devi documentare il grado di comunicazione, la capacità di cooperare sui tempi di visita, il rischio di alienazione parentale.",
+          "riferimenti_da_consultare": "Affidamento condiviso come regola — legge 54/2006, capo I + eccezioni per assenza di accordo cooperativo nei criteri di legge"
+        },
+        {
+          "step_id": 4,
+          "name": "Selezione del tipo di affidamento (esclusivo vs. condiviso)",
+          "rationale": "Sulla base delle circostanze e della legge, costruisci la tesi: se la situazione mostra uno dei genitori assente/incapace e bassa possibilità di cooperazione, orientiamoci verso esclusivo; se entrambi hanno capacità e il minore ha legami equilibrati, mediazione verso condiviso è la regola.",
+          "riferimenti_da_consultare": "Disciplina dell'affidamento esclusivo vs. condiviso — legge 54/2006 + rimandi al codice civile sulle limitazioni della potestà"
+        },
+        {
+          "step_id": 5,
+          "name": "Strutturazione del diritto di visita/mantenimento",
+          "rationale": "Una volta determinato il tipo di affidamento, devi articolare i tempi di visita, le modalità di comunicazione con il minore, e i criteri di contribuzione al mantenimento. Questi elementi vanno proposti con dettaglio operativo.",
+          "riferimenti_da_consultare": "Regole su modalità di visita e mantenimento — codice civile capo della potestà + legge affidamento condiviso artt. ~4-7"
+        },
+        {
+          "step_id": 6,
+          "name": "Valutazione della necessità di mediazione familiare o perizia psicologica",
+          "rationale": "Se il conflitto è alto o le capacità genitoriali controverse, proponi al giudice il rinvio a mediazione (talora obbligatoria per legge nei procedimenti di famiglia) o una perizia psicologica per neutralizzare sospetti di alienazione.",
+          "riferimenti_da_consultare": "Procedure di mediazione e perizia — codice di procedura civile capo procedimento camerale + linee guida dei tribunali sulla mediazione obbligatoria"
+        },
+        {
+          "step_id": 7,
+          "name": "Redazione del titolo esecutivo",
+          "rationale": "Struttura il provvedimento richiesto con chiarezza: affidamento a quale genitore, modalità di mantenimento, tempi di visita, scadenza di revisione del provvedimento se mutano le circostanze.",
+          "riferimenti_da_consultare": "Forma e contenuti del provvedimento camerale — codice di procedura civile artt. ~709-713, istruzioni sulla redazione dei provvedimenti in materia di affidamento"
+        }
+      ],
+      "optional_variations": [
+        "Focus su affidamento esclusivo con visitazione protetta: se in fascicolo vi è documentazione di comportamenti del genitore non affidatario che espongono il minore a rischio (violenza domestica, abuso, grave trascuratezza), circoscrivi l'intera analisi ai motivi di esclusione della potestà e della visitazione ordinaria, scartando la mediazione.",
+        "Inserimento di mediazione obbligatoria ante ricorso: se il tribunale prevede obbligatorietà della mediazione familiare, proponi al giudice di rinviare la decisione di merito a esito del percorso, con eventuale ricorso per urgenza se il minore è in condizione vulnerabile.",
+        "Richiesta di perizia psicologica su entrambi i genitori: se il conflitto è ad alta litigiosità e le narrazioni sono totalmente contrapposte, non aspettare che sia il giudice a disporre la perizia — proponila tu nel ricorso, circoscrivendo il quesito al tema della capacità genitoriale e della relazione con il minore.",
+        "Modifica di affidamento già vigente: se il caso riguarda un cambio di affidamento (da esclusivo a condiviso o viceversa), articola l'analisi sulle circostanze sopravvenute (cambio di lavoro, nuova famiglia, comportamenti del minore) che giustifichino la revisione, evitando di riaprire la ricostruzione completa degli assetti precedenti."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_successioni_testamento_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "successioni",
+        "topic_sub": "testamento",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "testamento olografo",
+          "testamento pubblico",
+          "validità testamento",
+          "revoca testamento",
+          "interpretazione volontà testatore",
+          "legatario e erede"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, libro II titolo III della successione per testamento (capo I-V, ~artt. 587-712 c.c.)",
+          "codice civile, capo sulle disposizioni testamentarie e loro interpretazione (~artt. 631-686 c.c.)",
+          "codice civile, norme sulla capacità del testatore e sui requisiti di forma (~artt. 588-606 c.c.)"
+        ],
+        "use_case_examples": [
+          "Contestazione della validità di un testamento olografo per mancanza di sottoscrizione corretta",
+          "Conflitto tra erede e legatario per interpretazione di disposizioni testamentarie ambigue",
+          "Revoca tacita o espressa di testamento precedente — determinazione della volontà reale del de cuius",
+          "Verifica della capacità testamentaria del testatore al momento della redazione"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi validità e interpretazione testamento",
+      "reasoning_explanation": "Ti propongo di affrontare il testamento su tre binari paralleli: forma (il testamento è stato redatto secondo le regole?), capacità (il testatore era capace?) e contenuto (cosa ha voluto realmente dire?). È uno scheletro di partenza per ordinarti il caso prima di ogni atto: da qui saprai se devi contestare il documento stesso, la lucidità del testatore, o solo negoziare su cosa intendeva.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica della forma e dei requisiti procedurali",
+          "rationale": "Un testamento invalido nella forma cade. Devi subito mappare se è olografo, pubblico o segreto — ogni forma ha vincoli diversi su sottoscrizione, luogo, testimoni.",
+          "riferimenti_da_consultare": "requisiti formali del testamento (olografo, pubblico, segreto) — codice civile sezione generale della successione per testamento"
+        },
+        {
+          "step_id": 2,
+          "name": "Accertamento della capacità testamentaria del testatore",
+          "rationale": "Se il testatore non era lucido (demenza, infermità mentale, vizio di volontà), il testamento cade indipendentemente dalla forma. Ricostruisci lo stato di fatto al momento della redazione.",
+          "riferimenti_da_consultare": "capacità testamentaria e vizi della volontà — disciplina generale della capacità d'agire e cause di annullamento testamento"
+        },
+        {
+          "step_id": 3,
+          "name": "Interpretazione delle disposizioni testamentarie",
+          "rationale": "Se forma e capacità reggono, devi capire cosa il testatore ha effettivamente voluto. Collega le parole al contesto, agli atti anteriori, alla situazione familiare.",
+          "riferimenti_da_consultare": "criteri di interpretazione della volontà testamentaria — norme sull'interpretazione dei negozi giuridici e disposizioni testamentarie"
+        },
+        {
+          "step_id": 4,
+          "name": "Ricognizione dei legittimari e diritti di riserva",
+          "rationale": "Anche un testamento valido può ledere la quota riservata per legge. Identifica chi ha diritto alla quota di riserva e se il testamento la viola.",
+          "riferimenti_da_consultare": "legittimari e quote di riserva — codice civile sezione successione legittima e limiti alla libertà testamentaria"
+        },
+        {
+          "step_id": 5,
+          "name": "Analisi delle revoche espresse o tacite",
+          "rationale": "Spesso il testatore redige più testamenti. Accerta se uno revoca l'altro (forma della revoca, compatibilità, data) — il più recente vale, ma può essere parziale.",
+          "riferimenti_da_consultare": "revoca e sostituzione di testamento — discipline sulla revoca espressa, tacita e per incompatibilità"
+        },
+        {
+          "step_id": 6,
+          "name": "Valutazione della stratificazione successoria e delle azioni esperibili",
+          "rationale": "Mappa chi ha interesse (eredità, legati, legittimari), quali difetti emergono, e quali azioni — nullità, annullamento, riduzione — conviene esperire o contrastare.",
+          "riferimenti_da_consultare": "azioni successorie e rimedi — azioni di nullità, annullamento, riduzione e prescrizione in materia di successione"
+        }
+      ],
+      "optional_variations": [
+        "Focus esclusivo su validità formale: se il litigio è solo se il testamento è stato sottoscritto correttamente, scarta gli step 2-6 e concentrati su step 1 + consulenza peritale grafica.",
+        "Prevalenza della ricognizione di legittimari: se il client è erede riservatario e contesta le disposizioni, enfatizza step 4 e 5 e riduci step 3 a mero background interpretativo.",
+        "Vertenza sulla lucidità: se la questione è la capacità (demenza iniziale, assunzione di psicofarmaci), costruisci tutto su step 2 — raccolta cartelle cliniche, consulenza psichiatrica — e relega forma e interpretazione a verifica secondaria."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_civile_successioni_quota_legittima_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "civile",
+        "topic_primary": "successioni",
+        "topic_sub": "quota_legittima",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "quota legittima",
+          "legittimari",
+          "successione testamentaria",
+          "violazione della legittima",
+          "riduzione donazioni",
+          "azione di riduzione",
+          "calcolo della massa ereditaria",
+          "eredi forzosi"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, libro II (successioni), titolo II capo su legittima e quota disponibile (~artt. 536-564 c.c.)",
+          "codice civile, libro II, titolo III sulla divisione dell'eredità e sulla donazione (~artt. 737-809 c.c.)",
+          "codice civile, libro I sulla famiglia e stato civile, sezione genitori e figli (~artt. 258-342 c.c.)"
+        ],
+        "use_case_examples": [
+          "Figlio escluso dal testamento che contesta la disposizione per violazione della propria quota legittima",
+          "Vedova legittimaria che impugna donazioni fatte dal coniuge defunto al fine di tutelare la sua porzione",
+          "Controversia tra coerede sulla corretta quantificazione della massa ereditaria ai fini del calcolo della legittima",
+          "Testatore che ha disposto dell'intero patrimonio a favore di un solo figlio, ledendo gli altri legittimari"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Tutela della quota legittima in successione",
+      "reasoning_explanation": "La quota legittima rappresenta la porzione di patrimonio riservata dalla legge ai legittimari (figli, coniuge, ascendenti). Ti propongo uno schema di lavoro scandito in: prima, identificazione dei soggetti legittimari e della loro categoria; secondo, calcolo della massa ereditaria lorда e della quota spettante; terzo, verifica di eventuali lesioni della legittima tramite testamento o donazioni; infine, individuazione dei rimedi procedurali disponibili. È un punto di partenza per mappare il tuo caso e scegliere gli strumenti di tutela più efficaci.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione del legittimario e della sua categoria",
+          "rationale": "Il regime della quota legittima dipende dalla qualità del soggetto (coniuge, figlio legittimo, figlio naturale riconosciuto, ascendente). Solo una volta stabilito chi è il legittimario puoi misurare la sua quota.",
+          "riferimenti_da_consultare": "disciplina dei legittimari e loro categorie nel codice civile, parte generale della successione — titolo II su legittima"
+        },
+        {
+          "step_id": 2,
+          "name": "Ricostruzione della massa ereditaria",
+          "rationale": "La quota legittima si calcola sulla massa complessiva (eredità netta + valore donazioni fatte in vita). Devi perciò censire il patrimonio del defunto e le donazioni rilevanti ai fini successori.",
+          "riferimenti_da_consultare": "regole sulla riunione fittizia dei beni donati nel computo della massa ereditaria — codice civile, capo su legittima"
+        },
+        {
+          "step_id": 3,
+          "name": "Calcolo della quota legittima teorica",
+          "rationale": "Applica le regole di divisione della massa al legittimario e alla sua categoria (ad esempio, quota di un figlio su tre rispetto alla loro parte, su una massa al netto dei legati). Otterrai l'importo che per legge spetta al tuo cliente.",
+          "riferimenti_da_consultare": "norme sulla misura della legittima per ciascuna categoria di legittimari — codice civile, titolo II"
+        },
+        {
+          "step_id": 4,
+          "name": "Verifica della lesione della legittima",
+          "rationale": "Confronta la quota teorica con quanto il legittimario riceve di fatto nel testamento (o nella successione senza testamento). Se riceve meno, c'è lesione della legittima e sorge diritto all'azione di riduzione.",
+          "riferimenti_da_consultare": "disposizioni sulla lesione della legittima da testamento o da donazioni eccessivamente onerose — codice civile, capo legittima"
+        },
+        {
+          "step_id": 5,
+          "name": "Identificazione degli atti lesivi e loro ordine di riduzione",
+          "rationale": "Se il testamento e/o le donazioni ledono la legittima, devi stabilire quali atti riducono e in quale ordine (prima i legati, poi le donazioni dalla più recente, poi il testamento). Questo ordine è cruciale per la strategia processuale.",
+          "riferimenti_da_consultare": "regole sull'ordine e sulle modalità di riduzione — codice civile, sezione sulla tutela della legittima"
+        },
+        {
+          "step_id": 6,
+          "name": "Scelta della via ordinaria o stragiudiziale",
+          "rationale": "Decidi se agire immediatamente con azione giudiziale di riduzione oppure tentare prima una soluzione bonaria (negoziazione tra coeredi, accordo con i beneficiari del testamento). Ciascuna via ha tempi e costi diversi.",
+          "riferimenti_da_consultare": "prescrizione e decadenza dell'azione di riduzione, termini procedurali per la tutela della legittima — codice civile e codice di procedura civile"
+        }
+      ],
+      "optional_variations": [
+        "Focus sulla riduzione di donazioni: se la lesione proviene da donazioni fatte dal de cuius in vita, struttura l'analisi sulle regole di riunione fittizia e sull'ordine di riduzione dei liberali.",
+        "Ricorso alla tutela d'urgenza: se necessario stabilizzare rapidamente diritti del legittimario in pericolo (ad esempio, patrimonio a rischio di dissipazione), valuta misure cautelari parallele all'azione di riduzione principale.",
+        "Scenari di pluralità di legittimari: se il legittimario non è unico, espandi l'analisi ai conflitti intersoggettivi tra legittimari di categoria diversa (ad esempio, figli vs. coniuge) e alle loro quote relative.",
+        "Impugnazione di testamento per vizi di forma o di volontà: se il testamento lesivo presenta vulnerabilità formali o di capacità del testatore, valuta se combinare l'azione di riduzione con l'impugnazione, a seconda della convenienza tattica."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_penale_querela_redazione_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "penale",
+        "topic_primary": "querela",
+        "topic_sub": "redazione",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "querela penale",
+          "redazione atto",
+          "legittimazione attiva",
+          "termini decadenza",
+          "fatto costitutivo reato",
+          "denunciante"
+        ],
+        "aree_normative_rilevanti": [
+          "codice penale, discipline della querela (~artt. 120-126 cp)",
+          "codice di procedura penale, parte sulla presentazione querela e ricorso (~artt. 120-130 cpp)",
+          "codice penale, reati procedibili solo a querela (~parte speciale)"
+        ],
+        "use_case_examples": [
+          "Redazione querela per ingiuria o diffamazione (reati procedibili a querela di parte)",
+          "Querela per lesioni personali colpose in ambito stradale",
+          "Querela per appropriazione indebita tra privati",
+          "Querela per molestia o stalking (con allegazione fatti e cronologia)"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Redazione della querela penale: struttura e adempimenti",
+      "reasoning_explanation": "Ti propongo uno scheletro operativo per redigere una querela penale che sia formalmente corretta e sostanzialmente efficace. La querela è un atto che attiva il procedimento per reati di competenza privata o che lo richiede come condizione: serve esporre i fatti precisi, identificare il querelato e rispettare i termini di decadenza. Procediamo per stadi: identificazione del reato, raccolta elementi, redazione conforme alle esigenze di forma e sostanza.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione del reato e verifica procedibilità",
+          "rationale": "Non tutti i reati sono procedibili a querela di parte. Devi accertare se il fatto rientra in reati di competenza privata (es. ingiuria, diffamazione, lesioni lievi) oppure se è un reato perseguibile d'ufficio su cui la querela non ha effetto. Questa verifica premiale ti salva tempo e evita atti inutili.",
+          "riferimenti_da_consultare": "Codice penale, parte speciale — disciplina del reato contestato e clausole sulla procedibilità a querela"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica della legittimazione attiva del querelante",
+          "rationale": "La querela può presentarla la persona offesa dal reato, o in certi casi il coniuge, i prossimi congiunti o il rappresentante legale. Se il querelante non ha legittimazione, l'atto è inidoneo. Questa verifica è preliminare e obbligatoria.",
+          "riferimenti_da_consultare": "Codice penale, discipline sulla querela — legittimazione attiva del denunciante e suoi limiti"
+        },
+        {
+          "step_id": 3,
+          "name": "Raccolta fatti e cronologia dettagliata",
+          "rationale": "La querela deve narrare i fatti specifici che costituiscono il reato: date, orari, luogo, circostanze, condotta dell'imputato, danno subìto. Senza una cronologia precisa e coerente, il pubblico ministero o il giudice faticano a comprendere il fatto e la querela perde mordente. Raccogli tutto prima di redigere.",
+          "riferimenti_da_consultare": "Codice di procedura penale, requisiti di forma e contenuto della querela"
+        },
+        {
+          "step_id": 4,
+          "name": "Redazione della narrativa del fatto",
+          "rationale": "Scrivi in prima persona (dal querelante) i fatti in ordine cronologico, senza commenti ma con chiarezza. Esponi il danno (patrimoniale, morale, alla reputazione). Cita l'imputato con i dati anagrafici. Indica il reato che ritieni configurato, con rinvio ai capi normativi (senza citare singoli articoli, ma indicando l'area del codice penale).",
+          "riferimenti_da_consultare": "Codice di procedura penale, forma e contenuto della querela — elementi essenziali della dichiarazione"
+        },
+        {
+          "step_id": 5,
+          "name": "Sottoscrizione, termine e modalità di deposito",
+          "rationale": "La querela deve essere sottoscritta dal querelante o dal suo difensore. È soggetta a termine di decadenza (generalmente 3 mesi dal momento in cui la persona offesa ha notizia dell'offesa e dell'autore, salvo proroghe legali). Verifica il termine nel caso concreto prima di depositare. Presenta presso la procura della Repubblica o in carabinieri/polizia.",
+          "riferimenti_da_consultare": "Codice penale, termini di decadenza della querela (~artt. 120-126 cp) e codice di procedura penale sulla presentazione"
+        },
+        {
+          "step_id": 6,
+          "name": "Allegazione di prove e documenti",
+          "rationale": "Allega alla querela ogni documento che probatorio: messaggi, email, denunce precedenti, foto, certificazioni mediche, perizie. La querela acquisisce forza se sostenuta da documentazione che corrobora i fatti allegati. Organizza gli allegati in ordine cronologico o tematico.",
+          "riferimenti_da_consultare": "Codice di procedura penale, regime della prova nella fase di querela e investigazioni preliminari"
+        },
+        {
+          "step_id": 7,
+          "name": "Verifica finale e consegna",
+          "rationale": "Rilleggi la querela per coerenza interna, correttezza dei dati anagrafici, completezza della narrativa. Chiedi conferma al cliente sui fatti esposti. Deposita con ricevuta di presentazione. Conserva copia del ricevuto per i tuoi atti.",
+          "riferimenti_da_consultare": "Codice di procedura penale, adempimenti formali e formalità di presentazione"
+        }
+      ],
+      "optional_variations": [
+        "Querela con richiesta di misure cautelari: se il fatto è urgente o il querelato è pericoloso, integrare la narrativa con una sezione sui rischi attuali e chiedere misure di protezione del querelante (es. divieto di avvicinamento).",
+        "Querela congiunta con altri querelanti: se più persone sono danneggiate dallo stesso fatto (es. diffamazione di gruppo), redigere querela collettiva o coordinate, verificando la legittimazione di ciascuno e la coerenza narrativa.",
+        "Querela con riserva di costituzione di parte civile: se intendi chiedere il risarcimento danni in sede penale, indicarlo esplicitamente nella querela o in istanza separata successiva, rispettando i termini di costituzione."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_penale_procedibilita_ufficio_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "penale",
+        "topic_primary": "procedibilita",
+        "topic_sub": "ufficio",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "procedibilità d'ufficio",
+          "reati procedibili d'ufficio",
+          "reati procedibili a querela",
+          "ufficio del pubblico ministero",
+          "iniziativa processuale penale",
+          "potere di iniziativa del pm"
+        ],
+        "aree_normative_rilevanti": [
+          "codice penale, disposizioni sulla procedibilità dei reati (~artt. 120-126 cp e capo II del titolo II cp)",
+          "codice di procedura penale, esercizio dell'azione penale da parte del pubblico ministero (~artt. 50-165 cpp, capo II del titolo I)",
+          "codice di procedura penale, notizia di reato e presentazione della querela (~artt. 330-340 cpp)"
+        ],
+        "use_case_examples": [
+          "Valutazione se un reato è procedibile d'ufficio in una denuncia querellabile per stabilire se il pm può agire senza querela",
+          "Analisi della qualità di parte offesa in un procedimento per reato d'ufficio e conseguenti diritti di partecipazione",
+          "Eccezione di difetto di procedibilità in una fase processuale per verificare se il reato contestato era effettivamente procedibile d'ufficio",
+          "Determinazione del momento entro cui deve intervenire l'esercizio dell'azione penale in caso di reato procedibile solo a querela"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Procedibilità d'ufficio: analisi e imputazione",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per distinguere quale regime di procedibilità governa il reato contestato nel tuo caso. L'accertamento del regime di procedibilità — d'ufficio oppure a querela — determina chi può muovere l'azione penale, entro quali termini, e quale ruolo avrà la parte offesa. È il primo fondamento su cui costruire la strategia difensiva o l'imputazione.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione del fatto-reato e fattispecie rilevante",
+          "rationale": "Devi fissare esattamente quale reato è stato contestato (dato di fatto) e quale norma sostantiva lo disciplina, prima di cercare il regime di procedibilità.",
+          "riferimenti_da_consultare": "descrizione astratta del reato nel codice penale — capo e sezione di appartenenza"
+        },
+        {
+          "step_id": 2,
+          "name": "Ricerca del regime di procedibilità nel codice penale",
+          "rationale": "Ogni reato ha un regime espresso nella parte speciale del c.p. (d'ufficio per default, a querela se espressamente previsto). Devi identificare se il legislatore ha previsto un'eccezione.",
+          "riferimenti_da_consultare": "norma sostantiva del reato — lettere finali che stabiliscono querellabilità o procedibilità d'ufficio"
+        },
+        {
+          "step_id": 3,
+          "name": "Verifica della qualità della persona offesa e dei legittimati a querela",
+          "rationale": "Se il reato è procedibile solo a querela, devi accertare chi è legittimato a presentarla (la vittima, genitori se minore, erede se vittima è deceduta). Se procedibile d'ufficio, la vittima è comunque parte offesa con diritti di partecipazione.",
+          "riferimenti_da_consultare": "disciplina della querela — capo II del titolo I cpp e disposizioni sulla legittimazione soggettiva"
+        },
+        {
+          "step_id": 4,
+          "name": "Accertamento dei termini di presentazione della querela (se rilevante)",
+          "rationale": "Nei reati querellabili, il termine per presentare querela è perentorio (generalmente 3 mesi da quando la persona offesa ha avuto conoscenza del colpevole). Il mancato rispetto determina l'estinzione del diritto di querela.",
+          "riferimenti_da_consultare": "termini di presentazione della querela — sezione sulla querela cpp (~artt. 120-126 cp e sgg.)"
+        },
+        {
+          "step_id": 5,
+          "name": "Valutazione della manifestazione o rinuncia della querela (se procedibile a querela)",
+          "rationale": "La parte offesa può espressamente manifestare la volontà di querelare oppure rinunciare. Devi verificare se è stata formulata positivamente (con querela processuale o stragiudiziale) o se è stata già rinunciata.",
+          "riferimenti_da_consultare": "forme di manifestazione e rinuncia della querela — parte dedicata cpp"
+        },
+        {
+          "step_id": 6,
+          "name": "Analisi della legittimità dell'esercizio dell'azione penale da parte del pm",
+          "rationale": "Una volta identificato il regime, valuta se il pm ha agito legittimamente: se procedibile d'ufficio, il pm ha iniziativa libera; se a querela, il pm agisce solo dopo querela regolarmente presentata (senza querela, difetta la procedibilità).",
+          "riferimenti_da_consultare": "esercizio dell'azione penale da parte del pubblico ministero — parte I cpp (~artt. 50-60 cpp)"
+        },
+        {
+          "step_id": 7,
+          "name": "Risoluzione di eccezioni di difetto di procedibilità",
+          "rationale": "Se nel procedimento viene eccepito il difetto di procedibilità (reato a querela contestato senza querela, oppure querela tardiva), devi verificare la fondatezza e proporre eccezione di nullità o richiesta di archiviazione.",
+          "riferimenti_da_consultare": "vizi procedurali e condizioni di procedibilità — sezione vizi e nullità cpp"
+        }
+      ],
+      "optional_variations": [
+        "Se il reato rientra in categorie particolari (ad es. reati commessi da pubblici ufficiali in abuso di potere, reati contro la pubblica amministrazione), verifica se esiste una procedibilità d'ufficio obbligatoria indipendentemente dalla volontà della vittima, con possibili eccezioni normative specifiche.",
+        "Se il procedimento coinvolge minori (vittima o imputato), accertate se la procedibilità è influenzata da norme speciali (es. diritto minorile con regime diversificato); spesso reati contro minori sono procedibili d'ufficio anche quando la fattispecie base è querellabile.",
+        "Se la persona offesa è deceduta, indaga sulla trasmissibilità del diritto di querela agli eredi e sui termini ristretti che possono applicarsi; in certi reati, il decesso della vittima può comportare l'estinzione del diritto di querela.",
+        "Se il procedimento è già in corso e riscontri tardività della querela, valuta se è possibile sanare il vizio o se il difetto di procedibilità è indefettibile, con conseguente archiviazione obbligatoria."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_amministrativo_ricorso_tar_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "amministrativo",
+        "topic_primary": "ricorso",
+        "topic_sub": "tar",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "ricorso amministrativo",
+          "Tribunale amministrativo regionale",
+          "atto amministrativo",
+          "annullamento",
+          "legittimazione attiva",
+          "motivi ricorso",
+          "termini presentazione"
+        ],
+        "aree_normative_rilevanti": [
+          "Codice del Processo Amministrativo, capo I disposizioni generali sui ricorsi (artt. ~29-48 cpa)",
+          "Codice del Processo Amministrativo, ricorso per l'annullamento (artt. ~55-80 cpa)",
+          "Codice del Processo Amministrativo, competenza del TAR (artt. ~1-15 cpa)",
+          "Legge n. 241/1990, procedimento amministrativo e motivazione dell'atto (capo II ~artt. 3-11)"
+        ],
+        "use_case_examples": [
+          "Ricorso contro diniego di permesso di costruire emesso dal comune",
+          "Impugnazione di provvedimento di esclusione da gara pubblica",
+          "Ricorso contro sanzione amministrativa irrogata da organo della pubblica amministrazione",
+          "Contestazione di provvedimento di revoca di contributo o agevolazione"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Ricorso al TAR: analisi strutturata e costruzione",
+      "reasoning_explanation": "Ti propongo uno scheletro di lavoro per la fase di preparazione del ricorso al TAR. Procediamo prima mappando l'atto impugnato e verificando i presupposti di ricorribilità, poi costruendo i motivi di censura sulla base dei vizi legittimabili. È un punto di partenza che puoi adattare al profilo della tua controversia.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica della ricorribilità dell'atto",
+          "rationale": "Occorre prima di tutto accertare che l'atto impugnato sia effettivamente un atto amministrativo suscettibile di ricorso al TAR e che non ricadano ostacoli processuali (come esaurimento del procedimento o termine già scaduto).",
+          "riferimenti_da_consultare": "Norme sulla nozione di atto amministrativo e su contenuto del ricorso — Codice Processo Amministrativo, disposizioni generali"
+        },
+        {
+          "step_id": 2,
+          "name": "Accertamento della legittimazione e dell'interesse",
+          "rationale": "Il ricorrente deve provare di avere un interesse legittimo (non meramente di fatto) al ricorso e, ove necessario, qualità di parte nel procedimento che ha portato all'atto. È un filtro preliminare essenziale.",
+          "riferimenti_da_consultare": "Condizioni per la ricorribilità — competenza del TAR e soggetti legittimati, codice processo amministrativo"
+        },
+        {
+          "step_id": 3,
+          "name": "Ricostruzione della motivazione dell'atto impugnato",
+          "rationale": "Analizza in dettaglio cosa l'amministrazione ha dichiarato e quali ragioni ha esposto nella motivazione. Questo costituisce il punto di attacco per i motivi di censura.",
+          "riferimenti_da_consultare": "Obblighi di motivazione e trasparenza amministrativa — Legge n. 241/1990 e regole procedimentali"
+        },
+        {
+          "step_id": 4,
+          "name": "Identificazione dei vizi giuridici contestabili",
+          "rationale": "Seleziona i motivi di ricorso applicabili (illegittimità, vizio di procedimento, motivi di merito). Non tutti i vizi sono ricorribili: concentrati su quelli categorizzati dalla giurisprudenza TAR.",
+          "riferimenti_da_consultare": "Tipi di vizio amministrativo e motivi di ricorso — Codice Processo Amministrativo, capo sui motivi ricorribili"
+        },
+        {
+          "step_id": 5,
+          "name": "Costruzione dei singoli motivi di censura",
+          "rationale": "Per ciascun vizio rilevato, articola il motivo con: enunciazione del principio giuridico violato, rappresentazione dei fatti, applicazione della norma al caso concreto, richiesta di annullamento.",
+          "riferimenti_da_consultare": "Vizi di illegittimità sostanziale e procedurale, violazione di norme di legge — Codice Processo Amministrativo"
+        },
+        {
+          "step_id": 6,
+          "name": "Verifica del termine per la presentazione",
+          "rationale": "Accertati che il ricorso sia presentato entro il termine perentorio (o che sussista una causa di sospensione/interruzione). Il superamento del termine è causa di inammissibilità assoluta.",
+          "riferimenti_da_consultare": "Termini di presentazione del ricorso e decorrenza — Codice Processo Amministrativo, norme sulla tempestività"
+        },
+        {
+          "step_id": 7,
+          "name": "Redazione dell'atto di ricorso e deposito",
+          "rationale": "Componi il ricorso secondo lo schema formale previsto (parte narrativa, parte motivi, conclusioni). Assicurati della corretta costituzione della controparte e della competenza territoriale del TAR.",
+          "riferimenti_da_consultare": "Forma e contenuto del ricorso amministrativo, giurisdizione territoriale del TAR — Codice Processo Amministrativo"
+        }
+      ],
+      "optional_variations": [
+        "Focalizzazione su vizi di procedimento: se l'atto contiene lacune procedurali significative (mancanza di istruttoria, violazione del contraddittorio), puoi concentrare il ricorso su questi soli motivi, scartando l'analisi approfondita del merito amministrativo.",
+        "Ricorso sospensivo con richiesta di misure cautelari: aggiungi una domanda autonoma di sospensione dell'efficacia dell'atto sulla base del fumus boni iuris e del danno grave e irreparabile, anche come pressione negoziale.",
+        "Ampliamento a più soggetti passivi: se il ricorso riguarda una decisione collegiale o a livelli gerarchici, verifica se la qualità di controparte tocchi solo l'ente emanante o anche (es.) il ministero vigilante.",
+        "Ricorso cautelare autonomo in via d'urgenza: se i presupposti lo suggeriscono (urgenza manifesta), prepara uno schema minimalista per ricorso cautelare immediato, rinviando il merito alla successiva fase ordinaria."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_tributario_ricorso_commissione_tributaria_provinciale_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "tributario",
+        "topic_primary": "ricorso",
+        "topic_sub": "commissione_tributaria_provinciale",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "ricorso commissione tributaria provinciale",
+          "impugnazione avviso di accertamento",
+          "termini presentazione ricorso tributario",
+          "competenza CTP",
+          "motivi ricorso tasse"
+        ],
+        "aree_normative_rilevanti": [
+          "decreto legislativo n. 546/1992, competenza e procedura commissioni tributarie (~artt. 1-50)",
+          "decreto legislativo n. 546/1992, ricorso in commissione provinciale (~artt. 19-39)",
+          "decreto legislativo n. 546/1992, termini e forma del ricorso (~artt. 19-25)",
+          "codice tributario, atti impugnabili e termini di decadenza (~artt. 1-60 d.lgs. 472/1997)"
+        ],
+        "use_case_examples": [
+          "ricorso contro avviso di accertamento IVA con contestazione illegittimità motivazione e quantificazione",
+          "ricorso per annullamento atto di riscossione esattoriale fondato su vizi di forma e procedura",
+          "ricorso contro cartella esattoriale per errore materiale e violazione termini presentazione",
+          "ricorso per diniego rimborso IVA con richiesta di sospensiva della riscossione"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Ricorso in commissione tributaria provinciale",
+      "reasoning_explanation": "Ti propongo uno scheletro di passaggi per costruire un ricorso tributario davanti alla commissione provinciale. L'obiettivo è partire dalla qualificazione dell'atto impugnato, verificare il rispetto dei termini e della forma, e articolare i motivi di ricorso secondo le categorie normative riconosciute. È un punto di partenza: modifica, scarta, aggiungi sezioni a seconda della fattispecie concreta.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione dell'atto impugnato e competenza della CTP",
+          "rationale": "La commissione tributaria provinciale ha competenza su avvisi di accertamento, cartelle esattoriali, atti di riscossione entro certi limiti. Occorre qualificare l'atto e verificare che la CTP sia il giudice competente.",
+          "riferimenti_da_consultare": "competenza ratione materiae della commissione tributaria provinciale — d.lgs. 546/1992"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica dei termini di presentazione del ricorso",
+          "rationale": "Il ricorso ha termini perentori (decadenza): dalla notifica dell'atto impugnato. Superati i termini, il ricorso è inammissibile. Occorre controllare data notifica, data deposito ricorso e calcolo giorni.",
+          "riferimenti_da_consultare": "termini di decadenza per il ricorso — d.lgs. 546/1992 e codice tributario"
+        },
+        {
+          "step_id": 3,
+          "name": "Raccolta della documentazione e ricostruzione dei fatti tributari",
+          "rationale": "Conviene assemblare in ordine cronologico gli atti tributari (dichiarazione, controlli, motivazione dell'accertamento) e identificare i punti contestabili (presunzioni non provate, violazioni di diritto, errori di calcolo).",
+          "riferimenti_da_consultare": "onere della prova e presunzioni nella controversia tributaria — codice tributario e sentenze CTP"
+        },
+        {
+          "step_id": 4,
+          "name": "Articolazione dei motivi di ricorso (illegittimità dell'accertamento)",
+          "rationale": "I motivi vanno distinti in: vizi di forma e procedura, violazione norme sostanziali, errori di fatto e di diritto, mancanza di idonea motivazione. Ogni motivo sostiene un capo dell'atto impugnato.",
+          "riferimenti_da_consultare": "motivi di ricorso e vizi di legittimità dell'atto tributario — d.lgs. 546/1992 e giurisprudenza CTP"
+        },
+        {
+          "step_id": 5,
+          "name": "Formulazione della memoria ricorsoria e allegati",
+          "rationale": "La memoria deve contenere: qualificazione atto, motivi articolati, riferimenti alle norme e alla documentazione prodotta. Va rispettata la forma scritta e possono essere allegate prove (perizie, corrispondenza con l'amministrazione, certificazioni).",
+          "riferimenti_da_consultare": "forma e contenuto del ricorso — regolamento processuale commissioni tributarie (d.lgs. 546/1992)"
+        },
+        {
+          "step_id": 6,
+          "name": "Deposito del ricorso presso la cancelleria della commissione provinciale",
+          "rationale": "Il ricorso va depositato presso la cancelleria della CTP territorialmente competente entro i termini. Occorre seguire le modalità (cartaceo, PEC, telematico secondo le direttive della commissione) e conservare copia per sé e per la controparte.",
+          "riferimenti_da_consultare": "modalità di deposito e adempimenti procedurali — regolamento interno commissioni tributarie"
+        },
+        {
+          "step_id": 7,
+          "name": "Eventuale richiesta di sospensiva della riscossione",
+          "rationale": "Se l'atto impugnato riguarda cartella esattoriale o avviso di accertamento con riscossione coattiva, puoi chiedere alla commissione la sospensione degli atti di riscossione in via cautelare, allegando pregiudizio grave e irreparabile.",
+          "riferimenti_da_consultare": "misure cautelari e sospensiva della riscossione nel processo tributario — d.lgs. 546/1992"
+        }
+      ],
+      "optional_variations": [
+        "Se l'avviso di accertamento è carente di motivazione o presenta vizi formali evidenti, puoi concentrare il ricorso su tali profili procedurali, evitando articolazione complessa dei motivi sostantivi.",
+        "Se la controversia riguarda questioni tecniche complesse (calcoli IVA, ammortamenti, studi di settore), considerati di acquisire una consulenza tecnica e depositare relazione peritale in allegato: rafforza la contestazione.",
+        "Se il termine per ricorrere è prossimo a scadenza ma la documentazione non è completa, puoi depositare ricorso entro termine con memoria sommaria e poi integrare con motivi articolati nelle repliche successive — rispetta la forma minima per non perdere il termine.",
+        "Se la stessa questione tributaria è stata già oggetto di pronuncia da altre commissioni (CTP di altre province, CTA), valuta di eccepire violazione di giudicato tributario implicito e uniformità di indirizzo giurisprudenziale nel ricorso."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_tributario_accertamento_avviso_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "tributario",
+        "topic_primary": "accertamento",
+        "topic_sub": "avviso",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "avviso di accertamento",
+          "contenuto minimo avviso",
+          "notificazione accertamento",
+          "vizi formali avviso",
+          "motivi di impugnazione",
+          "verifica competenza ufficio",
+          "termini decadenza accertamento"
+        ],
+        "aree_normative_rilevanti": [
+          "codice tributario, titolo II capo II, procedimento di accertamento (~artt. 12-24)",
+          "codice tributario, disciplina dell'avviso di accertamento e contenuto obbligatorio (~artt. 7-12 segg.)",
+          "codice tributario, impugnazione dell'avviso e ricorso — termini e motivi (~artt. 37-44)",
+          "codice di procedura civile, competenza territoriale e giurisdizionale negli affari tributari (~artt. 50 segg.)"
+        ],
+        "use_case_examples": [
+          "Contribuente riceve avviso di accertamento IRPEF senza menzione della base documentale; ti occorre verificare se vizi formali conducono a invalidità",
+          "Azienda sottoposta a accertamento IVA; devi mappare i termini di decadenza e valutare completezza delle motivazioni nell'avviso",
+          "Avviso di accertamento notificato a domicilio inesatto; necessario vagliare effetti sulla notificazione e validità procedurale",
+          "Società riceve avviso su materia tecnicamente estranea alla competenza dell'ufficio; devi controllare se incompetenza invalida l'accertamento"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi della legittimità dell'avviso di accertamento",
+      "reasoning_explanation": "Ti propongo uno schema per smontare sistematicamente un avviso di accertamento: partiamo dalla verificazione del rispetto dei requisiti formali (notificazione, motivazione, competenza), poi analizziamo i vizi sostanziali eventualmente contenuti nell'atto, infine mappiamo i tempi per la difesa. È un punto di partenza per decidere se impugnare, e su quali fronti. Procediamo ordinatamente verificando prima la forma, poi il merito dell'operato dell'amministrazione.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica della notificazione e del primo contatto con l'avviso",
+          "rationale": "Un avviso malamente notificato può essere nullo ab initio. Devi controllare: consegna, modalità, domicilio indicato, dichiarazione di notificazione. Se la notificazione zoppica, tutto il resto può crollare.",
+          "riferimenti_da_consultare": "norme sulla notificazione degli atti amministrativi tributari — codice tributario parte procedimentale; regole di forma e luogo della notificazione"
+        },
+        {
+          "step_id": 2,
+          "name": "Analisi del contenuto obbligatorio dell'avviso",
+          "rationale": "L'avviso deve contenere elementi minimi: oggetto del tributo, periodo, motivazione sommaria della ragione dell'accertamento, ufficio competente, termine di pagamento. Assenze o opacità qui costituiscono vizi formali rilevanti.",
+          "riferimenti_da_consultare": "contenuto minimo obbligatorio dell'avviso di accertamento — codice tributario, norme generali sugli atti tributari"
+        },
+        {
+          "step_id": 3,
+          "name": "Verifica della competenza ratione materiae e territoriale dell'ufficio",
+          "rationale": "Se l'ufficio che ha emesso l'avviso è incompetente per materia o per territorio, l'accertamento può essere invalido. Controlla la sede legale del contribuente, il tipo di tributo, la competenza dell'ufficio notificante.",
+          "riferimenti_da_consultare": "competenza territoriale e funzionale degli uffici tributari — codice tributario, disciplina organizzativa dell'Agenzia delle Entrate"
+        },
+        {
+          "step_id": 4,
+          "name": "Analisi della motivazione e della ragionevolezza dell'accertamento",
+          "rationale": "L'avviso deve contenere una motivazione che giustifichi la pretesa. Verifica se l'amministrazione ha dato conto dei dati su cui fonda l'accertamento, se ha rispettato il principio di capacità contributiva, se le inferenze sono logiche.",
+          "riferimenti_da_consultare": "norme sulla motivazione degli atti di accertamento — codice tributario e principi generali del diritto amministrativo; diritto di difesa e accesso ai dati"
+        },
+        {
+          "step_id": 5,
+          "name": "Determinazione dei termini di decadenza e della finestra di impugnazione",
+          "rationale": "Ogni accertamento ha termini di decadenza (normali, prolungati, sospensioni). Devi stabilire se l'avviso è stato emesso entro termine, e se hai ancora tempo per ricorrere. I tempi sono ristretti: non perderli.",
+          "riferimenti_da_consultare": "termini di decadenza dell'accertamento — codice tributario, capo relativo ai termini procedimentali"
+        },
+        {
+          "step_id": 6,
+          "name": "Valutazione della strada giurisdizionale: ricorso alla Commissione Tributaria o contenzioso ordinario",
+          "rationale": "Scegli il foro corretto: Commissione Tributaria per la maggior parte dei casi, giudice ordinario per questioni di legittimità costituzionale o extra-tributarie. Valuta il merito sommariamente per capire quale strada conviene.",
+          "riferimenti_da_consultare": "giurisdizione tributaria e competenza delle Commissioni Tributarie — codice di procedura civile, parte relativa ai giudizi tributari"
+        }
+      ],
+      "optional_variations": [
+        "Focus solo sulla formale rilevanza dei vizi notificativi: se la notificazione è nulla, il resto non conta e puoi shortcircuitare l'analisi di merito.",
+        "Approfondimento sulla motivazione insufficiente: se l'avviso manca di una motivazione seria, puoi fondare l'impugnazione sull'illegittimità per difetto di motivazione, spesso più forte che sul merito.",
+        "Analisi della base documentale e del diritto di accesso: prima di impugnare, richiedi accesso ai dati e ai verbali su cui l'amministrazione fonda l'accertamento; questo può rivelare inconsistenze utili in ricorso.",
+        "Valutazione della conciliazione giudiziale: in alcuni casi, un primo contatto bonario con l'ufficio o una mediazione può evitare il ricorso formale; considera se è praticabile nel tuo caso."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_lavoro_licenziamento_giusta_causa_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "lavoro",
+        "topic_primary": "licenziamento",
+        "topic_sub": "giusta_causa",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "licenziamento per giusta causa",
+          "comportamento del dipendente",
+          "violazione doveri contrattuali",
+          "preavviso ridotto",
+          "proporzionalità sanzione",
+          "procedura disciplinare"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, capo III delle obbligazioni in generale — doveri del lavoratore e datore (artt. ~2104-2110 c.c.)",
+          "codice civile, capo IV rapporto di lavoro — disciplina del licenziamento e giusta causa (artt. ~2118-2125 c.c.)",
+          "Legge n. 604/1966, disciplina del licenziamento nelle relazioni di lavoro (artt. ~1-2 e segg.)",
+          "contratti collettivi nazionali di categoria — procedure disciplinari e cause di giusta causa"
+        ],
+        "use_case_examples": [
+          "Dipendente licenziato per assenteismo ripetuto senza documentazione medica: verifica se il comportamento integra violazione dei doveri di diligenza e se sono state esperite fasi di contestazione",
+          "Licenziamento per insubordinazione: accertamento se l'ordine del datore era legittimo, se il dipendente ha disobbedito consapevolmente, se la sanzione è proporzionata",
+          "Licenziamento per sottrazione di beni aziendali: verifica dell'effettivo possesso, della consapevolezza di violazione, della proporzionalità rispetto alle circostanze",
+          "Licenziamento dopo procedura disciplinare incompleta: analisi della legittimità del procedimento, della tempestività della contestazione, della fase difensiva del dipendente"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Giusta causa nel licenziamento: analisi strutturale",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per mappar un caso di licenziamento contestato per giusta causa. L'analisi deve staccarsi da tre fuochi: il comportamento addotto dal datore, il procedimento disciplinare svolto, la proporzionalità della sanzione rispetto ai fatti. Procediamo verificando se il comportamento del dipendente integra effettivamente una violazione contrattuale rilevante, se il datore ha rispettato la procedura, e infine se il licenziamento era la conseguenza logica o una reazione sproporzionata.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione del fatto contestato e del dovere violato",
+          "rationale": "La giusta causa richiede che il fatto addebitato integri una violazione dei doveri nascenti dal rapporto di lavoro. Devi mappare esattamente cosa il datore dice che il dipendente ha fatto, e quale norma contrattuale (o legale) la fa costituire un illecito.",
+          "riferimenti_da_consultare": "doveri generali del lavoratore (diligenza, fedeltà, obbedienza) — codice civile capo III"
+        },
+        {
+          "step_id": 2,
+          "name": "Verifica della procedura disciplinare e della tempestività",
+          "rationale": "Il licenziamento per giusta causa rimane nullo se il datore non ha seguito il procedimento minimo: comunicazione scritta dei fatti contestati, termini per la difesa del dipendente, istruttoria. Controlla quando il fatto è divenuto noto, quando è stata inviata la contestazione, se scadenze e diritti difensivi sono stati rispettati.",
+          "riferimenti_da_consultare": "disciplina della procedura disciplinare — contratti collettivi nazionali di categoria e norme generali sulla responsabilità datoriale"
+        },
+        {
+          "step_id": 3,
+          "name": "Accertamento dei fatti materiali della contestazione",
+          "rationale": "Non basta che il datore allega il fatto: devi verificare se è provato. Raccogli testimonianze, documenti, registri aziendali, registrazioni, mail. Se il fatto non è vero o è parzialmente falso, crolla il presupposto della giusta causa.",
+          "riferimenti_da_consultare": "onere della prova a carico del datore — principi generali del diritto processuale civile e della responsabilità contrattuale"
+        },
+        {
+          "step_id": 4,
+          "name": "Valutazione della gravità e della proporzionalità della sanzione",
+          "rationale": "Anche se il fatto è provato, devi chiederti: il licenziamento era la conseguenza necessaria e proporzionata, o il datore ha reagito in modo sproporzionato? Comportamenti analoghi in azienda sono stati sanzionati diversamente? Avrebbe potuto dare una sospensione, una multa, una nota disciplinare?",
+          "riferimenti_da_consultare": "principio di proporzionalità nella sanzione disciplinare — giurisprudenza di merito e di legittimità, norme contrattuali sulla scala delle sanzioni"
+        },
+        {
+          "step_id": 5,
+          "name": "Analisi del nesso causale tra comportamento e licenziamento",
+          "rationale": "Verifica che il licenziamento sia conseguenza immediata e diretta del comportamento contestato, e non di altri motivi occulti (economici, discriminatori, ritorsivi). Se il datore ha agito per causa diversa e il comportamento è solo il pretesto, la giusta causa crolla.",
+          "riferimenti_da_consultare": "cause di nullità del licenziamento per discriminazione, ritorsione, violazione normativa — codice civile e contratti collettivi"
+        },
+        {
+          "step_id": 6,
+          "name": "Formulazione dell'eccezione e della proposta risarcitoria",
+          "rationale": "Sulla base della tua analisi, costruisci l'eccezione al licenziamento (è difettoso di procedura? Il fatto non è provato? La sanzione è sproporzionata?) e quantifica il danno: retribuzione del periodo di preavviso omesso, retribuzione fino al reintegro, danni per lesione della reputazione professionale se rilevante.",
+          "riferimenti_da_consultare": "effetti della nullità del licenziamento — obblighi di reintegro e compensazione economica secondo la normativa vigente"
+        }
+      ],
+      "optional_variations": [
+        "Focus su licenziamento orale o privo di forma scritta: se il datore non ha comunica il licenziamento per iscritto, verifica se la nullità formale è pregiudiziale rispetto al merito della giusta causa",
+        "Aggiungi analisi di discriminazione: se il comportamento addotto è stato applicato selettivamente (solo a donne, soli stranieri, etc.), il caso diventa questione di nullità per discriminazione oltre che per carenza di giusta causa",
+        "Variante licenziamento disciplinare vs licenziamento economico mascherato: valuta se il datore in realtà ha licenziato per motivi economici e ha costruito la giusta causa a posteriori — richiede analisi attenta della cronologia e dei documenti aziendali"
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_lavoro_demansionamento_generale_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "lavoro",
+        "topic_primary": "demansionamento",
+        "topic_sub": "generale",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "demansionamento lavoro",
+          "modifica mansioni",
+          "danno biologico occupazionale",
+          "mobilità interna imposizione",
+          "illegittimità demansionamento",
+          "risarcimento danno da demansionamento"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, disciplina del contratto di lavoro (artt. ~2094-2134 c.c.)",
+          "codice civile, responsabilità civile (artt. ~2043-2059 c.c. — danno biologico)",
+          "decreto legislativo n. 66/2003, disciplina della tutela e promozione dell'occupazione (artt. ~1-20 segg. — mobilità)",
+          "codice della privacy, trattamento dati personali in relazione al rapporto di lavoro (artt. ~1-22 segg. d.lgs. 196/2003 e GDPR applicazioni settoriali)"
+        ],
+        "use_case_examples": [
+          "Operaio di fabbrica riassegnato a mansioni inferiori per punizione disciplinare senza giusta causa; rivendica ripristino e danno biologico",
+          "Impiegato amministrativo trasferito a ruolo generico dopo introduzione software: contesta illegittimità della modifica e chiede risarcimento",
+          "Dirigente declassato a posizione subordinata durante riorganizzazione aziendale; verifica se sussistono violazioni contrattuali e diritto a compenso aggiuntivo",
+          "Professionista sanitario riassegnato a incarichi non conformi al titolo di studio; contesta illegittimità e richiede tutela reputazionale"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Demansionamento e tutela del lavoratore in sede civile",
+      "reasoning_explanation": "Ti propongo questi passaggi come scheletro per ricostruire se il demansionamento è illegittimo e misurare il danno conseguente. Procediamo anzitutto qualificando la modifica (se contrattualmente autorizzata o abusiva), poi verificando se sussistono violazioni del principio di corrispettività e infine quantificando il danno biologico e professionale. È un punto di partenza che consente di ordinarti il materiale: contatti, documenti aziendali, prove di perdita di reputazione.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Ricostruzione del contratto di lavoro originario e accertamento della mansione",
+          "rationale": "Devi stabilire quale era la mansione iniziale, il livello contrattuale, la corrispondente retribuzione e responsabilità. Questo è il punto zero per misurare la deviazione e il danno.",
+          "riferimenti_da_consultare": "disciplina generale del contratto di lavoro — codice civile, capo sulla prestazione lavorativa e obblighi del datore"
+        },
+        {
+          "step_id": 2,
+          "name": "Analisi documentale del momento di imposizione del demansionamento",
+          "rationale": "Raccogli comunicazioni ufficiali (lettere, comunicati, ordinanze aziendali) che provano quando e come il datore ha cambiato le mansioni. Verifica se c'è stata consultazione sindacale, preavviso, o se è stata una modifica unilaterale e improvvisa.",
+          "riferimenti_da_consultare": "procedure di modifica del contratto — autonomia privata vs. vincoli procedurali da normative su mobilità interna"
+        },
+        {
+          "step_id": 3,
+          "name": "Verifica della legittimità della modifica secondo clausole contrattuali e prassi aziendale",
+          "rationale": "Accertamento se il contratto individuale, il CCNL applicabile o il regolamento aziendale autorizzano il datore a cambiare mansioni unilateralmente. Controlla se la modifica rientra nelle 'mansioni equivalenti' o se configura un'illegittima riduzione.",
+          "riferimenti_da_consultare": "principi di corrispettività e di corrispondenza tra mansione e retribuzione nel diritto del lavoro italiano"
+        },
+        {
+          "step_id": 4,
+          "name": "Quantificazione della perdita retributiva e dei benefici economici correlati",
+          "rationale": "Se le nuove mansioni sono inferiori, misura il differenziale stipendiale, perdita di scatti di anzianità, esclusione da bonus, mancati incrementi. Calcola il danno patrimoniale concreto e cumulato nel tempo.",
+          "riferimenti_da_consultare": "tutela della retribuzione proporzionata — codice civile e discipline sulla corrispettività della prestazione lavorativa"
+        },
+        {
+          "step_id": 5,
+          "name": "Accertamento del danno biologico e alla reputazione professionale",
+          "rationale": "Raccogli prove di stress, deterioramento della salute psico-fisica, isolamento lavorativo, perdita di opportunità di carriera, danno all'immagine professionale. Il demansionamento può costituire 'mobbing istituzionale' e legittima richiesta di risarcimento del danno non patrimoniale.",
+          "riferimenti_da_consultare": "responsabilità civile del datore per danno biologico — codice civile artt. ~2043 segg., giurisprudenza sulla tutela della dignità e della integrità psico-fisica del lavoratore"
+        },
+        {
+          "step_id": 6,
+          "name": "Verifica di eventuali violazioni di diritti soggettivi e diritti della personalità",
+          "rationale": "Controlla se il demansionamento integra discriminazione (per età, genere, origine, disabilità), violazione del diritto alla riservatezza o della dignità della persona. Queste cause autonome ampliano il quadro risarcitorio.",
+          "riferimenti_da_consultare": "disciplina antidiscriminazione — codice civile, decreti legislativi attuativi direttive UE, codice della privacy (artt. ~1-22 segg. nella versione nazionale)"
+        },
+        {
+          "step_id": 7,
+          "name": "Formulazione della domanda: ripristino mansionale vs. risarcimento danni",
+          "rationale": "Decidi se chiedere il reintegro nelle mansioni originarie (pretesa restitutoria) oppure il risarcimento monetario del danno patito. Spesso è conveniente cumulare, lasciando al giudice di valutare se il ripristino è fattibile o se preferire il danno compensativo.",
+          "riferimenti_da_consultare": "rimedi contrattuali e risarcitori nel diritto civile del lavoro — codice civile sulla responsabilità e sulla risoluzione dei contratti"
+        }
+      ],
+      "optional_variations": [
+        "Focalizzazione su demansionamento punitivo (disciplina): se il cambio di mansioni è conseguenza di una sanzione disciplinare, aggiungi verifica della legittimità della contestazione, del rispetto del diritto di difesa e della proporzionalità della misura rispetto alla violazione asserita.",
+        "Demansionamento per impossibilità sopravvenuta: se il datore sostiene che le mansioni originarie sono divenute impossibili (es. chiusura di un settore, riorganizzazione), sposta il focus su verifica dell'effettiva impossibilità vs. opportunità aziendale, e su conseguente diritto a equivalente retribuzione durante il periodo transitorio.",
+        "Scatta sindacale e tutela collettiva: integra la prospettiva individuale con verifica se il demansionamento viola accordi sindacali, CCNL o impegni sulla occupazione; valuta se promuovere ricorso collettivo o segnalazione alle autorità del lavoro (Ispettorato).",
+        "Focus su perdita di chance e di prospettive di carriera: se il lavoratore poteva accedere a promozioni, corsi di specializzazione o posizioni manageriali, quantifica il danno da mancate opportunità future e dal deterioramento della sua posizione sul mercato del lavoro esterno."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_gdpr_compliance_dpia_obbligatorieta_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "gdpr_compliance",
+        "topic_primary": "dpia",
+        "topic_sub": "obbligatorieta",
+        "jurisdiction": "UE-IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "valutazione d'impatto sulla protezione dati",
+          "DPIA obbligatoria",
+          "rischio trattamento dati personali",
+          "Garante della Privacy GDPR",
+          "trattamenti ad alto rischio",
+          "dati sensibili biometrici",
+          "profilazione automatizzata",
+          "documentazione compliance"
+        ],
+        "aree_normative_rilevanti": [
+          "GDPR, valutazione d'impatto sulla protezione dati e condizioni di obbligatorietà (artt. ~35-36 + Considerandi ~89-91)",
+          "GDPR, principi di trasparenza e responsabilizzazione del titolare (artt. ~5-7 + capo III)",
+          "Regolamento UE 2016/679, linee guida EDPB WP248 e WP260 su DPIA e risk assessment",
+          "Codice della Privacy italiano, implementazione GDPR e provvedimenti Garante italiano su valutazioni d'impatto (artt. ~1-110 D.Lgs. 196/2003 come modificato)"
+        ],
+        "use_case_examples": [
+          "Società di e-commerce che introduce profilazione automatizzata per raccomandazioni: deve mappare se la DPIA è obbligatoria per il rischio generato dal trattamento automatizzato",
+          "Ospedale che integra un sistema di diagnosi basato su machine learning su dati di pazienti: necessita valutazione d'impatto per elaborazione dati biometrici/sensibili",
+          "Agenzia di credito che espande monitoraggio clienti con tracciamento comportamentale: occorre verificare se il nuovo perimetro di trattamento innesca l'obbligo DPIA",
+          "Pubblico amministrazione che implementa sorveglianza su spazi pubblici con riconoscimento facciale: DPIA obbligatoria per natura e intensità del trattamento"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Obbligatorietà della DPIA: analisi condizioni attivazione",
+      "reasoning_explanation": "Ti propongo uno scheletro per verificare se il tuo cliente è effettivamente tenuto a condurre una valutazione d'impatto secondo il GDPR. Partiamo da tre questioni concrete: cosa fa il titolare con i dati, quali rischi genera il trattamento, come documentiamo la decisione. È un punto di partenza per circoscrivere l'obbligo e sostenere una posizione (obbligo/non obbligo) con riferimenti normativi chiari.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificazione della natura del trattamento",
+          "rationale": "La DPIA è obbligatoria solo per trattamenti 'ad alto rischio'. Devi prima capire se rientra nelle categorie di rischio elevato (profilazione automatizzata, elaborazione dati sensibili, monitoraggio sistematico, etc.) oppure se è un trattamento ordinario.",
+          "riferimenti_da_consultare": "categorie di trattamento ad alto rischio secondo GDPR — disposizioni generali su obbligatorietà valutazione d'impatto + linee guida EDPB WP248"
+        },
+        {
+          "step_id": 2,
+          "name": "Mappatura delle operazioni di trattamento specifiche",
+          "rationale": "Non basta dire 'trattiamo dati di clienti'. Devi documentare quali dati, con quale mezzo, per quale periodo, verso quali categorie di soggetti. Questa mappatura è la base per valutare se il rischio è effettivamente 'alto'.",
+          "riferimenti_da_consultare": "registri dei trattamenti e principi di trasparenza — codice della Privacy, capo II e sezioni applicative GDPR su finalità, categorie dati, conservazione"
+        },
+        {
+          "step_id": 3,
+          "name": "Valutazione qualitativa dei rischi emersi",
+          "rationale": "A questo punto domandati: il trattamento potrebbe privare i soggetti di diritti/libertà? Genera profiling discriminatorio? Comporta comunicazioni automatizzate in massa? Se la risposta è sì e non è chiaramente mitigabile, l'obbligatorietà della DPIA è presumibile.",
+          "riferimenti_da_consultare": "fattori di rischio rilevanti per obbligatorietà — rischi per diritti e libertà secondo GDPR artt. ~5-36 e considerazioni WP248"
+        },
+        {
+          "step_id": 4,
+          "name": "Verifica della lista di trattamenti notoriamente ad alto rischio",
+          "rationale": "Il Garante italiano e l'EDPB hanno pubblicato elenchi non esaustivi di trattamenti che richiedono DPIA (videosorveglianza, social media profiling, sistemi di scoring, etc.). Controlla se il tuo caso rientra in queste categorie note.",
+          "riferimenti_da_consultare": "liste di trattamenti ad alto rischio — provvedimenti Garante italiano e linee guida EDPB WP248, WP260 su casistiche notorie"
+        },
+        {
+          "step_id": 5,
+          "name": "Documentazione della conclusione sull'obbligatorietà",
+          "rationale": "Una volta completato l'esame, redigi un memo interno (o un parere) che sintetizzi perché la DPIA è obbligatoria (o non lo è). Questo documento ti protegge da contestazioni successive del Garante e dimostra due diligence.",
+          "riferimenti_da_consultare": "doveri di documentazione e responsabilizzazione — capo I GDPR, artt. ~5-7 e registri dei trattamenti per tracciabilità decisionale"
+        },
+        {
+          "step_id": 6,
+          "name": "Se obbligatoria: comunicazione al Garante (se richiesto)",
+          "rationale": "Se conclude che è obbligatoria, verifica se il Garante italiano richiede notifica previa della DPIA (in rari casi il Garante impone consultazione previa). Prepara i tempi e la documentazione di supporto.",
+          "riferimenti_da_consultare": "procedure di consultazione previa Garante — codice della Privacy, artt. ~36-37 GDPR e provvedimenti Garante su tempistiche notificazione"
+        }
+      ],
+      "optional_variations": [
+        "Focus esclusivo su rischi reputazionali e organizzativi: se il tuo cliente è refrattario a un'analisi formale, puoi proporre una DPIA 'light' incentrata sui rischi emergenti dalla mappatura senza entrare in metodologie pesanti. Non è conforme, ma è un compromesso di partenza.",
+        "Coinvolgimento del DPO o consulente esterno: se internamente non hai competenze di risk assessment, chiedi una valutazione esterna certificata. Costa di più, ma è più difficile da contestare in caso di istruttoria del Garante.",
+        "Esclusione a priori di obbligatorietà con parere legale: se sei sicuro che il trattamento non rientra nei casi ad alto rischio, puoi saltare i step 3-4 e documentare subito la non-obbligatorietà. Attenta a questa strada: se il Garante dopo ti smentisce, la posizione è più fragile.",
+        "DPIA come pratica preventiva: anche se non obbligatoria secondo lo scaffale normativo, conduci la valutazione comunque per scopi di diligenza interna e per anticipare contestazioni. È uno step opzionale di prudenza commerciale."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_gdpr_compliance_dpa_clausole_contratto_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "gdpr_compliance",
+        "topic_primary": "dpa",
+        "topic_sub": "clausole_contratto",
+        "jurisdiction": "UE-IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "Data Protection Agreement",
+          "responsabile del trattamento",
+          "incaricato del trattamento",
+          "clausole obbligatorie DPA",
+          "garanzie di conformità GDPR",
+          "obblighi sicurezza dati",
+          "cessazione trattamento dati"
+        ],
+        "aree_normative_rilevanti": [
+          "GDPR, disciplina del responsabile e dell'incaricato del trattamento (~artt. 28-32)",
+          "GDPR, obblighi di trasparenza e informativa (~artt. 13-14)",
+          "Decreto Legislativo 101/2018, attuazione GDPR in Italia (capo I e II, ~artt. 1-60)",
+          "Linee Guida Garante per la Privacy italiana su Data Protection Agreements (provvedimenti e FAQ)",
+          "Clausole standard per DPA — template WP248 EDPB e best practice"
+        ],
+        "use_case_examples": [
+          "Azienda italiana incarica fornitore cloud estero di gestire dati clienti: verifica se contratto contiene clausole obbligatorie GDPR per incaricato.",
+          "Responsabile del trattamento richiede modifica DPA a incaricato per introdurre sub-incaricati: analizza variabilità contrattuale consentita.",
+          "PMI riceve DPA pre-compilato da partner multinazionale: controlla conformità a standard minimo GDPR e normativa italiana.",
+          "Fornitore di servizi SaaS offre DPA modificato rispetto al modello precedente: identifica quali clausole sono vincolanti e quali negoziabili."
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Analisi e redazione clausole DPA conforme GDPR",
+      "reasoning_explanation": "Un Data Protection Agreement (DPA) tra responsabile e incaricato del trattamento è il patto giuridico che fissa diritti e obblighi quando i dati personali sono affidati a terzi. Ti propongo di mappare prima quali clausole il GDPR rende obbligatorie, poi di verificare se il tuo contratto le contiene, infine di negoziare eventuali gaps. È uno scheletro: per ogni caso reale (cloud estero, sub-incaricati, cessazione) adatterai i passaggi.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Identificare la posizione delle parti (responsabile o incaricato)",
+          "rationale": "La struttura del DPA cambia radicalmente a seconda che tu rappresenti chi dà i dati (responsabile) o chi li riceve e processa (incaricato). Questa chiarezza è il fondamento di tutto il resto.",
+          "riferimenti_da_consultare": "Definizioni e ruoli nel GDPR — sezione disciplina del responsabile e incaricato"
+        },
+        {
+          "step_id": 2,
+          "name": "Mappare le clausole obbligatorie GDPR nel DPA",
+          "rationale": "Il GDPR elenca un insieme fisso di clausole che DEVONO comparire in qualsiasi DPA valido (oggetto, durata, sicurezza, sub-incaricati, assistenza). Verifica che il contratto le copra tutte, non solo nominalmente.",
+          "riferimenti_da_consultare": "Obblighi essenziali del contratto tra responsabile e incaricato — codice civile parallelo + GDPR nucleo vincolante"
+        },
+        {
+          "step_id": 3,
+          "name": "Verificare le clausole su sub-incaricati e loro approvazione",
+          "rationale": "Sub-incaricati (es. cloud provider estero, outsourcer) creano catene di trattamento. Il DPA deve specificare come si autorizzano, quali garanzie ricevono, come il responsabile ha diritto di opporsi. È uno snodo critico di negoziazione.",
+          "riferimenti_da_consultare": "Disciplina sub-incaricati e loro gestione contrattuale — capo II GDPR attuazione italiana"
+        },
+        {
+          "step_id": 4,
+          "name": "Controllare le clausole su sicurezza, misure tecniche e organizzative",
+          "rationale": "L'incaricato deve garantire con mezzi concreti (crittografia, pseudonimizzazione, accessi controllati) la sicurezza dei dati. Il DPA deve descrivere queste misure in modo sufficientemente dettagliato per essere verificabile.",
+          "riferimenti_da_consultare": "Obblighi di sicurezza dei dati in capo all'incaricato — sezione protezione e riservatezza"
+        },
+        {
+          "step_id": 5,
+          "name": "Esaminare diritti di accesso, revisione e audit da parte del responsabile",
+          "rationale": "Il responsabile ha diritto di controllare che l'incaricato rispetti gli obblighi. Il DPA deve garantire accesso ai registri, diritto di ispezione, cooperazione in caso di data breach. Negozia i tempi e i modi.",
+          "riferimenti_da_consultare": "Diritti di controllo e verifica del responsabile — norme sulla responsabilità della gestione dati"
+        },
+        {
+          "step_id": 6,
+          "name": "Verificare clausole su trasferimenti internazionali (se rilevante)",
+          "rationale": "Se l'incaricato processa dati al di fuori dell'UE, occorrono garanzie ulteriori (adeguatezza UE, clausole standard, binding corporate rules). Questo aspetto rende molti DPA internazionali più complessi.",
+          "riferimenti_da_consultare": "Disciplina trasferimenti dati verso paesi extra-UE — sezione GDPR su adequacy decisions"
+        },
+        {
+          "step_id": 7,
+          "name": "Redigere o negoziare le clausole finali e allegati tecnici",
+          "rationale": "Una volta identificati i gap, redigi le integrazioni (o proponi negoziazione) per portare il DPA a conformità. Allega il registro delle misure di sicurezza e il piano di breach notification.",
+          "riferimenti_da_consultare": "Schemi di DPA conforme — template standard Garante e EDPB per uso italiano"
+        }
+      ],
+      "optional_variations": [
+        "Focus solo su clausole minime: se il tuo cliente è una PMI e il fornitore propone DPA rigido, negozia almeno il nucleo obbligatorio (sicurezza, sub-incaricati, assistenza) e accetta il resto come standard.",
+        "Inserisci clausola di revisione annuale: il DPA non è un documento statico; proponi di rivedere misure di sicurezza e sub-incaricati almeno annualmente per stare dietro ai rischi emergenti.",
+        "Aggiungi allegato tecnico dettagliato sulle misure di sicurezza: se il fornitore è estero o lavora con dati sensibili, chiedi di scomporre crittografia, backup, controllo accessi, log auditing in un allegato che sia verificabile.",
+        "Contempla scenario di sub-incaricati con opt-out: se il tuo cliente teme catene di trattamento incontrollate, inserisci diritto esplicito di opporsi a ogni nuovo sub-incaricato entro 30 giorni, altrimenti il contratto si scioglie."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_generic_parere_preventivo_struttura_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "generic",
+        "topic_primary": "parere",
+        "topic_sub": "preventivo_struttura",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "preventivo legale",
+          "struttura parere",
+          "stima costi litigation",
+          "analisi preliminare",
+          "fattispecie cliente",
+          "fondamenti normativi"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, norme generali sulla responsabilità civile e contrattuale (~artt. 1173-1229 c.c.)",
+          "codice civile, regole procedurali sulla prova e onere della prova (~artt. 2697-2742 c.c.)",
+          "codice di procedura civile, disciplina generale del processo (~artt. 1-100 c.p.c.)"
+        ],
+        "use_case_examples": [
+          "Cliente espone una controversia commerciale: devi stimare rischi, costi e tempistiche prima di proporre una strategia processuale",
+          "Ricevuta una diffida da controparte: serve un parere preventivo che inquadri la fattispecie normativa e i margini di difesa",
+          "Consulenza pre-contenziosa per una PMI: il cliente vuole capire il costo-beneficio prima di avviare un'azione in giudizio",
+          "Valutazione di una proposta transattiva ricevuta: serve una struttura di analisi che confronti il valore del diritto controverso"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Parere preventivo: struttura e metodo di lavoro",
+      "reasoning_explanation": "Ti propongo una sequenza di passaggi per costruire un parere preventivo solido che mappi il caso del cliente, identifichi i rischi normativi e le vie processuali possibili, e stimi il costo-beneficio della lite. È uno scheletro di partenza: ogni caso ha dinamiche proprie, quindi adatta gli step alle specifiche della tua fattispecie. L'idea centrale è scendere dal generale (inquadramento del diritto applicabile) al particolare (strategia concreta) in modo ordinato e trasparente.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Raccolta e analisi della fattispecie",
+          "rationale": "Prima di qualsiasi valutazione legale, devi avere i fatti chiari e documentati. In questa fase estrai dal cliente (o dalla diffida ricevuta) gli elementi cronologici, le parti coinvolte, i documenti rilevanti e le pretese.",
+          "riferimenti_da_consultare": "Norme generali sul capo della responsabilità civile — codice civile. Focus su cosa costituisce un inadempimento contrattuale o un illecito che il cliente lamenta."
+        },
+        {
+          "step_id": 2,
+          "name": "Inquadramento della fattispecie normativa",
+          "rationale": "Identifica quale branca del diritto governa il caso (civile, amministrativo, commerciale, ecc.) e quali sono i fondamenti normativi applicabili. Non scendere ancora nel dettaglio — lavora per aree.",
+          "riferimenti_da_consultare": "Codice civile (responsabilità contrattuale e extracontrattuale), codice della privacy se coinvolti dati personali, normative settoriali se applicabili (es. codice del consumo, codice della navigazione)."
+        },
+        {
+          "step_id": 3,
+          "name": "Analisi critica del merito e dei margini di difesa",
+          "rationale": "Esamina quale parte ha il fondamento più solido dal punto di vista normativo. Identifica gli elementi che la legge richiede per fondare la pretesa (o la difesa) e verifica se il tuo cliente (o il convenuto) li possiede. Segnala subito i rischi di merito.",
+          "riferimenti_da_consultare": "Regole sulla prova e onere della prova — codice civile. Esamina chi deve provare cosa e quali sono le conseguenze di una probatio insufficiens."
+        },
+        {
+          "step_id": 4,
+          "name": "Opzioni processuali e strategiche",
+          "rationale": "Mappa le vie disponibili: giudizio ordinario, giudizio sommario, arbitrato, negoziazione con mediazione obbligatoria ove prevista. Analizza pro e contro di ognuna rispetto al caso concreto.",
+          "riferimenti_da_consultare": "Codice di procedura civile, discipline sul processo ordinario, processo per decreto ingiuntivo, e procedimenti speciali. Se applicabile, contratti o accordi che prevedono clausole arbitrali o di mediazione."
+        },
+        {
+          "step_id": 5,
+          "name": "Stima dei rischi e del risultato probabile",
+          "rationale": "Non dare garanzie, ma offri una valutazione consapevole: percentuali di vittoria realistica, scenari avversi, vulnerabilità della posizione del tuo cliente. Sii franco sui limiti probatori.",
+          "riferimenti_da_consultare": "Norme sulla responsabilità civile e sulla determinazione del danno — codice civile. Considera anche le spese processuali e l'eventuale soccombenza."
+        },
+        {
+          "step_id": 6,
+          "name": "Stima di costi e tempistiche",
+          "rationale": "Quantifica il costo prevedibile della lite (onorari, spese di notifica, perizie, eventuale arbitrato) e la durata media dei gradi di giudizio nella jurisdizione competente. Fornisci una forchetta realistica, non una stima al ribasso.",
+          "riferimenti_da_consultare": "Tariffe forensi regionali, tabellari di categoria, costi dell'arbitrato, tariffe di notifica. Considera i tempi medi di smaltimento dei procedimenti nei tribunali competenti."
+        },
+        {
+          "step_id": 7,
+          "name": "Formulazione della raccomandazione e delle alternative",
+          "rationale": "Sintetizza il parere: qual è la strategia consigliata? Quali sono le alternative (transazione, mediazione, non agire)? Esponi chiaramente come il tuo cliente può procedere sulla base delle informazioni fornite.",
+          "riferimenti_da_consultare": "Norme sulla responsabilità professionale dell'avvocato — deontologia forense. Documentazione della consulenza resa per tutela reciproca."
+        }
+      ],
+      "optional_variations": [
+        "Focus esclusivamente sulla fattispecie di merito e scarta la stima di costi e tempistiche: utile se il cliente ha una domanda puramente teorica o vuole prima capire se ha ragione, indipendentemente da quanto costa.",
+        "Struttura il parere come 'parere sul rischio reputazionale' anziché risk legale: applicabile quando il cliente è una società quotata o un ente pubblico e le implicazioni vanno oltre il mero danno patrimoniale.",
+        "Aggiungi uno scenario di negoziazione: accanto alla via giudiziale, proponi una quantificazione della transazione ragionevole sulla base del valore della lite e della probabilità di vittoria.",
+        "Semplifica riducendo il parere a una scheda di sintesi (1-2 pagine): se il cliente ha urgenza di una decisione rapida, abbrevia l'analisi mantenendo merito e costi."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_generic_opinion_letter_struttura_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "generic",
+        "topic_primary": "opinion_letter",
+        "topic_sub": "struttura",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "parere legale",
+          "opinion letter",
+          "struttura parere",
+          "analisi questione giuridica",
+          "conclusioni motivate",
+          "fatto rilevante"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, norme generali sulla interpretazione dei contratti e degli atti (~artt. 1361-1371 c.c.)",
+          "deontologia forense, obblighi della professione di avvocato (norme ordinistiche sulla redazione di pareri)"
+        ],
+        "use_case_examples": [
+          "Parere sulla validità di una clausola contrattuale controversa (interpretazione + applicazione norme sostanziali)",
+          "Parere su responsabilità civile in caso di inadempimento (ricostruzione fattispecie + analisi causalità)",
+          "Parere su questione procedurale (prescrizione, termine, competenza) da sottoporre al giudice",
+          "Parere preliminare per cliente su opportunità/rischio di una transazione commerciale"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Struttura parere legale: dalla questione alle conclusioni",
+      "reasoning_explanation": "Un parere legale funziona se chi lo legge sa subito qual è la domanda, quali fatti la alimentano, e dove il diritto applicabile conduce. Ti propongo di scheletrizzare il parere in cinque passaggi: intestazione/premessa, fatto rilevante, questione posta, analisi normativa e conclusioni motivate. È il quadro di partenza che regge dalla più semplice opinione sulla interpretazione di un articolo fino ai pareri più compositi su controversie multi-aspetto.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Intestazione e contesto del mandato",
+          "rationale": "Chi legge il parere deve capire immediatamente a chi lo invii, da chi viene e in quale contesto nasce. Costruisce fiducia e chiarisce il perimetro della consulenza.",
+          "riferimenti_da_consultare": "norme ordinistiche sulla redazione di pareri e sulla responsabilità professionale dell'avvocato"
+        },
+        {
+          "step_id": 2,
+          "name": "Esposizione del fatto rilevante",
+          "rationale": "Ricostruisci la situazione di fatto con la precisione che serve. Il diritto applicabile dipende da questi particolari: se il fatto cambia, cambia tutto. Sii neutrale e completo.",
+          "riferimenti_da_consultare": "principi sulla necessità di identificare i fatti costitutivi della fattispecie — applicabili trasversalmente in diritto sostanziale"
+        },
+        {
+          "step_id": 3,
+          "name": "Formulazione della questione posta",
+          "rationale": "Esplicita la domanda giuridica in forma chiara: 'la questione è se...', 'il quesito riguarda...'. Così il lettore sa esattamente cosa stai risolvendo e cosa rimane fuori dal parere.",
+          "riferimenti_da_consultare": "metodologia dell'interpretazione giuridica — identificazione della questione come presupposto dell'analisi"
+        },
+        {
+          "step_id": 4,
+          "name": "Analisi normativa della questione",
+          "rationale": "Qui applichi le norme del diritto civile, commerciale, penale (a seconda della materia) al fatto specifico. Cita le fonti (legge, giurisprudenza, dottrina consolidata), spiega il ragionamento, affronta eventuali obiezioni.",
+          "riferimenti_da_consultare": "norme di diritto sostanziale del settore rilevante (civile, commerciale, penale, amministrativo) — le identificherai verificando la questione posta"
+        },
+        {
+          "step_id": 5,
+          "name": "Conclusioni motivate",
+          "rationale": "Sintetizza la tua conclusione in modo diretto. Se la questione ammette una sola risposta, dichiara chiaramente 'è nostro parere che...'. Se ci sono zone di incertezza, spiega quale sia la tesi più solida e quale il rischio residuo.",
+          "riferimenti_da_consultare": "tecniche di sintesi e comunicazione del consiglio legale al cliente — chiarezza e responsabilità nella formulazione"
+        }
+      ],
+      "optional_variations": [
+        "Parere breve (2 pagine): riduci drasticamente il fatto, concentrati sulla questione e sulla conclusione; usa questa forma per quesiti circoscritti (validità di una clausola, interpretazione di un termine, applicazione di una norma puntuale).",
+        "Parere articolato multi-questione: se il cliente chiede più di un quesito, dedica una sezione di analisi a ciascuno; usa una tabella sintetica finale ('Questione A: conclusione X; Questione B: conclusione Y') per leggibilità.",
+        "Parere con valutazione di rischio: aggiungi dopo l'analisi una sezione 'Valutazione rischio' in cui espliciti il grado di certezza della conclusione (alta, media, bassa) e gli elementi che potrebbero far vacillare il parere (ad es. evoluzione giurisprudenziale, ambiguità normativa).",
+        "Parere con alternative operative: se la conclusione teorica ammette più strade concrete (ad es. difesa in giudizio vs. negoziazione), concludi con un breve paragrafo 'Opzioni per il cliente' che espone le scelte disponibili senza sostituirti nel deciderle."
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    },
+    {
+      "pattern_id": "legal_generic_due_diligence_corporate_basic_001",
+      "pattern_type": "legal_content_methodology",
+      "schema_version": "2.0",
+      "generated_by": {
+        "model": "claude-haiku-4-5-20251001",
+        "date": "2026-05-28",
+        "prompt_version": "v2",
+        "cost_tier": "haiku",
+        "batch_id": "batch_pilot_002_20260528"
+      },
+      "domain": {
+        "legal_area": "generic",
+        "topic_primary": "due_diligence",
+        "topic_sub": "corporate_basic",
+        "jurisdiction": "IT"
+      },
+      "nota_per_avvocato": "Questo pattern è un'impalcatura di lavoro generata da AI. La struttura (i passaggi proposti, la successione, le varianti) ti è offerta come schema di partenza per il tuo caso.\n\nLe aree normative indicate (codici, capi, sezioni) sono affidabili come orientamento: ti dicono dove cercare. I riferimenti puntuali ai singoli articoli sono di tua responsabilità: verificali sul testo della legge o con la skill /verifica-fonti prima di citarli in un atto.\n\nLe varianti opzionali sono ipotesi: scartane quante vuoi. Tu sei l'avvocato — questo è uno strumento al tuo servizio, non un'autorità.",
+      "search": {
+        "keywords": [
+          "due diligence aziendale",
+          "verifica società costituzione",
+          "status legale capacità giuridica",
+          "iscrizione registro imprese",
+          "assetto amministrativo governance",
+          "conformità normativa societaria"
+        ],
+        "aree_normative_rilevanti": [
+          "codice civile, libro quinto società, titolo I società in generale (~artt. 2247-2307 c.c.)",
+          "codice civile, libro quinto società, titolo II società di persone (~artt. 2308-2510 c.c.)",
+          "codice civile, libro quinto società, titolo V società per azioni (~artt. 2325-2447 c.c.)",
+          "decreto legislativo 7 marzo 2005 n. 82 (CAD), disciplina società digitali e iscrizioni registri (~artt. 3-6 segg.)",
+          "decreto legislativo 10 agosto 2000 n. 267 (TUEL), obblighi di comunicazione enti locali e loro strumenti"
+        ],
+        "use_case_examples": [
+          "Acquisizione di una PMI in forma di srl: verificare costituzione regolare, assetto capitale, poteri amministratori",
+          "Valutazione società in partecipazione: controllare atto costitutivo, statuto, iscrizione CCIAA",
+          "Fusione per incorporazione: mappare esistenza società incorporanda, posizione debitoria, garanzie fideiussorie",
+          "Newco prima di sottoscrizione investimento: confermare status costitutivo, cariche, deleghe amministrative"
+        ],
+        "related_pattern_ids": []
+      },
+      "title": "Schema base verifica compliance societaria in due diligence",
+      "reasoning_explanation": "Ti propongo un percorso di controlli essenziali per mappare lo status legale e amministrativo di una società target prima di operazioni strutturali. È uno scheletro: per ogni società il tracciato cambia a seconda della forma (srl, spa, snc, sas) e del contesto (acquisizione, finanziamento, fusione). Partiamo dai documenti costitutivi e dalla posizione nei registri, poi allarghiamo alla governance e alle autorizzazioni.",
+      "default_approach": [
+        {
+          "step_id": 1,
+          "name": "Verifica costituzione e iscrizione registri",
+          "rationale": "Accertare che la società esista legalmente e sia regolarmente iscritta. È il fondamento: se manca o è irregolare, tutto il resto è a rischio.",
+          "riferimenti_da_consultare": "norme sulla costituzione di società di persone e di capitali — codice civile libro quinto; obbligo iscrizione e comunicazioni al registro imprese — decreto CAD"
+        },
+        {
+          "step_id": 2,
+          "name": "Esame atto costitutivo e statuto",
+          "rationale": "Leggere il documento fondativo: oggetto sociale, capitale, sedi, quote/azioni, diritti soci. Qui si vedono vincoli al trasferimento, patti parasociali, clausole limitanti.",
+          "riferimenti_da_consultare": "disciplina generali dell'atto costitutivo e dello statuto — codice civile libro quinto titoli I-V"
+        },
+        {
+          "step_id": 3,
+          "name": "Controllo assetto amministrativo e poteri",
+          "rationale": "Chi amministra (amministratore, cda, consiglio gestione), in quale forma, con quali deleghe. Se gli amministratori non hanno potere di firma, le sottoscrizioni di contratti target possono essere nulle.",
+          "riferimenti_da_consultare": "norme su amministrazione ordinaria e straordinaria, poteri e deleghe — codice civile libro quinto; deliberazioni sociali"
+        },
+        {
+          "step_id": 4,
+          "name": "Verifica composizione azionaria e beneficiari ultimi",
+          "rationale": "Mappare chi possiede quote o azioni, eventuali usufrutti, pegni, sequestri. Identificare i beneficiari ultimi per compliance anti-riciclaggio e sanzioni.",
+          "riferimenti_da_consultare": "norme sulla titolarità di partecipazioni — codice civile; obblighi di trasparenza dei beneficiari ultimi — decreto legislativo n. 231 del 2007"
+        },
+        {
+          "step_id": 5,
+          "name": "Ricerca di autorizzazioni e licenze settoriali",
+          "rationale": "Se la società esercita attività regolamentata (finanziaria, assicurativa, ambientale, edilizia), occorrono autorizzazioni. La loro assenza rende l'attività nulla o sanzionabile.",
+          "riferimenti_da_consultare": "norme settoriali (es. testo unico bancario, codice dell'ambiente, codice della strada): variano per settore, da consultare caso per caso"
+        },
+        {
+          "step_id": 6,
+          "name": "Controllo posizione tributaria e contributiva",
+          "rationale": "Verificare iscrizione Anagrafe tributaria, posizione IVA, versamenti INPS. Debiti tributari o previdenziali possono trasferirsi al nuovo proprietario.",
+          "riferimenti_da_consultare": "disciplina iscrizione Anagrafe tributaria e obblighi comunicazione — decreto-legge n. 78 del 2009; responsabilità passivo tributario successori"
+        }
+      ],
+      "optional_variations": [
+        "Focus su verifiche contrattuali: se il target ha contratti significativi (locazione, fornitura, affidamento), aggiungi mapping dei change of control clauses e dei consensi necessari",
+        "Approfondimento compliance normative speciali: per settori regolati (sanità, ambiente, privacy, sicurezza) estendi ogni step con controlli normativi vertical-specific",
+        "Semplificazione per transazioni minori: reduci gli step 5-6 a lista di checklist, se il target è micro-impresa in settore non regolato",
+        "Integrazione M&A-oriented: aggiungi step 7 su verifiche di potenziali liti, arbitrati, contenziosi in corso e coperture assicurative"
+      ],
+      "provenance_chain": [
+        {
+          "version": 1,
+          "author": "batch_pilot_002_20260528",
+          "action": "initial_generation",
+          "diff_summary": null,
+          "validation_status": "preview_only",
+          "timestamp": "2026-05-28T09:48:55+00:00",
+          "consent_to_share": false
+        }
+      ],
+      "human_validated": false,
+      "founder_curated": false,
+      "empirical_use_count": 0,
+      "empirical_validation_count": 0,
+      "empirical_rejection_count": 0
+    }
+  ]
+}
