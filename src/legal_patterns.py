@@ -49,6 +49,73 @@ NOTA_CANONICAL = (
     "l'avvocato — questo è uno strumento al tuo servizio, non un'autorità."
 )
 
+
+# ---------------------------------------------------------------------------
+# Legacy schema conversion (scaffold v2 → bulletin_patterns.json schema 1.0.0)
+# ---------------------------------------------------------------------------
+
+def _derive_task_name(pattern_id: str) -> str:
+    """legal_civile_contratti_trasporto_001 → legal_civile_contratti_trasporto"""
+    return re.sub(r"_\d{3}$", "", pattern_id)
+
+
+def _compose_prompt_template(pattern: dict) -> str:
+    """Compose legacy prompt_template field as markdown block from scaffold v2 pattern."""
+    nota = pattern.get("nota_per_avvocato", "")
+    reasoning = pattern.get("reasoning_explanation", "")
+    aree = pattern.get("search", {}).get("aree_normative_rilevanti", [])
+    steps = pattern.get("default_approach", [])
+    variations = pattern.get("optional_variations", [])
+
+    parts: list[str] = []
+    if nota:
+        parts.append(nota)
+        parts.append("")
+    if reasoning:
+        parts.append("## Approccio")
+        parts.append(reasoning)
+        parts.append("")
+    if aree:
+        parts.append("## Aree normative rilevanti")
+        for area in aree:
+            parts.append(f"- {area}")
+        parts.append("")
+    if steps:
+        parts.append("## Passaggi proposti")
+        for step in steps:
+            sid = step.get("step_id", "?")
+            name = step.get("name", "")
+            rationale = step.get("rationale", "")
+            riferimenti = step.get("riferimenti_da_consultare", "")
+            parts.append(f"{sid}. **{name}** — {rationale}")
+            if riferimenti:
+                parts.append(f"   Da consultare: {riferimenti}")
+        parts.append("")
+    if variations:
+        parts.append("## Varianti possibili")
+        for var in variations:
+            parts.append(f"- {var}")
+        parts.append("")
+    return "\n".join(parts).strip()
+
+
+def _to_legacy_pattern(p: dict) -> dict:
+    """Map scaffold v2 pattern to legacy schema 1.0.0 fields (BeccarIA pattern-extractor)."""
+    use_cases = p.get("search", {}).get("use_case_examples", []) or []
+    return {
+        "task_name": _derive_task_name(p["pattern_id"]),
+        "description": p.get("title", ""),
+        "prompt_template": _compose_prompt_template(p),
+        "example_input": use_cases[0] if use_cases else None,
+        "example_output": None,
+        "source_repo": "MicheleLoi/legal-tech-cowork",
+        "source_owner": "MicheleLoi",
+        "source_url": "https://github.com/MicheleLoi/legal-tech-cowork",
+        "source_commit": None,
+        "source_license": "AGPL-3.0-only",
+        "extraction_confidence": "high",
+    }
+
 # Haiku model id (decision_log canon § generated_by.model)
 HAIKU_MODEL = "claude-haiku-4-5-20251001"
 
@@ -498,7 +565,12 @@ def run_batch(
 
     coverage_path = repo_root / "output" / "pilot_domain_coverage_v1.json"
     prompt_path = repo_root / "src" / "legal_patterns_prompt_v2.txt"
-    out_ok_path = repo_root / "output" / "bulletin_legal_patterns.json"
+    # Output target: bulletin_patterns.json (legacy schema 1.0.0 consumed by
+    # BeccarIA pattern-extractor v4.0.0). Scaffold-not-answer patterns get
+    # converted to legacy format via _to_legacy_pattern() before write.
+    # Decision 2026-05-28 SID-20260528-093309: skill stabile, bollettino mutabile;
+    # no dual-bollettino routing; one file = one consumer skill.
+    out_ok_path = repo_root / "output" / "bulletin_patterns.json"
     out_pending_path = repo_root / "output" / "bulletin_legal_patterns_pending_review.json"
 
     targets = load_targets(coverage_path)
@@ -568,15 +640,20 @@ def run_batch(
             print(f"[batch] ABORTED: {result.abort_reason}")
             break
 
+    # Convert scaffold v2 patterns to legacy schema 1.0.0 format (one-shot,
+    # consumed by BeccarIA pattern-extractor). Pending_review file keeps
+    # the raw v2 format for audit (it's internal, not published).
+    legacy_patterns = [_to_legacy_pattern(p) for p in result.patterns_ok]
+
     # Write outputs (idempotent overwrite).
     out_ok_path.parent.mkdir(parents=True, exist_ok=True)
     out_ok_path.write_text(
         json.dumps(
             {
-                "schema_version": "2.0",
+                "schema_version": "1.0.0",
                 "generated_at": timestamp_iso,
-                "batch_id": batch_id,
-                "patterns": result.patterns_ok,
+                "source_count": 1,
+                "patterns": legacy_patterns,
             },
             indent=2,
             ensure_ascii=False,
