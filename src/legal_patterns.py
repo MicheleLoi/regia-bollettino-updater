@@ -108,11 +108,16 @@ def _to_legacy_pattern(p: dict) -> dict:
         "prompt_template": _compose_prompt_template(p),
         "example_input": use_cases[0] if use_cases else None,
         "example_output": None,
+        # source_* fields = editorial attribution (curated + published from this repo).
+        # Distinct from CONTENT license: pattern data is proprietary (see top-level
+        # content_license in bulletin_patterns.json + NOTICE.md in regia-bollettino-updater).
+        # SID-20260529-manual founder direttiva: "il bollettino non ha bisogno di essere
+        # AGPL". Code (this script) = AGPL-3.0; content (generated patterns) = proprietary.
         "source_repo": "MicheleLoi/legal-tech-cowork",
         "source_owner": "MicheleLoi",
         "source_url": "https://github.com/MicheleLoi/legal-tech-cowork",
         "source_commit": None,
-        "source_license": "AGPL-3.0-only",
+        "source_license": "proprietary",
         "extraction_confidence": "high",
     }
 
@@ -530,6 +535,8 @@ def run_batch(
     repo_root: Path,
     dry_run: bool = False,
     limit: int | None = None,
+    coverage_path: Path | None = None,
+    append_mode: bool = False,
 ) -> BatchResult:
     """Run the Haiku batch over the pilot domain coverage targets.
 
@@ -537,6 +544,13 @@ def run_batch(
         repo_root: regia-bollettino-updater repo root (cwd-equivalent).
         dry_run: if True, run on a single target (sanity check).
         limit: cap the number of targets processed (None = all 27).
+        coverage_path: override default coverage file path.
+        append_mode: if True, load existing bulletin_patterns.json, skip targets
+            whose task_name is already covered (dedup), generate only the new
+            targets, and merge results (existing patterns preserved verbatim,
+            including their post-hoc enrichment fields like keywords/legal_area/
+            jurisdiction added by external script). Doctrine ratificata
+            2026-05-28 SID-20260528-manual.
 
     Writes:
         output/bulletin_legal_patterns.json
@@ -563,7 +577,9 @@ def run_batch(
 
     client = anthropic.Anthropic(api_key=api_key)
 
-    coverage_path = repo_root / "output" / "pilot_domain_coverage_v1.json"
+    # Coverage file: override or default
+    if coverage_path is None:
+        coverage_path = repo_root / "output" / "pilot_domain_coverage_v1.json"
     prompt_path = repo_root / "src" / "legal_patterns_prompt_v2.txt"
     # Output target: bulletin_patterns.json (legacy schema 1.0.0 consumed by
     # BeccarIA pattern-extractor v4.0.0). Scaffold-not-answer patterns get
@@ -575,6 +591,26 @@ def run_batch(
 
     targets = load_targets(coverage_path)
     prompt_template = load_prompt_template(prompt_path)
+
+    # ── APPEND MODE — load existing patterns + dedup targets ────────────────
+    # Doctrine append-only ratificata 2026-05-28 SID-20260528-manual:
+    # il bullettino cresce per accumulo; pattern esistenti preservati verbatim
+    # (NON re-rolled da Haiku) per non perdere stochasticity + post-hoc
+    # enrichment fields. Solo target non ancora coperti vengono generati.
+    existing_patterns: list[dict[str, Any]] = []
+    if append_mode and out_ok_path.exists():
+        existing_doc = json.loads(out_ok_path.read_text(encoding="utf-8"))
+        existing_patterns = existing_doc.get("patterns", [])
+        existing_task_names = {p.get("task_name") for p in existing_patterns}
+        before_count = len(targets)
+        targets = [
+            t for t in targets
+            if _derive_task_name(t["pattern_id"]) not in existing_task_names
+        ]
+        skipped = before_count - len(targets)
+        print(f"[append] Loaded {len(existing_patterns)} existing patterns; "
+              f"skipped {skipped} already-covered targets; "
+              f"will generate {len(targets)} new.")
 
     if dry_run:
         targets = targets[:1]
@@ -643,17 +679,45 @@ def run_batch(
     # Convert scaffold v2 patterns to legacy schema 1.0.0 format (one-shot,
     # consumed by BeccarIA pattern-extractor). Pending_review file keeps
     # the raw v2 format for audit (it's internal, not published).
-    legacy_patterns = [_to_legacy_pattern(p) for p in result.patterns_ok]
+    new_legacy_patterns = [_to_legacy_pattern(p) for p in result.patterns_ok]
 
-    # Write outputs (idempotent overwrite).
+    # Append mode: merge existing patterns (preserved verbatim) + new generated.
+    # Existing patterns may have post-hoc enrichment fields (keywords/legal_area/
+    # jurisdiction added externally to schema v1.1.0); preserved as-is.
+    # Newly generated patterns are at schema v1.0.0 (lack enrichment fields);
+    # external enrichment script must run after this batch to bring them to v1.1.0.
+    if append_mode:
+        merged_patterns = existing_patterns + new_legacy_patterns
+        # Preserve schema_version from existing doc (1.1.0 if previously enriched);
+        # the merge as-is leaves new patterns without enrichment fields until
+        # external enrichment step runs.
+        schema_version = existing_doc.get("schema_version", "1.0.0") if append_mode and out_ok_path.exists() else "1.0.0"
+    else:
+        merged_patterns = new_legacy_patterns
+        schema_version = "1.0.0"
+
+    # Write outputs.
     out_ok_path.parent.mkdir(parents=True, exist_ok=True)
     out_ok_path.write_text(
         json.dumps(
             {
-                "schema_version": "1.0.0",
+                "schema_version": schema_version,
                 "generated_at": timestamp_iso,
                 "source_count": 1,
-                "patterns": legacy_patterns,
+                # Content license: dati proprietari (editorial curation © MicheleLoi).
+                # Distinct from the code license of this generator script (AGPL-3.0
+                # in repo MicheleLoi/regia-bollettino-updater). The two are separate
+                # assets per founder direttiva SID-20260529-manual: "il bollettino
+                # non ha bisogno di essere AGPL".
+                "content_license": "proprietary",
+                "content_license_notice": (
+                    "Content of this bulletin is proprietary, © MicheleLoi 2026, "
+                    "All Rights Reserved. The generator script (regia-bollettino-updater) "
+                    "is AGPL-3.0 but distinct from this content. The consumer skill "
+                    "(BeccarIA, legal-tech-cowork) is also AGPL-3.0 but consumes this "
+                    "proprietary content via HTTPS. See NOTICE.md for full details."
+                ),
+                "patterns": merged_patterns,
             },
             indent=2,
             ensure_ascii=False,
