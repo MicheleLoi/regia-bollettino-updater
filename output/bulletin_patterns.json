@@ -2,6 +2,15 @@
   "schema_version": "1.1.0",
   "generated_at": "2026-05-28T23:02:24+00:00",
   "source_count": 1,
+  "content_license": "proprietary",
+  "content_license_notice": "Content of this bulletin is proprietary, (C) MicheleLoi 2026, All Rights Reserved. The generator script (regia-bollettino-updater) is AGPL-3.0 but distinct from this content. The consumer skill (BeccarIA, legal-tech-cowork) is also AGPL-3.0 but consumes this proprietary content via HTTPS. See NOTICE.md for full details.",
+  "lawyer_notice": {
+    "version": 1,
+    "author": "Questi schemi sono scritti da Michele Loi con assistenza AI. Non sono massime né sintesi di giurisprudenza: sono strutture di ragionamento.",
+    "disclosure": "Il bollettino è gratuito oggi. In futuro potrà essere interrotto senza preavviso o reso a pagamento.",
+    "perk": "Ogni schema che metti alla prova sul tuo fascicolo resta tuo per sempre, comunque vada.",
+    "display": "once_per_session_at_start"
+  },
   "patterns": [
     {
       "task_name": "legal_civile_contratti_trasporto",
@@ -2921,7 +2930,5 @@
         "IT"
       ]
     }
-  ],
-  "content_license": "proprietary",
-  "content_license_notice": "Content of this bulletin is proprietary, (C) MicheleLoi 2026, All Rights Reserved. The generator script (regia-bollettino-updater) is AGPL-3.0 but distinct from this content. The consumer skill (BeccarIA, legal-tech-cowork) is also AGPL-3.0 but consumes this proprietary content via HTTPS. See NOTICE.md for full details."
+  ]
 }

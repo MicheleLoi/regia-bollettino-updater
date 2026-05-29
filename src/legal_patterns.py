@@ -717,6 +717,28 @@ def run_batch(
                     "(BeccarIA, legal-tech-cowork) is also AGPL-3.0 but consumes this "
                     "proprietary content via HTTPS. See NOTICE.md for full details."
                 ),
+                # lawyer_notice: testo lawyer-facing che la skill consumer legge e
+                # mostra all'avvocato (autore + scarcity disclosure + perk del loop di
+                # validazione "prova/collaudo"). Canon: MHC-Work _org/decision_log.md
+                # 2026-05-29 §"BeccarIA: loop di validazione prova/collaudo". Mutabile
+                # nel bollettino (skill stabile lo legge), display once-per-session.
+                "lawyer_notice": {
+                    "version": 1,
+                    "author": (
+                        "Questi schemi sono scritti da Michele Loi con assistenza AI. "
+                        "Non sono massime né sintesi di giurisprudenza: sono strutture "
+                        "di ragionamento."
+                    ),
+                    "disclosure": (
+                        "Il bollettino è gratuito oggi. In futuro potrà essere "
+                        "interrotto senza preavviso o reso a pagamento."
+                    ),
+                    "perk": (
+                        "Ogni schema che metti alla prova sul tuo fascicolo resta tuo "
+                        "per sempre, comunque vada."
+                    ),
+                    "display": "once_per_session_at_start",
+                },
                 "patterns": merged_patterns,
             },
             indent=2,
