@@ -100,7 +100,7 @@ def _compose_prompt_template(pattern: dict) -> str:
 
 
 def _to_legacy_pattern(p: dict) -> dict:
-    """Map scaffold v2 pattern to legacy schema 1.0.0 fields (BeccarIA pattern-extractor)."""
+    """Map scaffold v2 pattern to legacy schema 1.0.0 fields (BeccarIA schemi-di-ragionamento)."""
     use_cases = p.get("search", {}).get("use_case_examples", []) or []
     return {
         "task_name": _derive_task_name(p["pattern_id"]),
@@ -582,7 +582,7 @@ def run_batch(
         coverage_path = repo_root / "output" / "pilot_domain_coverage_v1.json"
     prompt_path = repo_root / "src" / "legal_patterns_prompt_v2.txt"
     # Output target: bulletin_patterns.json (legacy schema 1.0.0 consumed by
-    # BeccarIA pattern-extractor v4.0.0). Scaffold-not-answer patterns get
+    # BeccarIA schemi-di-ragionamento v4.0.0). Scaffold-not-answer patterns get
     # converted to legacy format via _to_legacy_pattern() before write.
     # Decision 2026-05-28 SID-20260528-093309: skill stabile, bollettino mutabile;
     # no dual-bollettino routing; one file = one consumer skill.
@@ -677,7 +677,7 @@ def run_batch(
             break
 
     # Convert scaffold v2 patterns to legacy schema 1.0.0 format (one-shot,
-    # consumed by BeccarIA pattern-extractor). Pending_review file keeps
+    # consumed by BeccarIA schemi-di-ragionamento). Pending_review file keeps
     # the raw v2 format for audit (it's internal, not published).
     new_legacy_patterns = [_to_legacy_pattern(p) for p in result.patterns_ok]
 

@@ -2,7 +2,7 @@
 """
 Pydantic models for bulletin_patterns.json.
 
-This module is the schema source of truth for the BeccarIA pattern-extractor skill consumer.
+This module is the schema source of truth for the BeccarIA schemi-di-ragionamento skill consumer.
 Field names here take precedence over any consumer-side expectations documented in Brief A.
 Schema changes that are breaking require coordination with the skill consumer (BeccarIA).
 """
@@ -68,7 +68,7 @@ class BulletinPatterns(BaseModel):
     """
     Top-level envelope for bulletin_patterns.json.
 
-    Consumed by the BeccarIA pattern-extractor skill.
+    Consumed by the BeccarIA schemi-di-ragionamento skill.
     Schema version: 1.0.0
     """
 

@@ -5,7 +5,7 @@ legal-AI open-source space, builds three JSON bulletin files, and publishes
 them to a founder-operated VPS.
 
 The bulletins are consumed by the **BeccarIA** plugin (`legal-tech-cowork`)
-via its `ecosystem-scout`, `pattern-extractor`, and `catalogo` skills.
+via its `ecosystem-scout`, `schemi-di-ragionamento`, and `catalogo` skills.
 
 ## What it does
 
@@ -209,7 +209,7 @@ Key fields for `ecosystem-scout` skill:
 }
 ```
 
-Key fields for `pattern-extractor` skill:
+Key fields for `schemi-di-ragionamento` skill:
 - `prompt_template`: verbatim text applied by Claude in conversation.
 - `extraction_confidence`: `"high"` (clearly delimited in source), `"medium"`
   (plausible with minor interpretation), or `"low"` (heuristically reconstructed).
