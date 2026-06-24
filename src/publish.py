@@ -1,26 +1,44 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 """
-publish.py — Upload bulletins to VPS via SSH/rsync with pre-flight checks.
+publish.py — Upload bulletins to VPS via Tailscale with pre-flight checks.
 
 Gate: refuses to publish if output/.review_flag is absent or stale.
-Backup: renames existing remote files to *.previous.json before overwrite.
+Backup: copies existing remote files to *.previous.json before overwrite.
 Verify: fetches public URL post-upload and validates JSON round-trip.
+
+Required env vars:
+  VPS_HOST          Tailscale hostname of the VPS (e.g. vps-easyname)
+  VPS_USER          SSH user on the VPS (e.g. loimi)
+  VPS_PATH          Absolute path to the bulletins directory on the VPS
+                    (e.g. /var/www/html/bollettini)
+
+Optional env vars:
+  VPS_MAGIC_IP      Tailscale magic IP for scp transfers (default: 100.90.201.54).
+                    Override when the Tailscale IP changes — never hardcoded in code.
+  VPS_BULLETIN_URL  Public base URL for post-upload HTTP verification
+                    (e.g. https://bollettino.example.com/). Skipped if unset.
+
+No longer needed:
+  VPS_KEY_PATH      Removed — Tailscale SSH handles authentication; no key file required.
 """
 
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import httpx
-import paramiko
 import yaml
 
 from .schema.ecosystem import BulletinEcosystem
 from .schema.patterns import BulletinPatterns
 from .schema.skills import BulletinSkills
+
+# Default Tailscale magic IP for scp; override with VPS_MAGIC_IP env var.
+_DEFAULT_MAGIC_IP = "100.90.201.54"
 
 
 def _check_review_flag(review_flag_path: Path, max_age_minutes: int) -> None:
@@ -50,32 +68,67 @@ def _check_review_flag(review_flag_path: Path, max_age_minutes: int) -> None:
         sys.exit(1)
 
 
-def _sftp_backup_and_upload(
-    ssh: paramiko.SSHClient,
+def _run(cmd: list[str], description: str) -> None:
+    """Run a subprocess command; exit with an error message on failure."""
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Error during {description}:")
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+        sys.exit(1)
+
+
+def _tailscale_backup_and_upload(
     local_path: Path,
     remote_dir: str,
+    vps_host: str,
+    vps_user: str,
+    magic_ip: str,
     previous_suffix: str,
 ) -> None:
     """
-    Via SFTP: backup existing remote file to *.previous.json, then upload.
+    Via Tailscale: backup existing remote file to *.previous.json, then upload.
+
+    Steps:
+      1. Remote backup: sudo cp BULLETINS_DIR/f BULLETINS_DIR/f.previous.json
+      2. SCP to /tmp on VPS via magic IP (avoids sudo for the transfer itself)
+      3. Remote move from /tmp to BULLETINS_DIR: sudo cp + rm
     """
-    sftp = ssh.open_sftp()
-    remote_path = f"{remote_dir}/{local_path.name}"
-    prev_stem = local_path.stem
-    prev_name = prev_stem + previous_suffix
+    fname = local_path.name
+    stem = local_path.stem
+    prev_name = stem + previous_suffix
+    remote_path = f"{remote_dir}/{fname}"
     remote_prev = f"{remote_dir}/{prev_name}"
+    tmp_path = f"/tmp/{fname}"
+    ssh_target = f"{vps_user}@{vps_host}"
+    scp_target = f"{vps_user}@{magic_ip}:{tmp_path}"
 
-    # Backup existing
-    try:
-        sftp.stat(remote_path)
-        sftp.rename(remote_path, remote_prev)
-        print(f"  Backed up remote {remote_path} → {remote_prev}")
-    except FileNotFoundError:
-        pass  # No existing file; no backup needed
+    # Step 1: backup existing file (ignore errors if file doesn't exist yet)
+    backup_cmd = f"[ -f {remote_path} ] && sudo cp {remote_path} {remote_prev} || true"
+    print(f"  Backing up remote {remote_path} → {remote_prev}")
+    _run(
+        ["tailscale", "ssh", ssh_target, backup_cmd],
+        f"backup of {fname}",
+    )
 
-    sftp.put(str(local_path), remote_path)
-    print(f"  Uploaded {local_path.name} → {remote_path}")
-    sftp.close()
+    # Step 2: copy local file to /tmp on VPS via scp + magic IP
+    print(f"  Uploading {local_path.name} → {scp_target}")
+    _run(
+        ["scp", str(local_path), scp_target],
+        f"scp transfer of {fname}",
+    )
+
+    # Step 3: move from /tmp to BULLETINS_DIR (requires sudo for root-owned webroot)
+    deploy_cmd = f"sudo cp {tmp_path} {remote_path} && sudo rm {tmp_path}"
+    print(f"  Deploying /tmp/{fname} → {remote_path}")
+    _run(
+        ["tailscale", "ssh", ssh_target, deploy_cmd],
+        f"remote deploy of {fname}",
+    )
+
+    print(f"  Done: {fname}")
 
 
 def _verify_remote(url: str, schema_class: type) -> None:
@@ -113,11 +166,11 @@ def run(config_path: str = "config.yaml") -> None:
             print(f"Error: bulletin file not found: {p}. Run `updater build` first.")
             sys.exit(1)
 
-    # Read SSH env vars
+    # Read Tailscale env vars
     vps_host = os.environ.get(env_vars.get("vps_host", "VPS_HOST"), "")
     vps_user = os.environ.get(env_vars.get("vps_user", "VPS_USER"), "")
     vps_path = os.environ.get(env_vars.get("vps_path", "VPS_PATH"), "")
-    vps_key_path = os.environ.get(env_vars.get("vps_key_path", "VPS_KEY_PATH"), "")
+    magic_ip = os.environ.get("VPS_MAGIC_IP", _DEFAULT_MAGIC_IP)
 
     for var_name, val in [
         ("VPS_HOST", vps_host),
@@ -128,26 +181,11 @@ def run(config_path: str = "config.yaml") -> None:
             print(f"Error: {var_name} env var not set.")
             sys.exit(1)
 
-    print(f"Connecting to {vps_user}@{vps_host}...")
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-    connect_kwargs: dict = {
-        "hostname": vps_host,
-        "username": vps_user,
-        "timeout": 30,
-    }
-    if vps_key_path:
-        connect_kwargs["key_filename"] = vps_key_path
-
-    ssh.connect(**connect_kwargs)
-
-    # Upload the two core bulletins
+    # Build list of bulletins to upload
     upload_targets = [
         (eco_path, BulletinEcosystem),
         (pat_path, BulletinPatterns),
     ]
-    # Upload skills bulletin only if the file was produced by the build step
     if skl_path.exists():
         upload_targets.append((skl_path, BulletinSkills))
     else:
@@ -156,12 +194,18 @@ def run(config_path: str = "config.yaml") -> None:
             "Configure skill_sources in config.yaml and re-run `updater build` to enable."
         )
 
+    print(f"Publishing via Tailscale to {vps_user}@{vps_host} ({vps_path})...")
     for local_path, _schema_class in upload_targets:
-        _sftp_backup_and_upload(ssh, local_path, vps_path, previous_suffix)
+        _tailscale_backup_and_upload(
+            local_path,
+            vps_path,
+            vps_host,
+            vps_user,
+            magic_ip,
+            previous_suffix,
+        )
 
-    ssh.close()
-
-    # Post-upload verification (requires VPS_URL env var, optional)
+    # Post-upload verification (requires VPS_BULLETIN_URL env var, optional)
     vps_base_url = os.environ.get("VPS_BULLETIN_URL", "")
     if vps_base_url:
         _verify_remote(
