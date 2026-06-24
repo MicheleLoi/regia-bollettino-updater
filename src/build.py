@@ -1,10 +1,16 @@
-# SPDX-License-Identifier: AGPL-3.0-only
+﻿# SPDX-License-Identifier: AGPL-3.0-only
 """
 build.py — Build bollettini JSON from raw scan output.
 
 Reads the most recent raw/*.json file, infers jurisdiction and capabilities
-from README text, computes is_active, extracts patterns, validates against
-pydantic schema, and writes the two bulletin JSON files.
+from README text, computes is_active, validates against pydantic schema,
+and writes bulletin_ecosystem.json and bulletin_skills.json.
+
+bulletin_patterns.json is NOT written by build.py: it is produced exclusively
+by `updater generate-legal-patterns` (legal_patterns.py), which generates
+curated proprietary patterns via the Haiku batch pipeline. build.py will
+create an empty-envelope bulletin_patterns.json only if the file does not
+yet exist (first-run bootstrap), and leaves any existing file untouched.
 """
 
 from __future__ import annotations
@@ -309,8 +315,6 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     active_cutoff = now - timedelta(days=active_days)
 
     eco_repos: list[EcosystemRepo] = []
-    all_patterns: list[Pattern] = []
-    source_repos_with_patterns: set[str] = set()
 
     for entry in raw_data.get("repos", []):
         meta = entry.get("meta") or {}
@@ -354,11 +358,6 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
             )
         )
 
-        patterns = _extract_patterns(readme, owner, name, url, license_spdx)
-        if patterns:
-            source_repos_with_patterns.add(f"{owner}/{name}")
-            all_patterns.extend(patterns)
-
     # --- Human picks: append to eco_repos with source_type='human_picked' ---
     # Curated entries from config.yaml. The scan step produced these in
     # raw_data['human_picks_raw']; build.py's only job is to map them to
@@ -374,27 +373,13 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     if human_pick_count > 0:
         print(f"  Added {human_pick_count} human-picked entr{'y' if human_pick_count == 1 else 'ies'} to ecosystem bulletin.")
 
-    # --- Semantic dedup: collapse patterns with identical prompt_template ---
-    # Rationale: forks inheriting an unmodified README produce identical pattern
-    # extractions. After scanning Mike + 915 fork the patterns array can balloon
-    # to thousands of duplicates. Dedup by hash of prompt_template, keep first
-    # occurrence (iteration order = canonical source first via seeds list +
-    # follow_forks order — Mike before its forks).
-    seen_templates: set[str] = set()
-    deduped_patterns: list[Pattern] = []
-    for p in all_patterns:
-        template_hash = p.prompt_template
-        if template_hash in seen_templates:
-            continue
-        seen_templates.add(template_hash)
-        deduped_patterns.append(p)
-    dedup_dropped = len(all_patterns) - len(deduped_patterns)
-    if dedup_dropped > 0:
-        print(
-            f"  Dedup: {dedup_dropped} duplicate pattern(s) collapsed "
-            f"({len(all_patterns)} → {len(deduped_patterns)})."
-        )
-    all_patterns = deduped_patterns
+    # bulletin_patterns.json is NOT generated from README scraping.
+    # It is produced exclusively by `updater generate-legal-patterns` (legal_patterns.py),
+    # which runs the Haiku batch to create curated, proprietary patterns.
+    # build.py writes an empty envelope here to avoid leaving stale scrape output
+    # at this path if the file does not yet exist; it never overwrites a non-empty file.
+    # Do NOT re-introduce README pattern extraction here -- see decision_log.
+    all_patterns: list[Pattern] = []
 
     # --- Build bulletin_skills.json from skill_sources_raw ---
     scan_date_str = now.strftime("%Y-%m-%d")
@@ -417,7 +402,7 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     bulletin_pat = BulletinPatterns(
         schema_version=PAT_VERSION,
         generated_at=now,
-        source_count=len(source_repos_with_patterns),
+        source_count=0,
         patterns=all_patterns,
     )
     bulletin_skl = BulletinSkills(
@@ -431,16 +416,23 @@ def run(config_path: str = "config.yaml") -> tuple[Path, Path, Path]:
     with open(eco_path, "w", encoding="utf-8") as fh:
         fh.write(bulletin_eco.model_dump_json(indent=2))
 
-    with open(pat_path, "w", encoding="utf-8") as fh:
-        fh.write(bulletin_pat.model_dump_json(indent=2))
+    # bulletin_patterns.json is owned by `updater generate-legal-patterns`.
+    # build.py writes an empty envelope ONLY if the file does not yet exist,
+    # so that new environments have a valid (empty) file at the expected path.
+    # If the file already exists (curated content from generate-legal-patterns),
+    # build.py leaves it completely untouched.
+    if not pat_path.exists():
+        with open(pat_path, "w", encoding="utf-8") as fh:
+            fh.write(bulletin_pat.model_dump_json(indent=2))
 
     skl_path.parent.mkdir(parents=True, exist_ok=True)
     with open(skl_path, "w", encoding="utf-8") as fh:
         fh.write(bulletin_skl.model_dump_json(indent=2))
 
+    pat_status = "preserved (curated)" if pat_path.exists() else "created (empty envelope)"
     print(
-        f"Build complete. {len(eco_repos)} repos, {len(all_patterns)} patterns, "
-        f"{len(skill_entries)} skill(s). "
-        f"Written to {eco_path}, {pat_path}, and {skl_path}."
+        f"Build complete. {len(eco_repos)} repos, {len(skill_entries)} skill(s). "
+        f"bulletin_patterns.json: {pat_status}. "
+        f"Written to {eco_path} and {skl_path}."
     )
     return eco_path, pat_path, skl_path
