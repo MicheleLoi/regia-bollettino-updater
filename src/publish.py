@@ -12,9 +12,10 @@ Required env vars:
   VPS_PATH          Absolute path to the bulletins directory on the VPS
                     (e.g. /var/www/html/bollettini)
 
+  VPS_MAGIC_IP      Tailscale magic IP for scp transfers (set in .env; never
+                    hardcoded in code — update it if the Tailscale IP changes).
+
 Optional env vars:
-  VPS_MAGIC_IP      Tailscale magic IP for scp transfers (default: 100.90.201.54).
-                    Override when the Tailscale IP changes — never hardcoded in code.
   VPS_BULLETIN_URL  Public base URL for post-upload HTTP verification
                     (e.g. https://bollettino.example.com/). Skipped if unset.
 
@@ -37,8 +38,7 @@ from .schema.ecosystem import BulletinEcosystem
 from .schema.patterns import BulletinPatterns
 from .schema.skills import BulletinSkills
 
-# Default Tailscale magic IP for scp; override with VPS_MAGIC_IP env var.
-_DEFAULT_MAGIC_IP = "100.90.201.54"
+# Tailscale magic IP for scp is read from VPS_MAGIC_IP (.env) — never hardcoded here.
 
 
 def _check_review_flag(review_flag_path: Path, max_age_minutes: int) -> None:
@@ -170,12 +170,13 @@ def run(config_path: str = "config.yaml") -> None:
     vps_host = os.environ.get(env_vars.get("vps_host", "VPS_HOST"), "")
     vps_user = os.environ.get(env_vars.get("vps_user", "VPS_USER"), "")
     vps_path = os.environ.get(env_vars.get("vps_path", "VPS_PATH"), "")
-    magic_ip = os.environ.get("VPS_MAGIC_IP", _DEFAULT_MAGIC_IP)
+    magic_ip = os.environ.get("VPS_MAGIC_IP", "")
 
     for var_name, val in [
         ("VPS_HOST", vps_host),
         ("VPS_USER", vps_user),
         ("VPS_PATH", vps_path),
+        ("VPS_MAGIC_IP", magic_ip),
     ]:
         if not val:
             print(f"Error: {var_name} env var not set.")
